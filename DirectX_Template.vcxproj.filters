@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>566eac11-563e-49f9-98b7-e3fd79482449</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>70dad81f-e9d4-4303-a956-17522f9a309f</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="StepTimer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\Screen.h" />
+    <ClInclude Include="GameLib\Components\Collider\Shapes\AABBCollider.h" />
+    <ClInclude Include="GameLib\Components\Collider\Shapes\BoxCollider.h" />
+    <ClInclude Include="GameLib\Components\Collider\Shapes\CapsuleCollider.h" />
+    <ClInclude Include="GameLib\Components\Collider\Shapes\Colliders.h" />
+    <ClInclude Include="GameLib\Components\Collider\Shapes\LineCollider.h" />
+    <ClInclude Include="GameLib\Components\Collider\Shapes\SphereCollider.h" />
+    <ClInclude Include="GameLib\Components\Collider\BaseCollider.h" />
+    <ClInclude Include="GameLib\Components\Collider\CheckHit.h" />
+    <ClInclude Include="GameLib\Components\Collider\CollideManager.h" />
+    <ClInclude Include="GameLib\GameMath\Easing.h" />
+    <ClInclude Include="GameLib\GameMath\GameMath.h" />
+    <ClInclude Include="GameLib\GameMath\Range.h" />
+    <ClInclude Include="GameLib\GameObject\GameObject.h" />
+    <ClInclude Include="GameLib\Input\KeyInput.h" />
+    <ClInclude Include="GameLib\Input\MouseInput.h" />
+    <ClInclude Include="GameLib\Resources\ResourceManager.h" />
+    <ClInclude Include="GameLib\Scene\Scene.h" />
+    <ClInclude Include="GameLib\Scene\SceneManager.h" />
+    <ClInclude Include="GameLib\Scene\Scenes.h" />
+    <ClInclude Include="GameLib\Scene\Transition\FadeTransition.h" />
+    <ClInclude Include="GameLib\Scene\Transition\SceneTransition.h" />
+    <ClInclude Include="GameLib\Scene\Transition\Transitions.h" />
+    <ClInclude Include="GameLib\State\BaseState.h" />
+    <ClInclude Include="GameLib\State\StateMachine.h" />
+    <ClInclude Include="GameLib\State\TransitionRule.h" />
+    <ClInclude Include="GameLib\ContainerExtensions.h" />
+    <ClInclude Include="GameLib\MyRenderer.h" />
+    <ClInclude Include="GameLib\Random.h" />
+    <ClInclude Include="GameLib\UI\Button.h" />
+    <ClInclude Include="GameLib\Components\Collider\HitInfomation\HitInfomation.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="DeviceResources.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="GameLib\Components\Collider\BaseCollider.cpp" />
+    <ClCompile Include="GameLib\Components\Collider\CheckHit.cpp" />
+    <ClCompile Include="GameLib\Components\Collider\CollideManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
+    <ClCompile Include="GameLib\Input\KeyInput.cpp" />
+    <ClCompile Include="GameLib\Input\MouseInput.cpp" />
+    <ClCompile Include="GameLib\Resources\ResourceManager.cpp" />
+    <ClCompile Include="GameLib\Scene\Scene.cpp" />
+    <ClCompile Include="GameLib\Scene\SceneManager.cpp" />
+    <ClCompile Include="GameLib\Scene\Transition\FadeTransition.cpp" />
+    <ClCompile Include="GameLib\Scene\Transition\SceneTransition.cpp" />
+    <ClCompile Include="GameLib\State\TransitionRule.cpp" />
+    <ClCompile Include="GameLib\MyRenderer.cpp" />
+    <ClCompile Include="GameLib\Random.cpp" />
+    <ClCompile Include="GameLib\UI\Button.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="directx.ico">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="settings.manifest">
+      <Filter>Assets</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
