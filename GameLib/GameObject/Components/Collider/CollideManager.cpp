@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CollideManager.h"
 
-#include "../../GameObject/GameObject.h"
+#include "../../GameObject.h"
 
 /// <summary>
 /// 全てのコライダーの衝突判定を行う関数

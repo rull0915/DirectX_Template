@@ -15,14 +15,13 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-
-#include "../Components/Collider/Shapes/Colliders.h"    // 各コライダー
 #include <memory>
 
 //====================================================//
 // 前方宣言
 //====================================================//
-
+class BaseComponent;
+class BaseCollider;
 
 //====================================================//
 // クラス宣言
@@ -34,27 +33,47 @@ class GameObject
     //-----------------------------------------------------
     
 private:
-    // コライダー
-    std::vector<std::unique_ptr<BaseCollider>> m_pColliders;
+    // コンポーネント
+    std::vector<std::unique_ptr<BaseComponent>> m_pComponents;
+
+    // アクティブフラグ　
+    bool m_isActive;
 
 public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    GameObject() {};
-    virtual ~GameObject();
+    GameObject();
+
+    virtual ~GameObject() = default;
+
+    //-----------------------------------------------------
+    // ゲッター
+    //-----------------------------------------------------
+    bool IsActive() const { return m_isActive; }
+
+    //-----------------------------------------------------
+    // セッター
+    //-----------------------------------------------------
+    void SetActive(bool value) { m_isActive = value; }
 
 public:
+    // 衝突時に呼び出される関数
     virtual void OnCollision(BaseCollider* other) {};
 
-    void AllCollideAccept();
-
 protected:
+    // コンポーネントを追加する関数
     template<typename T, typename... Args>
     T* AddComponent(Args&&... args);
 
-    const std::vector<std::unique_ptr<BaseCollider>>& GetCollider() const { return m_pColliders; }
+    // コンポーネントを1つ取得する関数
+    template<typename T>
+    T* GetComponent();
+
+    // コンポーネントをすべて取得する関数
+    template<typename T>
+    std::vector<T*> GetComponents();
 };
 
 /// <summary>
@@ -70,10 +89,50 @@ T* GameObject::AddComponent(Args&&... args)
     auto comp = std::make_unique<T>(this, std::forward<Args>(args)...);
     T* ptr = comp.get();
 
-    // もしコライダーなら配列に追加
-    if constexpr (std::is_base_of_v<BaseCollider, T>) {
-        m_pColliders.push_back(std::move(comp));
-    }
+    // 配列に追加
+    m_pComponents.push_back(std::move(comp));
 
     return ptr;
+}
+
+/// <summary>
+/// コンポーネントを1つ取得する関数
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <returns></returns>
+template<typename T>
+inline T* GameObject::GetComponent()
+{
+    // 全てのコンポーネントを検索
+    for (auto& component : m_pComponents)
+    {
+        T* casted = dynamic_cast<T*>(component.get());
+
+        // 型が一致した場合
+        if (casted) return casted;
+    }
+
+    return nullptr;
+}
+
+/// <summary>
+/// 全てのコンポーネントを取得する関数
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <returns></returns>
+template<typename T>
+inline std::vector<T*> GameObject::GetComponents()
+{
+    std::vector<T*> list;
+
+    // 全てのコンポーネントを検索
+    for (auto& component : m_pComponents)
+    {
+        T* casted = dynamic_cast<T*>(component.get());
+
+        // 型が一致した場合
+        if (casted) list.push_back(casted);
+    }
+
+    return list;
 }

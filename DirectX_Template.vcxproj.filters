@@ -19,15 +19,15 @@
     </ClInclude>
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Screen.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\AABBCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\BoxCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\CapsuleCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\Colliders.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\LineCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\SphereCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\BaseCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\CheckHit.h" />
-    <ClInclude Include="GameLib\Components\Collider\CollideManager.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\AABBCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\Colliders.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\LineCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\CollideManager.h" />
     <ClInclude Include="GameLib\GameMath\Easing.h" />
     <ClInclude Include="GameLib\GameMath\GameMath.h" />
     <ClInclude Include="GameLib\GameMath\Range.h" />
@@ -48,7 +48,10 @@
     <ClInclude Include="GameLib\MyRenderer.h" />
     <ClInclude Include="GameLib\Random.h" />
     <ClInclude Include="GameLib\UI\Button.h" />
-    <ClInclude Include="GameLib\Components\Collider\HitInfomation\HitInfomation.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\HitInfomation\HitInfomation.h" />
+    <ClInclude Include="GameLib\GameObject\Components\BaseComponent.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Components.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -57,10 +60,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Game\Game.cpp" />
-    <ClCompile Include="GameLib\Components\Collider\BaseCollider.cpp" />
-    <ClCompile Include="GameLib\Components\Collider\CheckHit.cpp" />
-    <ClCompile Include="GameLib\Components\Collider\CollideManager.cpp" />
-    <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\CollideManager.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
     <ClCompile Include="GameLib\Resources\ResourceManager.cpp" />
@@ -72,6 +74,9 @@
     <ClCompile Include="GameLib\MyRenderer.cpp" />
     <ClCompile Include="GameLib\Random.cpp" />
     <ClCompile Include="GameLib\UI\Button.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
+    <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

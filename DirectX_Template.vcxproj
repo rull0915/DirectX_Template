@@ -181,21 +181,23 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameLib\GameObject\Components\BaseComponent.h" />
     <ClInclude Include="DeviceResources.h" />
-    <ClInclude Include="GameLib\Components\Collider\BaseCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\CheckHit.h" />
-    <ClInclude Include="GameLib\Components\Collider\CollideManager.h" />
-    <ClInclude Include="GameLib\Components\Collider\HitInfomation\HitInfomation.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\AABBCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\BoxCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\CapsuleCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\Colliders.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\LineCollider.h" />
-    <ClInclude Include="GameLib\Components\Collider\Shapes\SphereCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\CollideManager.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\HitInfomation\HitInfomation.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\AABBCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\Colliders.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\LineCollider.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.h" />
     <ClInclude Include="GameLib\ContainerExtensions.h" />
     <ClInclude Include="GameLib\GameMath\Easing.h" />
     <ClInclude Include="GameLib\GameMath\GameMath.h" />
     <ClInclude Include="GameLib\GameMath\Range.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Components.h" />
     <ClInclude Include="GameLib\GameObject\GameObject.h" />
     <ClInclude Include="GameLib\Input\KeyInput.h" />
     <ClInclude Include="GameLib\Input\MouseInput.h" />
@@ -216,12 +218,14 @@
     <ClInclude Include="Game\Screen.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
-    <ClCompile Include="GameLib\Components\Collider\BaseCollider.cpp" />
-    <ClCompile Include="GameLib\Components\Collider\CheckHit.cpp" />
-    <ClCompile Include="GameLib\Components\Collider\CollideManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\CollideManager.cpp" />
     <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
@@ -242,6 +246,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

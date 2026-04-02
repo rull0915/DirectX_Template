@@ -1,14 +1,13 @@
 //====================================================//
-// ファイル名  : GameObject.cpp
-// 概要        : ゲームオブジェクト基底クラスです
+// ファイル名  : BaseComponent.cpp
+// 概要       : コンポーネントの基底クラス  
 //====================================================//
 
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include "GameObject.h"
-
-#include "Components/Components.h"
+#include "pch.h"
+#include "BaseComponent.h"
 
 //====================================================//
 // 関数の実体宣言
@@ -17,9 +16,15 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-GameObject::GameObject()
-    : m_pComponents{}
-    , m_isActive{ TRUE }
+BaseComponent::BaseComponent(GameObject* own)
+	: m_own{ own }
+	, m_isActive{ TRUE }
 {
-};
+}
 
+/// <summary>
+/// デストラクタ
+/// </summary>
+BaseComponent::~BaseComponent()
+{
+}

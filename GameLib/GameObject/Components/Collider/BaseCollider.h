@@ -14,12 +14,7 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-
-
-//====================================================//
-// 前方宣言
-//====================================================//
-class GameObject;
+#include "../BaseComponent.h"
 
 //====================================================//
 // 列挙型宣言
@@ -51,7 +46,7 @@ struct AABB
 //====================================================//
 // クラス宣言
 //====================================================//
-class BaseCollider
+class BaseCollider : public BaseComponent
 {
 private:
 
@@ -59,42 +54,26 @@ private:
     // メンバ変数
     //-----------------------------------------------------
 
-    // 自分を所持するGameObjectのポインタ
-    GameObject* m_own;
-
     // 自身のレイヤー名
     std::string m_layerName;
 
     // コライダーのタイプ
     ColliderType m_type;
 
-    // 有効かどうか
-    bool m_isActive;
-
 public:
 
     //-----------------------------------------------------
     // 生成 / 破棄
     //-----------------------------------------------------
-    BaseCollider(GameObject* own, ColliderType type)
-        : m_own{ own }
-        , m_layerName{ "" }
-        , m_type{ type }
-        , m_isActive{ true }
-    {
-    };
-    virtual ~BaseCollider() = default;
+    BaseCollider(GameObject* own, ColliderType type);
+
+    virtual ~BaseCollider();
 
     ColliderType GetType() const { return m_type; };
 
-    GameObject* GetOwn() const { return m_own; }
-
-    // Activeフラグの管理
-    bool IsActive() const { return m_isActive; }
-    void SetActive(bool f) { m_isActive = f; }
+    const std::string& GetLayerName() { return m_layerName; }
 
     void SetLayerName(const std::string& name) { m_layerName = name; }
-    const std::string& GetLayerName() { return m_layerName; }
 
     // 自身を覆うAABBを取得する関数
     virtual AABB GetBoundingBox() const = 0;
