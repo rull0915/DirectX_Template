@@ -116,6 +116,8 @@ void Game::Render()
     // Œ»İ‚ÌƒV[ƒ“‚Ì•`‰æ
     m_sceneManager.Render();
 
+    MyRenderer::DrawBox({ 100, 100 }, { 200, 200 }, 0xFFFFFF);
+
     // •`‰æ‚ÌI—¹ ----------------------------------------
     m_sceneManager.TransitionRender();
     if (m_exitTrans) m_exitTrans->Render();

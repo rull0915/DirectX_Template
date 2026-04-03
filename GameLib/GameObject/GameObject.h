@@ -16,12 +16,13 @@
 // インクルードファイル
 //====================================================//
 #include <memory>
+#include <type_traits>
+
+#include "Components/Components.h"
 
 //====================================================//
 // 前方宣言
 //====================================================//
-class BaseComponent;
-class BaseCollider;
 
 //====================================================//
 // クラス宣言
@@ -33,6 +34,9 @@ class GameObject
     //-----------------------------------------------------
     
 private:
+    // トランスフォーム
+    std::unique_ptr<Transform> m_pTransform;
+
     // コンポーネント
     std::vector<std::unique_ptr<BaseComponent>> m_pComponents;
 
@@ -103,13 +107,20 @@ T* GameObject::AddComponent(Args&&... args)
 template<typename T>
 inline T* GameObject::GetComponent()
 {
-    // 全てのコンポーネントを検索
-    for (auto& component : m_pComponents)
+    // トランスフォームのみ分岐
+    if constexpr (std::is_same_v<T*, Transform*>) 
     {
-        T* casted = dynamic_cast<T*>(component.get());
+        return m_pTransform.get();
+    }
+    else {
+        // 全てのコンポーネントを検索
+        for (auto& component : m_pComponents)
+        {
+            T* casted = dynamic_cast<T*>(component.get());
 
-        // 型が一致した場合
-        if (casted) return casted;
+            // 型が一致した場合
+            if (casted) return casted;
+        }
     }
 
     return nullptr;
@@ -125,13 +136,21 @@ inline std::vector<T*> GameObject::GetComponents()
 {
     std::vector<T*> list;
 
-    // 全てのコンポーネントを検索
-    for (auto& component : m_pComponents)
+    // トランスフォームのみ分岐
+    if constexpr (std::is_same_v<T*, Transform*>)
     {
-        T* casted = dynamic_cast<T*>(component.get());
+        list.push_back(m_pTransform.get());
+    }
+    else
+    {
+        // 全てのコンポーネントを検索
+        for (auto& component : m_pComponents)
+        {
+            T* casted = dynamic_cast<T*>(component.get());
 
-        // 型が一致した場合
-        if (casted) list.push_back(casted);
+            // 型が一致した場合
+            if (casted) list.push_back(casted);
+        }
     }
 
     return list;

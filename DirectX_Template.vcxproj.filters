@@ -52,6 +52,8 @@
     <ClInclude Include="GameLib\GameObject\Components\BaseComponent.h" />
     <ClInclude Include="GameLib\GameObject\Components\Components.h" />
     <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
+    <ClInclude Include="GameLib\GameObject\Camera\RayCast.h" />
+    <ClInclude Include="GameLib\GameObject\Camera\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -77,6 +79,8 @@
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
     <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
+    <ClCompile Include="GameLib\GameObject\Camera\Camera.cpp" />
+    <ClCompile Include="GameLib\GameObject\Camera\RayCast.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -181,6 +181,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameLib\GameObject\Camera\Camera.h" />
+    <ClInclude Include="GameLib\GameObject\Camera\RayCast.h" />
     <ClInclude Include="GameLib\GameObject\Components\BaseComponent.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
@@ -221,6 +223,8 @@
     <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameLib\GameObject\Camera\Camera.cpp" />
+    <ClCompile Include="GameLib\GameObject\Camera\RayCast.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
