@@ -42,7 +42,7 @@ public:
     // ê∂ê¨ / îjä¸
     //-----------------------------------------------------
     LineCollider(GameObject* own, DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::Vector3 end)
-        : BaseCollider(own, ColliderType::Line)
+        : BaseCollider(own, ColliderType::Line, -1, 0)
         , m_start{ start }
         , m_end{ end }
     {

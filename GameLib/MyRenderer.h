@@ -152,12 +152,40 @@ public:
 		int color
 	);
 
+	static void DrawCircle
+	(
+		DirectX::SimpleMath::Vector3 centerPos,
+		DirectX::SimpleMath::Vector3 normal,
+		float radius,
+		int division,
+		int color,
+		bool fillFrag
+	);
+
+	// 補助関数：2つの方向ベクトル間の弧を描画する
+	static void DrawArc(
+		const DirectX::SimpleMath::Vector3& center,
+		DirectX::SimpleMath::Vector3 vStart, // 開始方向（正規化されている前提）
+		DirectX::SimpleMath::Vector3 vEnd,   // 終了方向（正規化されている前提）
+		float radius,
+		int color,
+		int segments = 16);
+
 	//  ----- UI ----- //
 	static void DrawBox
 	(
 		DirectX::SimpleMath::Vector2 posA,
 		DirectX::SimpleMath::Vector2 posB,
 		int color
+	);
+
+	// ----- 3D ----- //
+	static void Draw3DBox
+	(
+		DirectX::SimpleMath::Vector3 posA,
+		DirectX::SimpleMath::Vector3 posB,
+		int color,
+		bool fillFrag = false
 	);
 
 #pragma endregion

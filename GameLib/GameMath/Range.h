@@ -34,10 +34,18 @@ namespace MyMath
 		bool m_isNull;
 
 	public:
-		Range(float min, float max)
-			: m_min{ min }, m_max{ max }
-			, m_isNull{ m_max < m_min }
+		Range(float min, float max, bool adjust = false)
 		{
+			m_min = min;
+			m_max = max;
+
+			if (adjust)
+			{
+				m_min = min < max ? min : max;
+				m_max = min > max ? min : max;
+			}
+
+			m_isNull = m_max <= m_min;
 		};
 		Range() : Range(-FLT_MAX, FLT_MAX) {};
 

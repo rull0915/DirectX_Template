@@ -362,6 +362,110 @@ void MyRenderer::DrawLine(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMat
 	DrawLine(v1, v2);
 }
 
+void MyRenderer::DrawCircle(DirectX::SimpleMath::Vector3 centerPos, DirectX::SimpleMath::Vector3 normal, float radius, int division, int color, bool fillFrag)
+{
+	if (division < 3) return; // 三角形以下はスキップ
+	CheckChange(DrawMode::Primitiv);
+
+	// 法線ベクトルを正規化
+	normal.Normalize();
+
+	// 法線に垂直なベクトル U を求める
+	// 法線が真上(0,1,0)に近い場合は別の軸を使う（外積がゼロになるのを防ぐ）
+	SimpleMath::Vector3 up = (std::abs(normal.y) > 0.9f) ? SimpleMath::Vector3::UnitX : SimpleMath::Vector3::UnitY;
+	SimpleMath::Vector3 vU = normal.Cross(up);
+	vU.Normalize();
+
+	// 3. Uと法線に垂直なベクトル V を求める（これで円の平面が定義される）
+	SimpleMath::Vector3 vV = normal.Cross(vU);
+	vV.Normalize();
+
+	// 4. 円周上の点を計算して線で結ぶ
+	float step = XM_2PI / static_cast<float>(division);
+	SimpleMath::Vector3 firstPoint, prevPoint;
+
+	for (int i = 0; i <= division; ++i)
+	{
+		float theta = step * i;
+		// 円周上の座標を算出
+		SimpleMath::Vector3 currentPoint = centerPos + (vU * cosf(theta) + vV * sinf(theta)) * radius;
+
+		if (i > 0)
+		{
+			if (fillFrag)
+			{
+				// 前の点と現在の点と中心座標の三角形を描画
+				DrawTriangle(prevPoint, currentPoint, centerPos, color);
+			}
+			else
+			{
+				// 前の点と現在の点を線で結ぶ
+				DrawLine(prevPoint, currentPoint, color);
+			}
+		}
+		else
+		{
+			firstPoint = currentPoint; // 最後に閉じるために保存
+		}
+		prevPoint = currentPoint;
+	}
+}
+
+void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::SimpleMath::Vector3 vStart, DirectX::SimpleMath::Vector3 vEnd, float radius, int color, int segments)
+{
+	if (radius <= 0.0f || segments <= 0) return;
+
+	// 1. ベクトルの正規化（中心からの方向ベクトルとして扱う）
+	vStart.Normalize();
+	vEnd.Normalize();
+
+	// 2. 平面の法線を求める
+	DirectX::SimpleMath::Vector3 normal = vStart.Cross(vEnd);
+
+	// 開始と終了が同じ、または真逆（180度）の場合は外積がゼロになる
+	if (normal.LengthSquared() < 0.000001f) {
+		// 真逆の場合は法線が一意に決まらないため、何らかのデフォルト軸が必要
+		// ここでは簡易的に描画をスキップするか、直線を引くなどの処理
+		return;
+	}
+	normal.Normalize();
+
+	// 3. 基底ベクトル U, V を作成
+	// vStart をそのまま角度 0 (U) とする
+	DirectX::SimpleMath::Vector3 vU = vStart;
+	// U と法線に垂直なベクトルを V (角度 90) とする
+	DirectX::SimpleMath::Vector3 vV = normal.Cross(vU);
+	vV.Normalize();
+
+	// 4. 終了角を求める
+	// vStart が基準(角度0)なので、startRadian は必ず 0
+	float startRadian = 0.0f;
+	float endRadian = std::atan2(vV.Dot(vEnd), vU.Dot(vEnd));
+
+	// atan2 は -PI ~ PI を返すため、負の角度を正の回転（あるいは最短距離）に調整する場合
+	if (endRadian < 0) {
+		// 必要に応じて 2*PI を足して正の回転にする、
+		// もしくはそのままにして最短距離で描画させる
+	}
+
+	// 5. 描画ループ
+	float step = endRadian / static_cast<float>(segments); // startRadian(0) を引いたもの
+	DirectX::SimpleMath::Vector3 prevPoint = center + vU * radius;
+
+	for (int i = 1; i <= segments; ++i)
+	{
+		float theta = step * i;
+
+		// 円周上の座標を算出
+		DirectX::SimpleMath::Vector3 currentPoint = center + (vU * cosf(theta) + vV * sinf(theta)) * radius;
+
+		// 前の点と現在の点を線で結ぶ
+		DrawLine(prevPoint, currentPoint, color);
+
+		prevPoint = currentPoint;
+	}
+}
+
 #pragma endregion
 
 #pragma region UI
@@ -395,6 +499,59 @@ void MyRenderer::DrawBox(DirectX::SimpleMath::Vector2 posA, DirectX::SimpleMath:
 	VertexPositionColor v4 = VertexPositionColor(drawPosD, SimpleMath::Vector4{ r, g, b, a });
 
 	m_instance.m_primitiveBatch->DrawQuad(v1, v2, v3, v4);
+}
+
+void MyRenderer::Draw3DBox(DirectX::SimpleMath::Vector3 posA, DirectX::SimpleMath::Vector3 posB, int color, bool fillFrag)
+{
+	// 初期化していなければスキップ
+	if (!m_instance.m_initialized) return;
+
+	// 描画開始していなければスキップ
+	if (!m_instance.m_isDrawStarted) return;
+
+	CheckChange(DrawMode::Primitiv);
+
+	SimpleMath::Vector3 pos1 = { posA.x, posA.y, posA.z };
+	SimpleMath::Vector3 pos2 = { posA.x, posA.y, posB.z };
+	SimpleMath::Vector3 pos3 = { posB.x, posA.y, posB.z };
+	SimpleMath::Vector3 pos4 = { posB.x, posA.y, posA.z };
+	SimpleMath::Vector3 pos5 = { posA.x, posB.y, posA.z };
+	SimpleMath::Vector3 pos6 = { posA.x, posB.y, posB.z };
+	SimpleMath::Vector3 pos7 = { posB.x, posB.y, posB.z };
+	SimpleMath::Vector3 pos8 = { posB.x, posB.y, posA.z };
+
+	// 塗りつぶしがオンなら
+	if (fillFrag)
+	{
+		// 6面を描画
+		DrawRect(pos1, pos2, pos3, pos4, color);	// Up
+		DrawRect(pos5, pos6, pos7, pos8, color);	// Down
+		DrawRect(pos3, pos4, pos8, pos7, color);	// Front
+		DrawRect(pos2, pos1, pos6, pos5, color);	// Back
+		DrawRect(pos1, pos4, pos8, pos5, color);	// Left
+		DrawRect(pos3, pos2, pos6, pos7, color);	// Right
+	}
+	else
+	{
+		// 12辺を描画
+		// --- 上面 (Up) ---
+		DrawLine(pos1, pos2, color);
+		DrawLine(pos2, pos3, color);
+		DrawLine(pos3, pos4, color);
+		DrawLine(pos4, pos1, color);
+
+		// --- 下面 (Down) ---
+		DrawLine(pos5, pos6, color);
+		DrawLine(pos6, pos7, color);
+		DrawLine(pos7, pos8, color);
+		DrawLine(pos8, pos5, color);
+
+		// --- 垂直な柱 (Pillars) ---
+		DrawLine(pos1, pos5, color);
+		DrawLine(pos2, pos6, color);
+		DrawLine(pos3, pos7, color);
+		DrawLine(pos4, pos8, color);
+	}
 }
 
 #pragma endregion

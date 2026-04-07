@@ -15,6 +15,7 @@
 // インクルードファイル
 //====================================================//
 #include "../BaseComponent.h"
+#include "../Transform/Transform.h"
 
 //====================================================//
 // 列挙型宣言
@@ -23,7 +24,6 @@ enum class ColliderType
 {
     Sphere,
     Line,
-    AABB,
     Capsule,
     Box,
 };
@@ -41,6 +41,12 @@ struct AABB
         , max{ b }
     {
     };
+
+    AABB() 
+        : min{ 0, 0, 0 }, max{ 0, 0, 0 }
+    {}
+
+    void DebugDraw(int color) const;
 };
 
 //====================================================//
@@ -48,6 +54,13 @@ struct AABB
 //====================================================//
 class BaseCollider : public BaseComponent
 {
+    // ----------------------------------------------------
+    // 定数宣言
+    // ----------------------------------------------------
+public:
+    static constexpr int TYPE_ID = MAIN_COLLIDER;
+    static constexpr bool IS_MAIN = true;
+
 private:
 
     //-----------------------------------------------------
@@ -60,21 +73,82 @@ private:
     // コライダーのタイプ
     ColliderType m_type;
 
+protected:
+
+    // 親のトランスフォーム
+    const Transform* m_pTransform;
+
+    // ローカル中心座標
+    DirectX::SimpleMath::Vector3 m_localCenterPos;
+
+    // 自身を覆うAABB
+    mutable AABB m_boundingBox;
+
+    // トリガーフラグ
+    bool m_isTrigger;
+
+    // 値が変更されているかのフラグ
+    mutable bool m_isDirty;
+
+    // ワールド中心座標のキャッシュ
+    mutable DirectX::SimpleMath::Vector3 m_worldCenterPos;
+
 public:
 
     //-----------------------------------------------------
     // 生成 / 破棄
     //-----------------------------------------------------
-    BaseCollider(GameObject* own, ColliderType type);
+    BaseCollider(GameObject* own, ColliderType type, int ID, bool isMain);
 
     virtual ~BaseCollider();
 
+    //-----------------------------------------------------
+    // ゲッター
+    //-----------------------------------------------------
     ColliderType GetType() const { return m_type; };
 
     const std::string& GetLayerName() { return m_layerName; }
 
+    // 自身を覆うAABBを取得する関数
+    virtual AABB GetBoundingBox() const
+    {
+        UpdateCache();
+        return m_boundingBox;
+    }
+
+    // ワールド座標系での中心座標を返す関数
+    DirectX::SimpleMath::Vector3 GetWorldCenterPos() const
+    {
+        UpdateCache();
+        return m_worldCenterPos;
+    }
+
+    // トリガーフラグ
+    bool IsTrigger() const { return m_isTrigger; }
+
+    //-----------------------------------------------------
+    // セッター
+    //-----------------------------------------------------
     void SetLayerName(const std::string& name) { m_layerName = name; }
 
-    // 自身を覆うAABBを取得する関数
-    virtual AABB GetBoundingBox() const = 0;
+    void SetDirty() { m_isDirty = true; };
+
+    void SetLocalPos(DirectX::SimpleMath::Vector3 pos)
+    {
+        m_localCenterPos = pos;
+        SetDirty();
+    }
+
+    void SetTrigger(bool frag) { m_isTrigger = frag; }
+
+    //-----------------------------------------------------
+    // その他関数
+    //-----------------------------------------------------
+
+    // デバッグ描画関数
+    virtual void DebugDraw(int color) const = 0;
+    void DebugDrawAABB(int color) const { m_boundingBox.DebugDraw(color); }
+
+    // キャッシュの更新をする関数
+    virtual void UpdateCache() const = 0;
 };

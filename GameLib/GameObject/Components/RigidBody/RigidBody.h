@@ -1,12 +1,12 @@
 //====================================================//
-// ファイル名   : BaseComponent.h
+// ファイル名   : RigidBody.h
 // 作成者       : Hoshino Ryunosuke
-// 作成日       : 2026/04/02
+// 作成日       : 2026/04/06
 //
-// 概要 : 全てのコンポーネントの基底となるクラスです
+// 概要 : RigidBodyクラス 質量や速度などを管理します
 //
 // 更新履歴 :
-// 2026/04/02 新規作成
+// 2026/04/06 新規作成
 //====================================================//
 
 #pragma once
@@ -14,6 +14,7 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
+#include "../BaseComponent.h"
 
 //====================================================//
 // 前方宣言
@@ -21,33 +22,15 @@
 class GameObject;
 
 //====================================================//
-// マクロ宣言
-//====================================================//
-
-// コンポーネントを識別するID
-
-// メインID
-#define MAIN_BASE       (0x0000)
-#define MAIN_TRANSFORM   (0x0100)
-#define MAIN_COLLIDER   (0x0200)
-#define MAIN_RIGIDBODY  (0x0300)
-
-// サブ
-#define SUB_COLLIDER_SPHERE     (MAIN_COLLIDER | 0x0001)
-#define SUB_COLLIDER_CAPSULE    (MAIN_COLLIDER | 0x0002)
-#define SUB_COLLIDER_BOX        (MAIN_COLLIDER | 0x0003)
-#define SUB_COLLIDER_LINE       (MAIN_COLLIDER | 0x0004)
-
-//====================================================//
 // クラス宣言
 //====================================================//
-class BaseComponent
+class RigidBody : public BaseComponent
 {
     // ----------------------------------------------------
     // 定数宣言
     // ----------------------------------------------------
 public:
-    static constexpr int TYPE_ID = MAIN_BASE;
+    static constexpr int TYPE_ID = MAIN_RIGIDBODY;
     static constexpr bool IS_MAIN = true;
 
 private:
@@ -55,40 +38,47 @@ private:
     //-----------------------------------------------------
     // メンバ変数
     //-----------------------------------------------------
+    
+    // 質量
+    float m_mass, m_invMass;    // 質量 / 質量の逆数
 
-    // 自身の所有者のポインタ
-    GameObject* m_own;
+    // 速度/加速度
+    DirectX::SimpleMath::Vector3 m_velocity, m_acceleration;
 
-    // アクティブフラグ
-    bool m_isActive;
+    // 係数
+    float m_friction;       // 摩擦
+    float m_restitution;    // 反発
 
-    // 自身のID
-    const int m_myID;
-    const bool m_isMain;
+    // フラグ
+    bool m_isStatic;    // 固定
+    bool m_useGravity;  // 重力の影響
 
 public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    BaseComponent(GameObject* own, int id, bool isMain);
-    virtual ~BaseComponent();
+    RigidBody(GameObject* own);
+
+    ~RigidBody() = default;
+
+    //-----------------------------------------------------
+    // 公開関数
+    //-----------------------------------------------------
 
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
-    GameObject* GetOwn() const { return m_own; }
 
-    bool IsActive() const { return m_isActive; }
-
-    int GetID() const { return m_myID; }
-    bool IsMain() const { return m_isMain; }
+    float GetMass() const { return m_mass; }
+    bool IsStatic() const { return m_isStatic; }
 
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
 
-    void SetActive(bool f) { m_isActive = f; }
+    void SetMass(float mass) { m_mass = mass; }
+    void SetStatic(bool frag) { m_isStatic = frag; }
 
 private:
 

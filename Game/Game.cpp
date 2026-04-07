@@ -6,6 +6,7 @@
 #include "Game.h"
 
 #include "GameLib/Resources/ResourceManager.h"
+#include "GameLib/GameObject/Components/Collider/CollideManager.h"
 
 extern void ExitGame() noexcept;
 
@@ -39,8 +40,10 @@ void Game::Initialize(HWND window, int width, int height)
     MouseInput::SetMode(DirectX::Mouse::MODE_ABSOLUTE);
 
     // ====== シーンの登録 ====== //
+    m_sceneManager.RegisterScene("Test", std::make_unique<TestScene>(this));
 
     // 開始時のシーンを設定
+    m_sceneManager.SetStartScene("Test");
 
     // ====== リソースの追加 ====== //
 
@@ -89,6 +92,9 @@ void Game::Update(DX::StepTimer const& timer)
 
     // 各シーンの更新
     m_sceneManager.Update(elapsedTime);
+
+    // コライダーの衝突判定
+    CollideManager::Instance().CheckHitAll();
 }
 #pragma endregion
 
@@ -115,8 +121,6 @@ void Game::Render()
 
     // 現在のシーンの描画
     m_sceneManager.Render();
-
-    MyRenderer::DrawBox({ 100, 100 }, { 200, 200 }, 0xFFFFFF);
 
     // 描画の終了 ----------------------------------------
     m_sceneManager.TransitionRender();

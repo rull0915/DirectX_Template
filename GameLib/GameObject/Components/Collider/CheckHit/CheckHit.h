@@ -15,8 +15,8 @@
 // インクルードファイル
 //====================================================//
 
-#include "Shapes/Colliders.h"
-#include "BaseCollider.h"
+#include "../Shapes/Colliders.h"
+#include "../HitInfomation/HitInfomation.h"
 
 //====================================================//
 // 関数宣言
@@ -28,33 +28,37 @@
 /// <param name="col1">1つ目のコライダー</param>
 /// <param name="col2">2つ目のコライダー</param>
 /// <returns>衝突しているかどうか</returns>
-bool CheckHit(BaseCollider* col1, BaseCollider* col2);
+bool CheckHit(BaseCollider* col1, BaseCollider* col2, HitInfomation* info = nullptr);
 
 /// <summary>
 /// 球同士の衝突判定
 /// </summary>
-bool CheckHit(SphereCollider* col1, SphereCollider* col2);
+bool CheckHit(SphereCollider* col1, SphereCollider* col2, HitInfomation* info = nullptr);
 
 /// <summary>
-/// 球と線の衝突判定
+/// 球とカプセル
 /// </summary>
-bool CheckHit(SphereCollider* col1, LineCollider* col2);
+bool CheckHit(SphereCollider* col1, CapsuleCollider* col2, HitInfomation* info = nullptr);
 
 /// <summary>
-/// 球とAABBの衝突判定
+/// 球とOBB
 /// </summary>
-bool CheckHit(SphereCollider* col1, AABBCollider* col2);
+bool CheckHit(SphereCollider* col1, BoxCollider* col2, HitInfomation* info = nullptr);
 
 /// <summary>
-/// 線とAABBの衝突判定
+/// カプセル同士
 /// </summary>
-bool CheckHit(LineCollider* col1, AABBCollider* col2);
+bool CheckHit(CapsuleCollider* col1, CapsuleCollider* col2, HitInfomation* info = nullptr);
 
 /// <summary>
-/// AABB同士の衝突判定
+/// カプセルとOBB
 /// </summary>
-bool CheckHit(AABBCollider* col1, AABBCollider* col2);
+bool CheckHit(CapsuleCollider* col1, BoxCollider* col2, HitInfomation* info = nullptr);
 
+/// <summary>
+/// OBB同士
+/// </summary>
+bool CheckHit(BoxCollider* col1, BoxCollider* col2, HitInfomation* info = nullptr);
 
 /// <summary>
 /// コライダーが持つAABBの衝突判定

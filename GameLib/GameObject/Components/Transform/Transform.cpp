@@ -1,4 +1,3 @@
-#include "Transform.h"
 //====================================================//
 // ファイル名  : Transform.cpp
 // 概要        :  トランスフォームコンポーネント
@@ -7,6 +6,9 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
+#include "Transform.h"
+#include "../../GameObject.h"
+
 using namespace DirectX;
 
 //====================================================//
@@ -14,7 +16,14 @@ using namespace DirectX;
 //====================================================//
 
 Transform::Transform(GameObject* own)
-    : BaseComponent(own)
+    : BaseComponent(own, MAIN_TRANSFORM, true)
+    , m_localPosition{ 0, 0, 0 }
+    , m_localRotation{}
+    , m_localScale{ 1, 1, 1 }
+    , m_worldMatrix{}
+    , m_isDirty{ true }
+    , m_pParent{ nullptr }
+    , m_children{}
 {
 }
 
@@ -79,14 +88,44 @@ void Transform::RemoveChildren()
     }
 }
 
+void Transform::UpdateCache() const
+{
+    if (!m_isDirty) return;
+
+    using namespace DirectX::SimpleMath;
+
+    // 各ワールド成分を親から継承
+    if (m_pParent) {
+        m_worldScaleMatrix = Matrix::CreateScale(m_localScale) * m_pParent->GetWorldScaleMatrix();
+        m_worldRotationMatrix = Matrix::CreateFromQuaternion(m_localRotation) * m_pParent->GetWorldRotationMatrix();
+
+        // 親のワールド行列を使用して座標変換
+        Vector3 worldPos = Vector3::Transform(m_localPosition, m_pParent->GetWorldMatrix());
+        m_worldPositionMatrix = Matrix::CreateTranslation(worldPos);
+    }
+    else {
+        m_worldScaleMatrix = Matrix::CreateScale(m_localScale);
+        m_worldRotationMatrix = Matrix::CreateFromQuaternion(m_localRotation);
+        m_worldPositionMatrix = Matrix::CreateTranslation(m_localPosition);
+    }
+
+    // --- ワールド行列の更新 --- //
+    m_worldMatrix = m_worldScaleMatrix * m_worldRotationMatrix * m_worldPositionMatrix;
+
+    // フラグのリセット
+    m_isDirty = false;
+}
+
 /// <summary>
 /// ワールド座標系での座標を返す関数
 /// </summary>
 /// <returns></returns>
-const DirectX::SimpleMath::Vector3 Transform::GetWorldPosition()
+const DirectX::SimpleMath::Vector3 Transform::GetWorldPosition() const
 {
+    UpdateCache();
+
     // 最新のワールド行列を取得
-    auto& world = GetWorldMatrix();
+    auto& world = GetWorldPositionMatrix();
 
     // 位置成分を返す
     return world.Translation();
@@ -96,69 +135,75 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldPosition()
 /// ワールド座標系での回転を返す関数
 /// </summary>
 /// <returns></returns>
-const DirectX::SimpleMath::Quaternion Transform::GetWorldRotation()
+const DirectX::SimpleMath::Quaternion Transform::GetWorldRotation() const
 {
-    // 最新のワールド行列を取得
-    auto& world = GetWorldMatrix();
+    UpdateCache();
 
-    SimpleMath::Vector3 s; SimpleMath::Quaternion r; SimpleMath::Vector3 t;
-    world.Decompose(s, r, t);
-    return r;
+    // 回転行列からクォータニオンを作る
+    return DirectX::SimpleMath::Quaternion::CreateFromRotationMatrix(m_worldRotationMatrix);
 }
 
 /// <summary>
 /// ワールド座標系でのオイラー角を返す関数
 /// </summary>
 /// <returns></returns>
-const DirectX::SimpleMath::Vector3 Transform::GetWorldEulerAngle()
+const DirectX::SimpleMath::Vector3 Transform::GetWorldEulerAngle() const
 {
-    // 最新のワールド行列を取得
-    auto& world = GetWorldMatrix();
-
-    SimpleMath::Vector3 s; SimpleMath::Quaternion r; SimpleMath::Vector3 t;
-    world.Decompose(s, r, t);
-    return r.ToEuler();
+    UpdateCache();
+    return GetWorldRotation().ToEuler();
 }
 
 /// <summary>
 /// ワールド座標系でのスケールを返す関数
 /// </summary>
 /// <returns></returns>
-const DirectX::SimpleMath::Vector3 Transform::GetWorldScale()
+const DirectX::SimpleMath::Vector3 Transform::GetWorldScale() const
 {
-    // 最新のワールド行列を取得
-    auto& world = GetWorldMatrix();
-
-    SimpleMath::Vector3 s; SimpleMath::Quaternion r; SimpleMath::Vector3 t;
-    world.Decompose(s, r, t);
-    return s;
+    UpdateCache();
+    return { m_worldScaleMatrix._11, m_worldScaleMatrix._22, m_worldScaleMatrix._33 };
 }
 
 /// <summary>
 /// ワールド行列を返す関数
 /// </summary>
 /// <returns></returns>
-DirectX::SimpleMath::Matrix& Transform::GetWorldMatrix()
+DirectX::SimpleMath::Matrix& Transform::GetWorldMatrix() const
 {
-    if (m_isDirty) {
-        // ローカル行列作成
-        DirectX::SimpleMath::Matrix local =
-            DirectX::SimpleMath::Matrix::CreateScale(m_localScale) *
-            DirectX::SimpleMath::Matrix::CreateFromQuaternion(m_localRotation) *
-            DirectX::SimpleMath::Matrix::CreateTranslation(m_localPosition);
-
-        // 親オブジェクトがあれば
-        if (m_pParent) {
-            // 親の行列と合成
-            m_worldMatrix = local * m_pParent->GetWorldMatrix();
-        }
-        else {
-            m_worldMatrix = local;
-        }
-        // フラグリセット
-        m_isDirty = false;
-    }
+    UpdateCache();
     return m_worldMatrix;
+}
+
+DirectX::SimpleMath::Matrix& Transform::GetWorldPositionMatrix() const
+{
+    UpdateCache();
+    return m_worldPositionMatrix;
+}
+
+DirectX::SimpleMath::Matrix& Transform::GetWorldRotationMatrix() const
+{
+    UpdateCache();
+    return m_worldRotationMatrix;
+}
+
+DirectX::SimpleMath::Matrix& Transform::GetWorldScaleMatrix() const
+{
+    UpdateCache();
+    return m_worldScaleMatrix;
+}
+
+void Transform::SetWorldPosition(const DirectX::SimpleMath::Vector3 pos)
+{
+    if (m_pParent == nullptr) {
+        // 親がいなければワールド＝ローカル
+        m_localPosition = pos;
+    }
+    else {
+        // 親がいる場合、親の逆行列をかけて「ローカル座標」に変換して保存
+        SimpleMath::Matrix invParentWorld = m_pParent->GetWorldMatrix().Invert();
+        m_localPosition = SimpleMath::Vector3::Transform(pos, invParentWorld);
+    }
+    // 行列の再計算フラグを立てる
+    SetDirty();
 }
 
 /// <summary>
@@ -171,4 +216,7 @@ void Transform::SetDirty()
 
     // 子オブジェクトのフラグもセット
     for (auto* child : m_children) child->SetDirty();
+
+    // コライダーのフラグもセット
+    for (auto col : GetOwn()->GetComponents<BaseCollider>()) col->SetDirty();
 }

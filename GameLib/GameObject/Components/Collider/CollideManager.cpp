@@ -23,6 +23,12 @@ void CollideManager::CheckHitAll()
 			// コライダーのアクティブ確認
 			if (!colB->IsActive()) continue;
 
+			// リジッドボディの有無をチェック
+			RigidBody* aRigid = colA->GetOwn()->GetComponent<RigidBody>();
+			RigidBody* bRigid = colB->GetOwn()->GetComponent<RigidBody>();
+
+			if (!aRigid && !bRigid) continue;
+
 			// レイヤーによる衝突判定をするかどうかを管理
 
 			// 条件が存在していれば
@@ -38,12 +44,56 @@ void CollideManager::CheckHitAll()
 			// コライダーが持つAABBが衝突していなければスキップ
 			if (!CheckAABB(colA->GetBoundingBox(), colB->GetBoundingBox())) continue;
 
+			HitInfomation hit;
+
+			// 詳細情報を取得するかどうか
+			bool hasTrigger = colA->IsTrigger() || colB->IsTrigger();
+
+			bool AisStatic = !aRigid || (aRigid && aRigid->IsStatic());
+			bool BisStatic = !bRigid || (bRigid && bRigid->IsStatic());
+
+			bool isStatic = AisStatic && BisStatic;
+
 			// 衝突判定
-			if(CheckHit(colA, colB))
+			if(CheckHit(colA, colB, (!hasTrigger && !isStatic) ? &hit : nullptr))
 			{
+				// 移動が発生する状態の場合
+				if (!hasTrigger && !isStatic)
+				{
+					// 動く割合の算出
+					float ratioA = 0, ratioB = 0;
+
+					// どちらかがStaticな場合
+					if (AisStatic) {
+						ratioA = 0;   // Aは動かない
+						ratioB = 1;   // Bが100%押し戻される
+					}
+					else if (BisStatic) {
+						ratioA = -1;  // Aが100%押し戻される
+						ratioB = 0;   // Bは動かない
+					}
+					// どちらも移動する場合
+					else
+					{
+						// 双方の質量を取得
+						float massA = aRigid->GetMass(), massB = bRigid->GetMass();
+
+						// 質量の比率で移動量を決定
+						ratioA = -massB / (massA + massB);
+						ratioB =  massA / (massA + massB);
+					}
+
+					// 位置の補正
+					DirectX::SimpleMath::Vector3 corrVecA = ratioA * hit.hitDir * hit.hitLen;
+					DirectX::SimpleMath::Vector3 corrVecB = ratioB * hit.hitDir * hit.hitLen;
+
+					colA->GetOwn()->GetComponent<Transform>()->AddWorldPosition(corrVecA);
+					colB->GetOwn()->GetComponent<Transform>()->AddWorldPosition(corrVecB);
+				}
+
 				// 双方の衝突応答を呼び出す
-				colA->GetOwn()->OnCollision(colB);
-				colB->GetOwn()->OnCollision(colA);
+				colA->GetOwn()->BaseOnCollision(colB);
+				colB->GetOwn()->BaseOnCollision(colA);
 			}
 		}
 	}

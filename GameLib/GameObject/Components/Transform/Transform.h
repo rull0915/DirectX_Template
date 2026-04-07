@@ -27,6 +27,13 @@
 //====================================================//
 class Transform : public BaseComponent
 {
+public:
+    // ----------------------------------------------------
+    // 定数宣言
+    // ----------------------------------------------------
+    static constexpr int TYPE_ID = MAIN_TRANSFORM;
+    static constexpr bool IS_MAIN = true;
+
 private:
 
     //-----------------------------------------------------
@@ -39,8 +46,13 @@ private:
     DirectX::SimpleMath::Vector3 m_localScale;
 
     // 行列のキャッシュ
-    DirectX::SimpleMath::Matrix m_worldMatrix;
-    bool m_isDirty; // 値が変わったらtrueにするフラグ
+    mutable DirectX::SimpleMath::Matrix m_worldMatrix;
+
+    mutable DirectX::SimpleMath::Matrix m_worldPositionMatrix;    // World座標系の移動行列
+    mutable DirectX::SimpleMath::Matrix m_worldRotationMatrix;    // World座標系の回転行列
+    mutable DirectX::SimpleMath::Matrix m_worldScaleMatrix;       // World座標系の拡縮行列
+
+    mutable bool m_isDirty; // 値が変わったらtrueにするフラグ
 
     // --- 親子関係 --- //
 
@@ -78,6 +90,9 @@ public:
     // 子供を全て解放する関数
     void RemoveChildren();
 
+    // キャッシュを更新する関数
+    void UpdateCache() const;
+
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
@@ -86,38 +101,80 @@ public:
     const DirectX::SimpleMath::Vector3 GetLocalEulerAngle() const { return m_localRotation.ToEuler(); }
     const DirectX::SimpleMath::Vector3& GetLocalScale() const { return m_localScale; }
 
-    const DirectX::SimpleMath::Vector3 GetWorldPosition() ;
-    const DirectX::SimpleMath::Quaternion GetWorldRotation() ;
-    const DirectX::SimpleMath::Vector3 GetWorldEulerAngle() ;
-    const DirectX::SimpleMath::Vector3 GetWorldScale() ;
+    const DirectX::SimpleMath::Vector3 GetWorldPosition() const ;
+    const DirectX::SimpleMath::Quaternion GetWorldRotation() const ;
+    const DirectX::SimpleMath::Vector3 GetWorldEulerAngle() const ;
+    const DirectX::SimpleMath::Vector3 GetWorldScale() const ;
 
     // ワールド行列を取得する関数
-    DirectX::SimpleMath::Matrix& GetWorldMatrix();
+    DirectX::SimpleMath::Matrix& GetWorldMatrix() const;
+    DirectX::SimpleMath::Matrix& GetWorldPositionMatrix() const;
+    DirectX::SimpleMath::Matrix& GetWorldRotationMatrix() const;
+    DirectX::SimpleMath::Matrix& GetWorldScaleMatrix() const;
 
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
-    void SetLocalPosition(DirectX::SimpleMath::Vector3& pos) 
+    void SetLocalPosition(const DirectX::SimpleMath::Vector3& pos) 
     {
         m_localPosition = pos; 
         SetDirty();
     }
-    void SetLocalRotation(DirectX::SimpleMath::Quaternion& rot) 
+    void SetLocalRotation(const DirectX::SimpleMath::Quaternion& rot) 
     {
         m_localRotation = rot; 
         SetDirty();
     }
-    void SetLocalEulerAngle(DirectX::SimpleMath::Vector3& rot) 
+    void SetLocalEulerAngle(const DirectX::SimpleMath::Vector3& rot) 
     {
         m_localRotation = DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(rot); 
         SetDirty();
     }
-    void SetLocalScale(DirectX::SimpleMath::Vector3& scale) 
+    void SetLocalScale(const DirectX::SimpleMath::Vector3& scale) 
     {
         m_localScale = scale; 
         SetDirty();
     }
 
+    void SetWorldPosition(const DirectX::SimpleMath::Vector3 pos);
+
+    // 補助関数
+    void AddLocalPosition(const DirectX::SimpleMath::Vector3& value)
+    {
+        m_localPosition += value;
+        SetDirty();
+    }
+    void AddLocalEulerAngle(const DirectX::SimpleMath::Vector3& rot)
+    {
+        DirectX::SimpleMath::Vector3 euler = GetLocalEulerAngle();
+        m_localRotation = DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(euler + rot);
+        SetDirty();
+    }
+    void AddWorldPosition(const DirectX::SimpleMath::Vector3 value)
+    {
+        SetWorldPosition(GetWorldPosition() + value);
+        SetDirty();
+    }
+    // 前方向 (Z軸)
+    DirectX::SimpleMath::Vector3 GetForward() const {
+        auto f = GetWorldMatrix().Forward();
+        f.Normalize();
+        return f;
+    }
+
+    // 上方向 (Y軸)
+    DirectX::SimpleMath::Vector3 GetUp() const {
+        auto u = GetWorldMatrix().Up();
+        u.Normalize();
+        return u;
+    }
+
+    // 右方向 (X軸)
+    DirectX::SimpleMath::Vector3 GetRight() const {
+        auto r = GetWorldMatrix().Right();
+        r.Normalize();
+        return r;
+    }
 private:
 
     //-----------------------------------------------------

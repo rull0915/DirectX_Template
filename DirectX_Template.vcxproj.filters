@@ -19,14 +19,13 @@
     </ClInclude>
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Screen.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\AABBCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\Colliders.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\LineCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\CollideManager.h" />
     <ClInclude Include="GameLib\GameMath\Easing.h" />
     <ClInclude Include="GameLib\GameMath\GameMath.h" />
@@ -54,6 +53,11 @@
     <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
     <ClInclude Include="GameLib\GameObject\Camera\RayCast.h" />
     <ClInclude Include="GameLib\GameObject\Camera\Camera.h" />
+    <ClInclude Include="Game\TestScene.h" />
+    <ClInclude Include="Game\TestObjects\CubeObject.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.h" />
+    <ClInclude Include="GameLib\GameObject\Components\RigidBody\RigidBody.h" />
+    <ClInclude Include="GameLib\GameObject\ObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -63,7 +67,7 @@
     </ClCompile>
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\CollideManager.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
@@ -81,6 +85,14 @@
     <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
     <ClCompile Include="GameLib\GameObject\Camera\Camera.cpp" />
     <ClCompile Include="GameLib\GameObject\Camera\RayCast.cpp" />
+    <ClCompile Include="Game\TestScene.cpp" />
+    <ClCompile Include="Game\TestObjects\CubeObject.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\RigidBody\RigidBody.cpp" />
+    <ClCompile Include="GameLib\GameObject\ObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

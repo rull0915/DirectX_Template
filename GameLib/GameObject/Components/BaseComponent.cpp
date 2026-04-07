@@ -18,9 +18,11 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-BaseComponent::BaseComponent(GameObject* own)
+BaseComponent::BaseComponent(GameObject* own, int id, bool isMain)
 	: m_own{ own }
-	, m_isActive{ TRUE }
+	, m_isActive{ true }
+	, m_myID{ id }
+	, m_isMain{ isMain }
 {
 }
 

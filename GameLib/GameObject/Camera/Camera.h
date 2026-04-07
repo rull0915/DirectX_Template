@@ -29,20 +29,6 @@ class Camera : public GameObject
 private:
 
 	//==============================
-	// transform
-	//==============================
-
-	// 位置
-	DirectX::SimpleMath::Vector3 m_cameraPosition;
-
-	// 傾き
-	DirectX::SimpleMath::Vector3 m_cameraRotation;
-
-	// スケール
-	float m_cameraScale;
-
-
-	//==============================
 	// matrix
 	//==============================
 
@@ -75,8 +61,6 @@ public:
 	void Update();
 
 private:
-	void Move();
-	void Rotate();
 
 	// 行列の更新
 	void UpdateView();
@@ -84,8 +68,6 @@ private:
 
 	// ======== セッター ======== //
 public:
-	void SetPosition(DirectX::SimpleMath::Vector3 pos){ m_cameraPosition = pos;}
-	void SetRotation(DirectX::SimpleMath::Vector3 rot){ m_cameraRotation = rot;}
 
 	void SetTargetPosition(DirectX::SimpleMath::Vector3 pos){ m_targetPoint = pos;}
 
@@ -93,7 +75,6 @@ public:
 
 	// ======== ゲッター ======== //
 public:
-	DirectX::SimpleMath::Vector3& GetPos() { return m_cameraPosition; }
 
 	DirectX::SimpleMath::Matrix& GetView() { return m_view; }
 	DirectX::SimpleMath::Matrix& GetProj() { return m_proj; }

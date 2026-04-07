@@ -5,6 +5,8 @@
 using namespace DirectX;
 
 RayCast::RayCast()
+	: m_pGameObject{ nullptr }
+	, m_shortestDist{ FLT_MAX }
 {
 }
 
@@ -19,6 +21,9 @@ void RayCast::Initialize()
 
 void RayCast::Update(Camera& camera)
 {
+	// 最短距離をリセット
+	m_shortestDist = FLT_MAX;
+
 	// マウスの位置を取得
 	DirectX::SimpleMath::Vector2 mousePos = MouseInput::GetMousePoint();
 
@@ -39,29 +44,33 @@ void RayCast::Update(Camera& camera)
 	rayWorld.Normalize();
 
 	// コライダー情報を更新
-	SimpleMath::Vector3 start = camera.GetPos();
+	SimpleMath::Vector3 start = camera.GetComponent<Transform>()->GetWorldPosition();
 	SimpleMath::Vector3 end = start + rayWorld * 1000;
 
-	//if (!GetCollider().empty())
-	//{
-	//	auto col = dynamic_cast<LineCollider*>(GetCollider().at(0).get());
+	auto col = GetComponent<LineCollider>();
 
-	//	col->SetStart(start);
-	//	col->SetEnd(end);
-	//}
+	col->SetStart(start);
+	col->SetEnd(end);
 
 	m_pGameObject = nullptr;
 }
 
 void RayCast::DebugDraw()
 {
-	//auto col = dynamic_cast<LineCollider*>(GetCollider().at(0).get());
-	//auto start = col->GetStart();
-	//start.z -= 0.1f;
-	//MyRenderer::DrawLine(start, col->GetEnd(), 0xFF0000);
 }
 
 void RayCast::OnCollision(BaseCollider* col)
 {
-//	m_pGameObject = col->GetOwn();
+	// レイの開始地点
+	SimpleMath::Vector3 camPos = GetComponent<Transform>()->GetWorldPosition();
+	// 今回当たったオブジェクトの位置
+	SimpleMath::Vector3 hitPos = col->GetOwn()->GetComponent<Transform>()->GetWorldPosition();
+
+	float dist = SimpleMath::Vector3::DistanceSquared(camPos, hitPos);
+
+	// 初めての衝突、または今までの最短距離より近ければ更新
+	if (m_pGameObject == nullptr || dist < m_shortestDist) {
+		m_pGameObject = col->GetOwn();
+		m_shortestDist = dist;
+	}
 }
