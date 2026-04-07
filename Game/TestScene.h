@@ -46,9 +46,9 @@ private:
 
     Camera m_testCamera;
 
-    CubeObject m_testCube;
-    CubeObject m_testCube2;
-    CubeObject m_testCube3;
+    CubeObject* m_testCube;
+    CubeObject* m_testCube2;
+    CubeObject* m_testCube3;
 
 public:
 

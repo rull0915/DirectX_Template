@@ -1,6 +1,8 @@
 #include "TestScene.h"
 #include "Game.h"
 
+#include "GameLib/GameObject/ObjectManager.h"
+
 // コンストラクタ
 TestScene::TestScene(Game* pGame)
 	: Scene(pGame->GetSceneManager())
@@ -19,32 +21,27 @@ TestScene::~TestScene()
 // 初期化関数
 void TestScene::Initialize()
 {
+	m_testCube = ObjectManager::Instance().Generate<CubeObject>();
+	m_testCube2 = ObjectManager::Instance().Generate<CubeObject>();
+	m_testCube3 = ObjectManager::Instance().Generate<CubeObject>();
+
 	m_testCamera.GetComponent<Transform>()->SetLocalPosition({ 0, 0, 10 });
 
-	m_testCube2.GetComponent<Transform>()->SetParent(m_testCube.GetComponent<Transform>());
-	m_testCube2.GetComponent<Transform>()->SetLocalPosition({ 1, 2, 0 });
-	m_testCube2.GetComponent<Transform>()->SetLocalScale({ 0.5, 0.5, 0.5 });
+	m_testCube2->GetComponent<Transform>()->SetParent(m_testCube->GetComponent<Transform>());
+	m_testCube2->GetComponent<Transform>()->SetLocalPosition({ 1, 2, 0 });
+	m_testCube2->GetComponent<Transform>()->SetLocalScale({ 0.5, 0.5, 0.5 });
 
-//	m_testCube3.GetComponent<Transform>()->SetParent(m_testCube2.GetComponent<Transform>());
-	m_testCube3.GetComponent<Transform>()->SetLocalPosition({ 0, 10, 0 });
-//	m_testCube3.GetComponent<Transform>()->SetLocalScale({ 0.5, 0.5, 0.5 });
+	m_testCube3->GetComponent<Transform>()->SetLocalPosition({ 0, 10, 0 });
 
-	//	AddComponent<CapsuleCollider>(3.0f, 1.0f);
-//	AddComponent<BoxCollider>();
-	m_testCube3.AddComponent <BoxCollider>();
-//	m_testCube.AddComponent<CapsuleCollider>(4.0f, 0.2f);
-	m_testCube.AddComponent<BoxCollider>();
+	m_testCube->AddComponent <SphereCollider>();
+	m_testCube3->AddComponent <BoxCollider>();
+//	m_testCube->AddComponent<CapsuleCollider>(3.0f, 0.5f);
 
-	m_testCube.AddComponent<RigidBody>();
-	m_testCube3.AddComponent<RigidBody>();
-//	m_testCube2.AddComponent<SphereCollider>();
+//	m_testCube->AddComponent<RigidBody>();
+	m_testCube3->AddComponent<RigidBody>();
 
-//	m_testCube.GetComponent<Transform>()->SetLocalScale({10, 1, 10});
-
-//	m_testCube.GetComponent<BoxCollider>()->SetLocalSize({1, 1, 1});
-	m_testCube.GetComponent<Transform>()->SetLocalEulerAngle({0.5f, 0, 0.7});
-	m_testCube3.GetComponent<Transform>()->SetLocalEulerAngle({0, 0, 1});
-//	m_testCube.GetComponent<Transform>()->SetLocalScale({5, 1, 5});
+	m_testCube->GetComponent<Transform>()->SetLocalEulerAngle({0.5f, 0, 0.7});
+	m_testCube3->GetComponent<Transform>()->SetLocalEulerAngle({0, 0, 1});
 }
 
 // 更新関数 
@@ -54,15 +51,11 @@ void TestScene::Update(float elapsedTime)
 
 	m_testCamera.Update();
 
-	m_testCube.GetComponent<Transform>()->AddLocalEulerAngle({ 0, elapsedTime * 2, 0 });
-	m_testCube2.GetComponent<Transform>()->AddLocalEulerAngle({ 0, 0, elapsedTime / 2 });
+//	m_testCube->GetComponent<Transform>()->AddLocalEulerAngle({ 0, elapsedTime, 0 });
+	m_testCube2->GetComponent<Transform>()->AddLocalEulerAngle({ 0, 0, elapsedTime / 2 });
 
-	m_testCube3.GetComponent<Transform>()->AddLocalPosition({ 0, -elapsedTime, 0});
-	m_testCube3.GetComponent<Transform>()->AddLocalEulerAngle({ 0, -elapsedTime, 0});
-
-	m_testCube.Update();
-	m_testCube2.Update();
-	m_testCube3.Update();
+	m_testCube3->GetComponent<Transform>()->AddLocalPosition({ 0, -elapsedTime * 3, 0});
+//	m_testCube3->GetComponent<Transform>()->AddLocalEulerAngle({ 0, -elapsedTime, 0});
 }
 
 // 描画関数
@@ -70,10 +63,6 @@ void TestScene::Render()
 {
 	MyRenderer::SetProjection(m_testCamera.GetProj());
 	MyRenderer::SetView(m_testCamera.GetView());
-
-	m_testCube.Render();
-	m_testCube2.Render();
-	m_testCube3.Render();
 }
 
 // 終了関数

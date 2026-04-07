@@ -8,6 +8,8 @@
 #include "GameLib/Resources/ResourceManager.h"
 #include "GameLib/GameObject/Components/Collider/CollideManager.h"
 
+#include "GameLib/GameObject/ObjectManager.h"
+
 extern void ExitGame() noexcept;
 
 using namespace DirectX;
@@ -24,6 +26,14 @@ Game::Game() noexcept(false)
     //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
     //   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
     m_deviceResources->RegisterDeviceNotify(this);
+}
+
+/// <summary>
+/// デストラクタ
+/// </summary>
+Game::~Game()
+{
+    ObjectManager::Instance().Finalize();
 }
 
 // Initialize the Direct3D resources required to run.
@@ -91,7 +101,9 @@ void Game::Update(DX::StepTimer const& timer)
     MouseInput::MouseUpdate();
 
     // 各シーンの更新
+    ObjectManager::Instance().Update(elapsedTime);
     m_sceneManager.Update(elapsedTime);
+
 
     // コライダーの衝突判定
     CollideManager::Instance().CheckHitAll();
@@ -121,6 +133,8 @@ void Game::Render()
 
     // 現在のシーンの描画
     m_sceneManager.Render();
+
+    ObjectManager::Instance().Render();
 
     // 描画の終了 ----------------------------------------
     m_sceneManager.TransitionRender();

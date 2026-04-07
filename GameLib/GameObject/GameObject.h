@@ -47,8 +47,14 @@ private:
     // その他コンポーネント
     std::vector<std::unique_ptr<BaseComponent>> m_pComponents;
 
+    // デバッグ描画色
+    int m_debugColor;
+
     // アクティブフラグ　
     bool m_isActive;
+
+    // 削除フラグ
+    bool m_isDead;
 
 public:
 
@@ -59,18 +65,37 @@ public:
 
     virtual ~GameObject() = default;
 
-protected:
+    // 各仮想関数
+    virtual void Initialize() {};
+
+    virtual void Update(float elapsedTime) {};
+
+    virtual void Render() {};
+
+    virtual void Finalize() {};
+
+    // 基底クラスで必ず行う処理
+    void BaseUpdate(float elapsedTime);
+
+    void BaseRender();
+
+    void BaseFinalize();
 
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
     bool IsActive() const { return m_isActive; }
 
+    bool IsDead() const { return m_isDead; }
+
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
     void SetActive(bool value) { m_isActive = value; }
 
+    void Destroy() { m_isDead = true; }
+
+private:
     // コライダーのデバッグ描画をする関数
     void CollidersDebugDraw(int color, bool drawAABB = false);
 

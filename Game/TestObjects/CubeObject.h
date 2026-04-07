@@ -49,9 +49,13 @@ public:
     //-----------------------------------------------------
     // ŒöŠJŠÖ”
     //-----------------------------------------------------
-    void Update();
+    void Initialize() override;
 
-    void Render();
+    void Update(float elapsedTime) override;
+
+    void Render() override;
+
+    void Finalize() override;
 
     void OnCollision(BaseCollider* col) override;
 

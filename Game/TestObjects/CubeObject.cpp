@@ -10,7 +10,14 @@ CubeObject::~CubeObject()
 {
 }
 
-void CubeObject::Update()
+void CubeObject::Initialize()
+{
+	// コンポーネントの追加
+//	AddComponent<RigidBody>();
+//	AddComponent<BoxCollider>();
+}
+
+void CubeObject::Update(float elapsedTime)
 {
 	m_debugColor = 0x00FF00;
 }
@@ -22,8 +29,10 @@ void CubeObject::Render()
 //	MyRenderer::Draw3DBox({ -0.5, -0.5, -0.5 }, { 0.5, 0.5, 0.5 }, 0xFF0000, !KeyInput::GetKey(DirectX::Keyboard::Keys::F1));
 
 	MyRenderer::SetWorld(DirectX::SimpleMath::Matrix::Identity);
+}
 
-	CollidersDebugDraw(m_debugColor, false);
+void CubeObject::Finalize()
+{
 }
 
 void CubeObject::OnCollision(BaseCollider* col)

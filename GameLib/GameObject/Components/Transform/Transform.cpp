@@ -18,7 +18,7 @@ using namespace DirectX;
 Transform::Transform(GameObject* own)
     : BaseComponent(own, MAIN_TRANSFORM, true)
     , m_localPosition{ 0, 0, 0 }
-    , m_localRotation{}
+    , m_localRotation{ DirectX::SimpleMath::Quaternion::Identity }
     , m_localScale{ 1, 1, 1 }
     , m_worldMatrix{}
     , m_isDirty{ true }
@@ -81,11 +81,15 @@ void Transform::SetParent(Transform* parent)
 /// </summary>
 void Transform::RemoveChildren()
 {
-    // 全ての子オブジェクトを捜査
-    for (auto& child : m_children)
+    // 現在の子リストをコピーする
+    auto tempChildren = m_children;
+
+    // コピーしたリストを使って処理
+    for (auto* child : tempChildren)
     {
         child->SetParent(nullptr);
     }
+    m_children.clear();
 }
 
 void Transform::UpdateCache() const

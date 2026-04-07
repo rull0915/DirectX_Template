@@ -5,6 +5,8 @@
 #include "pch.h"
 #include "Game/Game.h"
 
+#include "GameLib/GameObject/ObjectManager.h"
+
 using namespace DirectX;
 
 #ifdef __clang__
