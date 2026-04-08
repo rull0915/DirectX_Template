@@ -37,7 +37,9 @@ void BoxCollider::UpdateCache() const
     m_boundingBox = AABB(m_worldCenterPos - extent, m_worldCenterPos + extent);
 
     // ----- ローカル座標行列の更新 ----- //
-    m_cache.localMatrix = DirectX::SimpleMath::Matrix::CreateTranslation(m_worldCenterPos) * m_pTransform->GetWorldRotationMatrix();
+    m_cache.localMatrix = m_pTransform->GetWorldRotationMatrix() * DirectX::SimpleMath::Matrix::CreateTranslation(m_worldCenterPos);
+
+    m_cache.localMatrixInverse = DirectX::SimpleMath::Matrix::CreateTranslation(-m_worldCenterPos) * m_pTransform->GetWorldRotationMatrix().Transpose();
 
     // フラグのリセット
     m_isDirty = false;

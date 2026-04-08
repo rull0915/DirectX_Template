@@ -8,7 +8,7 @@
 //====================================================//
 #include "BaseCollider.h"
 
-#include "CollideManager.h"
+#include "../Managers/CollideManager.h"
 
 #include "../../GameObject.h"
 #include "GameLib/MyRenderer.h"
@@ -20,12 +20,14 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-BaseCollider::BaseCollider(GameObject* own, ColliderType type, int ID, bool isMain)
+BaseCollider::BaseCollider(GameObject* own, ColliderType type, int ID, bool isMain, DirectX::SimpleMath::Vector3 center)
 	: BaseComponent(own, ID, isMain)
 	, m_type{ type }
 	, m_pTransform{ own->GetComponent<Transform>() }
 	, m_boundingBox{ {0, 0, 0}, {0, 0, 0} }
 	, m_isTrigger{ false }
+	, m_isDirty{ true }
+	, m_localCenterPos{ center }
 {
 	// 自身をマネージャーに登録
 	CollideManager::Instance().AddCollide(this);

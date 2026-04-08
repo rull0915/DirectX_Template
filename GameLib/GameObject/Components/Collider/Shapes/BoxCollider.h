@@ -52,6 +52,7 @@ private:
         DirectX::SimpleMath::Vector3 scale;
 
         DirectX::SimpleMath::Matrix localMatrix;
+        DirectX::SimpleMath::Matrix localMatrixInverse;
     };
 
     mutable WorldCache m_cache;
@@ -61,9 +62,9 @@ public:
     //-----------------------------------------------------
     // ê∂ê¨ / îjä¸
     //-----------------------------------------------------
-    BoxCollider(GameObject* own)
-        : BaseCollider(own, ColliderType::Box, SUB_COLLIDER_BOX, false) 
-        , m_localSize{ 1, 1, 1 }
+    BoxCollider(GameObject* own, DirectX::SimpleMath::Vector3 size = { 1, 1, 1 }, DirectX::SimpleMath::Vector3 pos = { 0, 0, 0 })
+        : BaseCollider(own, ColliderType::Box, SUB_COLLIDER_BOX, false, pos) 
+        , m_localSize{ size }
         , m_cache{}
     {
     };
@@ -106,6 +107,11 @@ public:
     {
         UpdateCache();
         return m_cache.localMatrix;
+    }
+    DirectX::SimpleMath::Matrix GetLocalMatrixInverse() const
+    {
+        UpdateCache();
+        return m_cache.localMatrixInverse;
     }
 
     //-----------------------------------------------------

@@ -9,7 +9,8 @@
 #include "pch.h"
 #include "ObjectManager.h"
 
-#include "Components/Collider/CollideManager.h"
+#include "Components/Managers/CollideManager.h"
+#include "Components/Managers/PhysicsManager.h"
 
 //====================================================//
 // 関数の実体宣言
@@ -49,7 +50,7 @@ void ObjectManager::Update(float elapsedTime)
 	}
 
 	// リジッドボディの更新
-	
+	PhysicsManager::Instance().Update(elapsedTime);
 
 	// 衝突判定
 	CollideManager::Instance().CheckHitAll();
@@ -130,6 +131,9 @@ void ObjectManager::RemoveDeadObject()
 			std::vector<BaseCollider*> cols;
 			obj->GetComponents<BaseCollider>(cols);
 			for (auto& col : cols) CollideManager::Instance().RemoveCollide(col);
+
+			// リジッドボディをマネージャーから削除
+			PhysicsManager::Instance().RemoveRigidBody(obj->GetComponent<RigidBody>());
 
 			// リストから削除
 			m_objects.erase(m_objects.begin() + i);

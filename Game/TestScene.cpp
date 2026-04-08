@@ -3,14 +3,19 @@
 
 #include "GameLib/GameObject/ObjectManager.h"
 
+#include "TestObjects/TestSphere.h"
+#include "TestObjects/WallObject.h"
+
+#include "GameLib/GameObject/Components/Managers/CollideManager.h"
+
+using namespace DirectX;
+
 // コンストラクタ
 TestScene::TestScene(Game* pGame)
 	: Scene(pGame->GetSceneManager())
 	, m_pGame{ pGame }
 	, m_testCamera{ Screen::WIDTH, Screen::HEIGHT }
-	, m_testCube{}
-	, m_testCube2{}
-	, m_testCube3{}
+	, m_objects{}
 {
 }
 
@@ -21,27 +26,29 @@ TestScene::~TestScene()
 // 初期化関数
 void TestScene::Initialize()
 {
-	m_testCube = ObjectManager::Instance().Generate<CubeObject>();
-	m_testCube2 = ObjectManager::Instance().Generate<CubeObject>();
-	m_testCube3 = ObjectManager::Instance().Generate<CubeObject>();
+	m_testCamera.GetComponent<Transform>()->SetLocalPosition({ 0, 5, 15 });
+	m_testCamera.GetComponent<Transform>()->SetLocalEulerAngle({ -PI_F / 12, 0, 0 });
 
-	m_testCamera.GetComponent<Transform>()->SetLocalPosition({ 0, 0, 10 });
+	int ballCount = 1;
+	for (int i = 0; i < ballCount; i++)
+	{
+		SimpleMath::Vector3 pos = { Random::GetFloat(-1.0f, 1.0f), Random::GetFloat(5.0f, 9.0f), Random::GetFloat(-1.0f, 1.0f) };
 
-	m_testCube2->GetComponent<Transform>()->SetParent(m_testCube->GetComponent<Transform>());
-	m_testCube2->GetComponent<Transform>()->SetLocalPosition({ 1, 2, 0 });
-	m_testCube2->GetComponent<Transform>()->SetLocalScale({ 0.5, 0.5, 0.5 });
+		m_objects.push_back(ObjectManager::Instance().Generate<SphereObject>(SimpleMath::Vector3{ pos }));
+	}
 
-	m_testCube3->GetComponent<Transform>()->SetLocalPosition({ 0, 10, 0 });
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, -2, -10 }, SimpleMath::Vector3{ 10, -1.5, 10 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, 10, -10 }, SimpleMath::Vector3{ 10, 10.5, 10 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10.5, -2, -10 }, SimpleMath::Vector3{ -10, 10, 10 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  10, -2, -10 }, SimpleMath::Vector3{  10.5, 10, 10 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, -2, 10 }, SimpleMath::Vector3{ 10, 10, 10.5 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, -2, -10.5 }, SimpleMath::Vector3{ 10, 10, -10 }));
 
-	m_testCube->AddComponent <SphereCollider>();
-	m_testCube3->AddComponent <BoxCollider>();
-//	m_testCube->AddComponent<CapsuleCollider>(3.0f, 0.5f);
+	auto* obj = ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -2, -2, -2 }, SimpleMath::Vector3{ 2, 2, 2 });
+	obj->GetComponent<Transform>()->SetLocalEulerAngle({ PI_F / 4, PI_F / 4, PI_F / 4 });
 
-//	m_testCube->AddComponent<RigidBody>();
-	m_testCube3->AddComponent<RigidBody>();
-
-	m_testCube->GetComponent<Transform>()->SetLocalEulerAngle({0.5f, 0, 0.7});
-	m_testCube3->GetComponent<Transform>()->SetLocalEulerAngle({0, 0, 1});
+	m_objects.push_back(obj);
+	CollideManager::Instance().SetCollideActive("Wall", "Wall", false);
 }
 
 // 更新関数 
@@ -52,10 +59,10 @@ void TestScene::Update(float elapsedTime)
 	m_testCamera.Update();
 
 //	m_testCube->GetComponent<Transform>()->AddLocalEulerAngle({ 0, elapsedTime, 0 });
-	m_testCube2->GetComponent<Transform>()->AddLocalEulerAngle({ 0, 0, elapsedTime / 2 });
-
-	m_testCube3->GetComponent<Transform>()->AddLocalPosition({ 0, -elapsedTime * 3, 0});
-//	m_testCube3->GetComponent<Transform>()->AddLocalEulerAngle({ 0, -elapsedTime, 0});
+//	m_testCube2->GetComponent<Transform>()->AddLocalEulerAngle({ 0, 0, elapsedTime / 2 });
+//
+//	m_testCube3->GetComponent<Transform>()->AddLocalPosition({ 0, -elapsedTime * 2, 0});
+//	m_testCube3->GetComponent<Transform>()->AddLocalEulerAngle({ 0, -elapsedTime * 3, 0});
 }
 
 // 描画関数

@@ -149,20 +149,15 @@ bool CheckHit(SphereCollider* col1, CapsuleCollider* col2, HitInfomation* info)
 bool CheckHit(SphereCollider* col1, BoxCollider* col2, HitInfomation* info)
 {
 	// ボックスのワールド行列の逆行列を使って、球の中心をローカル座標へ
-	// ※可能であれば col2->GetWorldMatrixInv() のようにキャッシュしたものを使いたい
-	SimpleMath::Matrix worldToLocal = col2->GetLocalMatrix().Invert();
+	SimpleMath::Matrix worldToLocal = col2->GetLocalMatrixInverse();
 
 	Vector3 worldCenter = col1->GetWorldCenterPos();
 	Vector3 localCenter = Vector3::Transform(worldCenter, worldToLocal);
 
 	Vector3 halfSize = col2->GetHalfSize();
 
-	// ボックス内の最近接点を求める（クランプ）
-	Vector3 localNear = {
-		MyMath::Clamp(localCenter.x, -halfSize.x, halfSize.x),
-		MyMath::Clamp(localCenter.y, -halfSize.y, halfSize.y),
-		MyMath::Clamp(localCenter.z, -halfSize.z, halfSize.z)
-	};
+	// ボックス内の最近接点を求める
+	Vector3 localNear = ClosedPointOnAABB(halfSize, localCenter);
 
 	// 距離の判定（二乗で比較して計算負荷を軽減）
 	float distSq = Vector3::DistanceSquared(localCenter, localNear);
@@ -170,24 +165,43 @@ bool CheckHit(SphereCollider* col1, BoxCollider* col2, HitInfomation* info)
 
 	if (distSq > radius * radius) return false;
 
-	// 衝突時の情報作成
-	if (info)
-	{
-		// ローカルの最近接点をワールドに戻す
-		Vector3 worldNear = Vector3::Transform(localNear, col2->GetLocalMatrix());
+	// 衝突情報が必要な場合
+	if (info) {
+		float dist = 0.0f;
+		// 球の中心がボックスの「内側」に完全に入っている場合
+		if (distSq < 0.0001f) {
+			// 最も近い面を探して押し出す
+			float dx = halfSize.x - abs(localCenter.x);
+			float dy = halfSize.y - abs(localCenter.y);
+			float dz = halfSize.z - abs(localCenter.z);
 
-		Vector3 diff = worldNear - worldCenter;
-		float dist = sqrtf(distSq);
-
-		if (dist > 0.0001f) {
-			info->hitDir = diff / dist;
+			if (dx < dy && dx < dz) {
+				localNear.x = (localCenter.x > 0) ? halfSize.x : -halfSize.x;
+				dist = dx;
+			}
+			else if (dy < dz) {
+				localNear.y = (localCenter.y > 0) ? halfSize.y : -halfSize.y;
+				dist = dy;
+			}
+			else {
+				localNear.z = (localCenter.z > 0) ? halfSize.z : -halfSize.z;
+				dist = dz;
+			}
+			// 内部にいるので、hitLen は半径 + 面までの距離
+			info->hitLen = radius + dist;
 		}
 		else {
-			// 中心が完全に重なった、または近すぎる場合
-			info->hitDir = Vector3::Up;
+			dist = std::sqrt(distSq);
+			info->hitLen = radius - dist;
 		}
 
-		info->hitLen = radius - dist;
+		Vector3 worldNear = Vector3::Transform(localNear, col2->GetLocalMatrix());
+		Vector3 diff = worldNear - worldCenter;
+
+		// 正規化
+		if (dist > 0.0001f) info->hitDir = diff / dist;
+		else info->hitDir = Vector3::Up;
+
 		info->own = col1->GetOwn();
 		info->target = col2->GetOwn();
 	}
@@ -232,140 +246,183 @@ bool CheckHit(CapsuleCollider* col1, CapsuleCollider* col2, HitInfomation* info)
 
 bool CheckHit(CapsuleCollider* col1, BoxCollider* col2, HitInfomation* info)
 {
+	// OBBの各軸3本 カプセルの軸とOBBの軸の外積3本 カプセルの両端からOBBへの線 この8本の分離軸に対して離れているか確認
+
 	// 情報の取得
 	std::pair<Vector3, Vector3> worldPoints = col1->GetPoints();
 	float radius = col1->GetRadius();
 
 	Vector3 size = col2->GetHalfSize();
+
+	// OBBの軸
+	Vector3 naX = col2->GetXAxis(), naY = col2->GetYAxis(), naZ = col2->GetZAxis();
+	Vector3 aX = naX * size.x, aY = naY * size.y, aZ = naZ * size.z;
+
+	// 線分ベクトル
+	Vector3 lineVec = worldPoints.second - worldPoints.first;
+	Vector3 halfLine = lineVec / 2;
+	lineVec.Normalize();
+
+	// 中心間のベクトル
+	Vector3 interval = col1->GetWorldCenterPos() - col2->GetWorldCenterPos();
+
+	// 投影後の長さ格納用変数
+	float lA = 0, lB = 0, l = 0;
+
+	// 最小の重なりとその軸
+	float minOverLap = FLT_MAX;
+	Vector3 minAxis = { 0, 0, 0 };
+
+	// ----- Aの各軸を判定 ----- //
+
+	// X軸
+	lA = size.x;
+	lB = abs(naX.Dot(halfLine)) + radius;
+	l = abs(naX.Dot(interval));
+	if (lA + lB < l) return false;
+	if ((lA + lB) - l < minOverLap)
+	{
+		minOverLap = (lA + lB) - l;
+		minAxis = naX;
+	}
+
+	// Y軸
+	lA = size.y;
+	lB = abs(naY.Dot(halfLine)) + radius;
+	l = abs(naY.Dot(interval));
+	if (lA + lB < l) return false;
+	if ((lA + lB) - l < minOverLap)
+	{
+		minOverLap = (lA + lB) - l;
+		minAxis = naY;
+	}
+
+	// Z軸
+	lA = size.z;
+	lB = abs(naZ.Dot(halfLine)) + radius;
+	l = abs(naZ.Dot(interval));
+	if (lA + lB < l) return false;
+	if ((lA + lB) - l < minOverLap)
+	{
+		minOverLap = (lA + lB) - l;
+		minAxis = naZ;
+	}
+
+	// 軸同士の外積
+
+	// X軸
+	Vector3 crX = lineVec.Cross(naX);
+	if (crX.LengthSquared() > 0.0001f) {
+		crX.Normalize();
+		lA = radius;
+		lB = abs(crX.Dot(aY)) + abs(crX.Dot(aZ));
+		l = abs(crX.Dot(interval));
+		if (lA + lB < l) return false;
+		if ((lA + lB) - l < minOverLap)
+		{
+			minOverLap = (lA + lB) - l;
+			minAxis = crX;
+		}
+	}
+
+	// Y軸
+	Vector3 crY = lineVec.Cross(naY);
+	if (crY.LengthSquared() > 0.0001f) {
+		crY.Normalize();
+		lA = radius;
+		lB = abs(crY.Dot(aX)) + abs(crY.Dot(aZ));
+		l = abs(crY.Dot(interval));
+		if (lA + lB < l) return false;
+		if ((lA + lB) - l < minOverLap)
+		{
+			minOverLap = (lA + lB) - l;
+			minAxis = crY;
+		}
+	}
+
+	// Z軸
+	Vector3 crZ = lineVec.Cross(naZ);
+	if (crZ.LengthSquared() > 0.0001f) {
+		crZ.Normalize();
+		lA = radius;
+		lB = abs(crZ.Dot(aX)) + abs(crZ.Dot(aY));
+		l = abs(crZ.Dot(interval));
+		if (lA + lB < l) return false;
+		if ((lA + lB) - l < minOverLap)
+		{
+			minOverLap = (lA + lB) - l;
+			minAxis = crZ;
+		}
+	}
+
+	// 端点からOBBへの最近点を求める
 	SimpleMath::Matrix local = col2->GetLocalMatrix();
+	SimpleMath::Matrix localInv = col2->GetLocalMatrixInverse();
 
 	// 線分をボックスのローカル座標系に変換
-	Vector3 start = Vector3::Transform(worldPoints.first, local.Invert());
-	Vector3 end = Vector3::Transform(worldPoints.second, local.Invert());
+	Vector3 start = Vector3::Transform(worldPoints.first, localInv);
+	Vector3 end = Vector3::Transform(worldPoints.second, localInv);
 
-	Vector3 radVec = { radius, radius, radius };
+	// ボックスへの最近点を求める
+	Vector3 nearStart = ClosedPointOnAABB(size, start), nearGoal = ClosedPointOnAABB(size, end);
 
-	// 拡大したAABBの作成
-	Vector3 min = - size - radVec, max = size + radVec;
-	Vector3 borderMin = -size, borderMax = size;
+	// ワールド座標系へ戻す
+	Vector3 wStart = Vector3::Transform(nearStart, local), wGoal = Vector3::Transform(nearGoal, local);
 
-	// 線分と拡大AABBとの衝突範囲を算出
+	// ベクトルを作成
+	Vector3 vStart = wStart - worldPoints.first, vGoal = wGoal - worldPoints.second;
 
-	Vector3 dir = end - start;
-	 
-	// どのエリアに衝突しているかを調べる
-	float tx[4] = {		// x成分
-		(min.x - start.x) / dir.x,
-		(borderMin.x - start.x) / dir.x,
-		(borderMax.x - start.x) / dir.x,
-		(max.x - start.x) / dir.x};
-	// x成分の傾きが0付近だった場合
-	if (abs(dir.x) < 0.00001f){
-		if (start.x < min.x || start.x > max.x){
-			tx[0] = -1, tx[1] = -1, tx[2] = -1, tx[3] = -1;
-		}
-		else {
-			if (start.x < borderMin.x)		{ tx[0] = 0, tx[1] = 1, tx[2] = 1, tx[3] = 1; }
-			else if (start.x < borderMax.x)	{ tx[0] = 0, tx[1] = 0, tx[2] = 1, tx[3] = 1; }
-			else							{ tx[0] = 0, tx[1] = 0, tx[2] = 0, tx[3] = 1; }
-		}
-	}
-	float ty[4] = {		// y成分
-		(min.y - start.y) / dir.y,
-		(borderMin.y - start.y) / dir.y,
-		(borderMax.y - start.y) / dir.y,
-		(max.y - start.y) / dir.y};
-	// y成分の傾きが0付近だった場合
-	if (abs(dir.y) < 0.00001f) {
-		if (start.y < min.y || start.y > max.y) {
-			ty[0] = -1, ty[1] = -1, ty[2] = -1, ty[3] = -1;
-		}
-		else {
-			if (start.y < borderMin.y) { ty[0] = 0, ty[1] = 1, ty[2] = 1, ty[3] = 1; }
-			else if (start.y < borderMax.y) { ty[0] = 0, ty[1] = 0, ty[2] = 1, ty[3] = 1; }
-			else { ty[0] = 0, ty[1] = 0, ty[2] = 0, ty[3] = 1; }
-		}
-	}
-	float tz[4] = {		// z成分
-		(min.z - start.z) / dir.z,
-		(borderMin.z - start.z) / dir.z,
-		(borderMax.z - start.z) / dir.z,
-		(max.z - start.z) / dir.z};
-	// z成分の傾きが0付近だった場合
-	if (abs(dir.z) < 0.00001f) {
-		if (start.z < min.z || start.z > max.z) {
-			tz[0] = -1, tz[1] = -1, tz[2] = -1, tz[3] = -1;
-		}
-		else {
-			if (start.z < borderMin.z) { tz[0] = 0, tz[1] = 1, tz[2] = 1, tz[3] = 1; }
-			else if (start.z < borderMax.z) { tz[0] = 0, tz[1] = 0, tz[2] = 1, tz[3] = 1; }
-			else { tz[0] = 0, tz[1] = 0, tz[2] = 0, tz[3] = 1; }
+	// 正規化
+	Vector3 nvStart = vStart, nvGoal = vGoal;
+	nvStart.Normalize(), nvGoal.Normalize();
+
+	// このベクトルに対して判定
+
+	// Start
+	if (vStart.LengthSquared() > 0.0001f) {
+		lA = abs(nvStart.Dot(halfLine)) + radius;
+		lB = abs(nvStart.Dot(aX)) + abs(nvStart.Dot(aY)) + abs(nvStart.Dot(aZ));
+		l = abs(nvStart.Dot(interval));
+		if (lA + lB < l) return false;
+		if ((lA + lB) - l < minOverLap)
+		{
+			minOverLap = (lA + lB) - l;
+			minAxis = nvStart;
 		}
 	}
 
-	using namespace MyMath;
-
-	// 最短ベクトル
-	float minLenSq = FLT_MAX; // 距離比較用
-	Vector3 pS, pB;
-
-	bool hit = false;
-
-	// 共通部分を調べる
-	for (int ix = 0; ix < 3; ++ix) {
-		Range rangeX = CommonPart(Range(tx[ix], tx[ix + 1], true), Range(0, 1));
-		if (rangeX.IsNull()) continue; // Xの時点で外れていればスキップ
-
-		for (int iy = 0; iy < 3; ++iy) {
-			Range rangeY = CommonPart(rangeX, Range(ty[iy], ty[iy + 1], true));
-			if (rangeY.IsNull()) continue; // XYの時点で外れていればスキップ
-
-			for (int iz = 0; iz < 3; ++iz) {
-				Range rangeZ = CommonPart(rangeY, Range(tz[iz], tz[iz + 1], true));
-				if (rangeZ.IsNull()) continue;
-
-				// x, y, zでの共通範囲が存在した場合
-
-				// エリア別の衝突チェック
-				Vector3 outSeg, outBox;
-				if (CheckArea(ix, iy, iz, start, end, rangeZ.Min(), rangeZ.Max(), size, radius, outSeg, outBox)) hit = true;
-				if (hit && !info) return true;
-
-				if (hit) {
-					Vector3 currentVec = (outBox - outSeg);
-					float currentLenSq = currentVec.LengthSquared();
-					if (currentLenSq < minLenSq) {
-						minLenSq = currentLenSq;
-						pS = outSeg, pB = outBox;
-					}
-				}
-			}
+	// Goal
+	if (vGoal.LengthSquared() > 0.0001f) {
+		lA = abs(nvGoal.Dot(halfLine)) + radius;
+		lB = abs(nvGoal.Dot(aX)) + abs(nvGoal.Dot(aY)) + abs(nvGoal.Dot(aZ));
+		l = abs(nvGoal.Dot(interval));
+		if (lA + lB < l) return false;
+		if ((lA + lB) - l < minOverLap)
+		{
+			minOverLap = (lA + lB) - l;
+			minAxis = nvGoal;
 		}
 	}
 
-	// 衝突時
-	if (hit && info)
+	// 全ての分離軸で衝突していれば
+
+	// 衝突情報が必要な場合
+	if (info)
 	{
-		// ワールド座標系に変換
-		Vector3 wpS = Vector3::Transform(pS, local);
-		Vector3 wpB = Vector3::Transform(pB, local);
-
-		// 衝突情報の保存
-		Vector3 diff = wpB - wpS;
-		float dist = diff.Length();
-
-		if (dist > 0.0001f) {
-			info->hitDir = diff / dist;
+		// minAxisがAからBを指すように調整
+		// DotがプラスならすでにBの方向を向いている
+		if (minAxis.Dot(interval) > 0.0f)
+		{
+			minAxis *= -1.0f;
 		}
-		else {
-			info->hitDir = Vector3::Up; // 重なりすぎている時は真上に逃がす
-		}
-		info->hitLen = radius - dist;
+
+		info->hitDir = minAxis;
+		info->hitLen = minOverLap;
 		info->own = col1->GetOwn();
 		info->target = col2->GetOwn();
 	}
 
-	return hit;
+	return true;
 }
 
 bool CheckHit(BoxCollider* colA, BoxCollider* colB, HitInfomation* info)

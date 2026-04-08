@@ -49,9 +49,9 @@ public:
     //-----------------------------------------------------
     // ê∂ê¨ / îjä¸
     //-----------------------------------------------------
-    SphereCollider(GameObject* own)
-        : BaseCollider(own, ColliderType::Sphere, SUB_COLLIDER_SPHERE, false)
-        , m_radius{ 1 }
+    SphereCollider(GameObject* own, float radius = 0.5f, DirectX::SimpleMath::Vector3 pos = {0, 0, 0})
+        : BaseCollider(own, ColliderType::Sphere, SUB_COLLIDER_SPHERE, false, pos)
+        , m_radius{ radius }
         , m_worldRadius{ 1 }
     {
     };

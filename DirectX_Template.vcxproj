@@ -188,7 +188,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\CollideManager.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\CollideManager.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\HitInfomation\HitInfomation.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.h" />
@@ -222,19 +222,21 @@
     <ClInclude Include="GameLib\GameObject\ObjectManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameLib\GameObject\Components\RigidBody\RigidBody.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\PhysicsManager.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
     <ClInclude Include="Game\TestScene.h" />
+    <ClInclude Include="Game\TestObjects\TestSphere.h" />
+    <ClInclude Include="Game\TestObjects\WallObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.cpp" />
     <ClCompile Include="GameLib\GameObject\Camera\Camera.cpp" />
     <ClCompile Include="GameLib\GameObject\Camera\RayCast.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\CollideManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Managers\CollideManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.cpp" />
@@ -263,6 +265,9 @@
     <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
     <ClCompile Include="Game\TestScene.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\RigidBody\RigidBody.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Managers\PhysicsManager.cpp" />
+    <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
+    <ClCompile Include="Game\TestObjects\WallObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

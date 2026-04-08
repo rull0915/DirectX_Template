@@ -38,9 +38,9 @@ void SphereCollider::DebugDraw(int color) const
 	MyRenderer::SetWorld(world);
 
 	float rad = GetRadius();
-	MyRenderer::DrawCircle({ 0, 0, 0 }, { 0, 1, 0 }, rad, 32, color, false);
-	MyRenderer::DrawCircle({ 0, 0, 0 }, { 1, 0, 0 }, rad, 32, color, false);
-	MyRenderer::DrawCircle({ 0, 0, 0 }, { 0, 0, 1 }, rad, 32, color, false);
+	MyRenderer::DrawCircle({ 0, 0, 0 }, { 0, 1, 0 }, rad, 16, color, false);
+	MyRenderer::DrawCircle({ 0, 0, 0 }, { 1, 0, 0 }, rad, 16, color, false);
+	MyRenderer::DrawCircle({ 0, 0, 0 }, { 0, 0, 1 }, rad, 16, color, false);
 
 	MyRenderer::SetWorld(DirectX::SimpleMath::Matrix::Identity);
 }

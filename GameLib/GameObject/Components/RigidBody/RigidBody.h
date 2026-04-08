@@ -20,6 +20,7 @@
 // 前方宣言
 //====================================================//
 class GameObject;
+class Transform;
 
 //====================================================//
 // クラス宣言
@@ -39,11 +40,17 @@ private:
     // メンバ変数
     //-----------------------------------------------------
     
+    // トランスフォームポインタ
+    Transform* m_pTransform;
+
     // 質量
     float m_mass, m_invMass;    // 質量 / 質量の逆数
 
     // 速度/加速度
     DirectX::SimpleMath::Vector3 m_velocity, m_acceleration;
+
+    // かかっている力
+    DirectX::SimpleMath::Vector3 m_force;
 
     // 係数
     float m_friction;       // 摩擦
@@ -66,19 +73,40 @@ public:
     // 公開関数
     //-----------------------------------------------------
 
+    void Integrate(float elapsedTime);
+
+    void AddForce(DirectX::SimpleMath::Vector3 vec)
+    {
+        m_force += vec;
+    }
+
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
 
     float GetMass() const { return m_mass; }
+    float GetInvMass() const { return m_invMass; }
     bool IsStatic() const { return m_isStatic; }
+    bool IsUseGravity() const { return m_useGravity; }
+    DirectX::SimpleMath::Vector3 GetForce() const { return m_force; }
+    DirectX::SimpleMath::Vector3 GetVelocity() const { return m_velocity; }
+    DirectX::SimpleMath::Vector3 GetAcceleration() const { return m_acceleration; }
+    float GetFriction() const { return m_friction; }
+    float GetRestitution() const { return m_restitution; }
 
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
 
     void SetMass(float mass) { m_mass = mass; }
+    void SetInvMass(float m) { m_invMass = m; }
     void SetStatic(bool frag) { m_isStatic = frag; }
+    void SetUseGravity(bool frag) { m_useGravity = frag; }
+    void SetForce(DirectX::SimpleMath::Vector3 f) { m_force = f; }
+    void SetVelocity(DirectX::SimpleMath::Vector3 v) { m_velocity = v; }
+    void SetAcceleration(DirectX::SimpleMath::Vector3 a) { m_acceleration = a; }
+    void SetFriction(float f) { m_friction = f; }
+    void SetRestitution(float r) { m_restitution = r; }
 
 private:
 

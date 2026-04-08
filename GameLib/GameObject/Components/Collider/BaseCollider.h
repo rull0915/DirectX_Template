@@ -98,7 +98,7 @@ public:
     //-----------------------------------------------------
     // ê∂ê¨ / îjä¸
     //-----------------------------------------------------
-    BaseCollider(GameObject* own, ColliderType type, int ID, bool isMain);
+    BaseCollider(GameObject* own, ColliderType type, int ID, bool isMain, DirectX::SimpleMath::Vector3 center = { 0, 0, 0 });
 
     virtual ~BaseCollider();
 

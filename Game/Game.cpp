@@ -6,7 +6,6 @@
 #include "Game.h"
 
 #include "GameLib/Resources/ResourceManager.h"
-#include "GameLib/GameObject/Components/Collider/CollideManager.h"
 
 #include "GameLib/GameObject/ObjectManager.h"
 
@@ -100,13 +99,15 @@ void Game::Update(DX::StepTimer const& timer)
     KeyInput::KeyUpdate();
     MouseInput::MouseUpdate();
 
+    // デバッグ用の一時停止処理
+    static bool stop = false;
+    if (KeyInput::GetKeyDown(DirectX::Keyboard::Keys::F1)) stop = !stop;
+
+    if (stop) return;
+
     // 各シーンの更新
     ObjectManager::Instance().Update(elapsedTime);
     m_sceneManager.Update(elapsedTime);
-
-
-    // コライダーの衝突判定
-    CollideManager::Instance().CheckHitAll();
 }
 #pragma endregion
 

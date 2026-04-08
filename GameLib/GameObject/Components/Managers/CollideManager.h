@@ -17,8 +17,8 @@
 
 #include <map>
 
-#include "BaseCollider.h"
-#include "CheckHit/CheckHit.h"
+#include "../RigidBody/RigidBody.h"
+#include "../Collider/CheckHit/CheckHit.h"
 
 //====================================================//
 // ‘O•ûéŒ¾

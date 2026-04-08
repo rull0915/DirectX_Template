@@ -34,6 +34,12 @@ namespace Random
 
         return die(mt);
     }
+    float GetFloat(float min, float max)
+    {
+        std::uniform_real_distribution<float> die{ min, max };
+
+        return die(mt);
+    }
     bool GetBool(float pct)
     {
         std::bernoulli_distribution die{ pct };

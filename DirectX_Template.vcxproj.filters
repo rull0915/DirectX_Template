@@ -26,7 +26,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\CollideManager.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\CollideManager.h" />
     <ClInclude Include="GameLib\GameMath\Easing.h" />
     <ClInclude Include="GameLib\GameMath\GameMath.h" />
     <ClInclude Include="GameLib\GameMath\Range.h" />
@@ -58,6 +58,9 @@
     <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.h" />
     <ClInclude Include="GameLib\GameObject\Components\RigidBody\RigidBody.h" />
     <ClInclude Include="GameLib\GameObject\ObjectManager.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\PhysicsManager.h" />
+    <ClInclude Include="Game\TestObjects\TestSphere.h" />
+    <ClInclude Include="Game\TestObjects\WallObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -68,7 +71,7 @@
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\CollideManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Managers\CollideManager.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
     <ClCompile Include="GameLib\Resources\ResourceManager.cpp" />
@@ -90,9 +93,11 @@
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\RigidBody\RigidBody.cpp" />
     <ClCompile Include="GameLib\GameObject\ObjectManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Managers\PhysicsManager.cpp" />
+    <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
+    <ClCompile Include="Game\TestObjects\WallObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -69,8 +69,8 @@ public:
     //-----------------------------------------------------
     // ê∂ê¨ / îjä¸
     //-----------------------------------------------------
-    CapsuleCollider(GameObject* own, float height = 1.0f, float radius = 0.5f, AxisType type = AxisType::Y)
-        : BaseCollider(own, ColliderType::Capsule, SUB_COLLIDER_CAPSULE, false)
+    CapsuleCollider(GameObject* own, float height = 1.0f, float radius = 0.5f, AxisType type = AxisType::Y, DirectX::SimpleMath::Vector3 pos = { 0, 0, 0 })
+        : BaseCollider(own, ColliderType::Capsule, SUB_COLLIDER_CAPSULE, false, pos)
         , m_lineDir{ type }
         , m_capsuleHeight{ height }
         , m_radius{ radius }

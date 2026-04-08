@@ -137,167 +137,18 @@ static float ClosedSegmentToSegment(const Vector3& p1, const Vector3& p2, const 
     }
 }
 
+static Vector3 ClosedPointOnAABB(const Vector3& halfSize, const Vector3 point)
+{
+    Vector3 nearPoint = {
+    MyMath::Clamp(point.x, -halfSize.x, halfSize.x),
+    MyMath::Clamp(point.y, -halfSize.y, halfSize.y),
+    MyMath::Clamp(point.z, -halfSize.z, halfSize.z)
+    };
+
+    return nearPoint;
+}
+
 inline static float LengthSegmentOnSeparateAxis(const Vector3& target, const Vector3& x, const Vector3& y, const Vector3& z)
 {
     return abs(target.Dot(x)) + abs(target.Dot(y)) + abs(target.Dot(z));
-}
-
-static bool CheckArea(int idX, int idY, int idZ, Vector3 start, Vector3 end, float tMin, float tMax, Vector3 size, float radius, Vector3& outSeg, Vector3& outBox)
-{
-    if (idX < 0 || idX > 2 || idY < 0 || idY > 2 || idZ < 0 || idZ > 2) return false;
-
-    // 中心の場合
-    if (idX == 1 && (idY == 1 && idZ == 1))
-    {
-        // 線分の中点
-        Vector3 center = (start + end) / 2;
-
-        // X軸の判定：右の壁か左の壁か
-        Vector3 distToWall, sign;
-
-        distToWall.x = size.x - abs(center.x); // 壁までの最短距離
-        sign.x = (center.x >= 0) ? 1.0f : -1.0f; // どちら側の壁か（法線の向き）
-
-        distToWall.y = size.y - abs(center.y);
-        sign.y = (center.y >= 0) ? 1.0f : -1.0f;
-
-        distToWall.z = size.z - abs(center.z);
-        sign.z = (center.z >= 0) ? 1.0f : -1.0f;
-
-        // 3つの軸の中で、最も距離が短い（＝脱出しやすい）軸を探す
-        float minDist = distToWall.x;
-        Vector3 localNormal = { sign.x, 0, 0 };
-
-        if (distToWall.y < minDist) {
-            minDist = distToWall.y;
-            localNormal = { 0, sign.y, 0 };
-        }
-        if (distToWall.z < minDist) {
-            minDist = distToWall.z;
-            localNormal = { 0, 0, sign.z };
-        }
-
-        // 最終的な押し戻しベクトル
-        outSeg = center;
-        outBox = center + localNormal * (minDist * radius);
-
-        return true;
-    }
-
-    // --- 面の場合 ---
-    // (idX, idY, idZ のうち 2つが 1 である状態)
-    int centers = (idX == 1) + (idY == 1) + (idZ == 1);
-    if (centers == 2)
-    {
-        Vector3 faceNormal(0, 0, 0);
-        float wallPos = 0;
-
-        // どの軸の面かを特定
-        if (idX != 1) {
-            faceNormal.x = (idX == 0) ? -1.0f : 1.0f;
-            wallPos = size.x * faceNormal.x;
-        }
-        else if (idY != 1) {
-            faceNormal.y = (idY == 0) ? -1.0f : 1.0f;
-            wallPos = size.y * faceNormal.y;
-        }
-        else if (idZ != 1) {
-            faceNormal.z = (idZ == 0) ? -1.0f : 1.0f;
-            wallPos = size.z * faceNormal.z;
-        }
-
-        // 線分を面の範囲（size）でクランプして、面上の最近点を探す
-        // 例：X面なら、startとendのY, Zをボックスの範囲内に収める
-        Vector3 p1 = start + (end - start) * tMin;
-        Vector3 p2 = start + (end - start) * tMax;
-
-        // p1, p2 のうち、より「壁の外側」に近い方、あるいはめり込んでいる方を選ぶ
-        // 面の法線方向の距離を比較
-        float d1 = 0, d2 = 0;
-        if (idX != 1) {
-            d1 = abs(p1.x - wallPos);
-            d2 = abs(p2.x - wallPos);
-        }
-        else if (idY != 1) {
-            d1 = abs(p1.y - wallPos);
-            d2 = abs(p2.y - wallPos);
-        }
-        else if (idZ != 1) {
-            d1 = abs(p1.z - wallPos);
-            d2 = abs(p2.z - wallPos);
-        }
-
-        // より壁に近い（または外に出ている）点を選択
-        outSeg = (d1 < d2) ? p1 : p2;
-
-        // 面上の最近点（outSegをその平面に投影したもの）
-        outBox = outSeg;
-        if (idX != 1) outBox.x = wallPos;
-        else if (idY != 1) outBox.y = wallPos;
-        else if (idZ != 1) outBox.z = wallPos;
-
-        return true;
-    }
-
-    // 辺の場合
-    if (idX == 1 || idY == 1 || idZ == 1)
-    {
-        // 辺の2点を決定
-        Vector3 aStart, aEnd;
-        switch (idX)
-        {
-        case 0: aStart.x = -size.x, aEnd.x = -size.x; break;
-        case 1: aStart.x = -size.x, aEnd.x = size.x; break;
-        case 2: aStart.x = size.x, aEnd.x = size.x; break;
-        }
-        switch (idY)
-        {
-        case 0: aStart.y = -size.y, aEnd.y = -size.y; break;
-        case 1: aStart.y = -size.y, aEnd.y = size.y; break;
-        case 2: aStart.y = size.y, aEnd.y = size.y; break;
-        }
-        switch (idZ)
-        {
-        case 0: aStart.z = -size.z, aEnd.z = -size.z; break;
-        case 1: aStart.z = -size.z, aEnd.z = size.z; break;
-        case 2: aStart.z = size.z, aEnd.z = size.z; break;
-        }
-
-        Vector3 outA, outB;
-
-        // 線分同士の最短距離が半径以下かどうかを返す
-        float lenSq = ClosedSegmentToSegment(start, end, aStart, aEnd, outA, outB);
-        outSeg = outA, outBox = outB;
-
-        return lenSq <= radius * radius;
-    }
-
-    // 点の場合
-    
-    // 点の座標を決定
-    Vector3 point;
-    
-    switch (idX)
-    {
-    case 0: point.x = -size.x; break;
-    case 2: point.x = size.x; break;
-    default: point.x = 0;      break;
-    }
-    switch (idY)
-    {
-    case 0: point.y = -size.y; break;
-    case 2: point.y = size.y; break;
-    default: point.y = 0;      break;
-    }
-    switch (idZ)
-    {
-    case 0: point.z = -size.z; break;
-    case 2: point.z = size.z; break;
-    default: point.z = 0;      break;
-    }
-
-    Vector3 nearP = ClosestPointOnSegment(start, end, point);
-    outSeg = nearP, outBox = point;
-
-    return (nearP - point).LengthSquared() <= radius * radius;
 }

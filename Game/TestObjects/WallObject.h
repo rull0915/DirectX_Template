@@ -1,12 +1,12 @@
 //====================================================//
-// ファイル名   : TestScene.h
+// ファイル名   : WallObject.h
 // 作成者       : Hoshino Ryunosuke
-// 作成日       : 2026/04/03
+// 作成日       : 2026/04/08
 //
-// 概要 :
+// 概要 : 壁オブジェクトクラス
 //
 // 更新履歴 :
-// 2026/04/03 新規作成
+// 2026/04/08 新規作成
 //====================================================//
 
 #pragma once
@@ -14,21 +14,17 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include "GameLib/Scene/Scene.h"
-
-#include "GameLib/GameObject/Camera/Camera.h"
-
-#include "TestObjects/CubeObject.h"
+#include "GameLib/GameObject/GameObject.h"
 
 //====================================================//
 // 前方宣言
 //====================================================//
-class Game;
+
 
 //====================================================//
 // クラス宣言
 //====================================================//
-class TestScene : public Scene
+class WallObject : public GameObject
 {
 private:
 
@@ -41,39 +37,26 @@ private:
     // メンバ変数
     //-----------------------------------------------------
 
-    // このシーンを含むゲームオブジェクトへのポインタ
-    Game* m_pGame;
-
-    Camera m_testCamera;
-
-    std::vector<GameObject*> m_objects;
-
 public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    TestScene(Game* pGame);
-    ~TestScene();
+    WallObject(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::Vector3 end);
+    ~WallObject() = default;
 
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-
-    // 初期化関数
     void Initialize() override;
 
-    // 更新関数
     void Update(float elapsedTime) override;
 
-    // 描画関数
     void Render() override;
 
-    // 終了関数
     void Finalize() override;
 
-    // カメラの移動
-    void CameraMove(float elapsedTime);
+    void OnCollision(BaseCollider* col) override;
 
     //-----------------------------------------------------
     // ゲッター
