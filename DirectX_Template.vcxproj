@@ -200,6 +200,9 @@
     <ClInclude Include="GameLib\GameMath\GameMath.h" />
     <ClInclude Include="GameLib\GameMath\Range.h" />
     <ClInclude Include="GameLib\GameObject\Components\Components.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\Cell.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\TreeManager.h" />
     <ClInclude Include="GameLib\GameObject\GameObject.h" />
     <ClInclude Include="GameLib\Input\KeyInput.h" />
     <ClInclude Include="GameLib\Input\MouseInput.h" />
@@ -240,6 +243,7 @@
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.cpp" />
     <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />

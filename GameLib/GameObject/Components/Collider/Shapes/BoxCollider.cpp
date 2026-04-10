@@ -3,16 +3,15 @@
 
 #include "GameLib/MyRenderer.h"
 
+using namespace DirectX;
+
 void BoxCollider::UpdateCache() const
 {
-    // 変化フラグオフなら
-    if (!m_isDirty) return;
-
     // ワールドの拡大率を取得
-    DirectX::SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
+    SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
 
     // ----- 中心座標の更新 ----- //
-    m_worldCenterPos = DirectX::SimpleMath::Vector3::Transform(m_localCenterPos, m_pTransform->GetWorldMatrix());
+    m_worldCenterPos = SimpleMath::Vector3::Transform(m_localCenterPos, m_pTransform->GetWorldMatrix());
 
     // ----- 各軸の更新 ----- //
     m_cache.xAxis = m_pTransform->GetRight();
@@ -23,41 +22,59 @@ void BoxCollider::UpdateCache() const
     m_cache.scale = m_localSize * worldScale;
 
     // ----- AABBの更新 ----- //
-    DirectX::SimpleMath::Matrix worldRotation = DirectX::SimpleMath::Matrix::CreateFromQuaternion(m_pTransform->GetWorldRotation());
+    SimpleMath::Matrix worldRotation = SimpleMath::Matrix::CreateFromQuaternion(m_pTransform->GetWorldRotation());
 
-    DirectX::SimpleMath::Vector3 h = m_cache.scale * 0.5f;
+    SimpleMath::Vector3 h = m_cache.scale * 0.5f;
 
     float ex = abs(m_cache.xAxis.x * h.x) + abs(m_cache.yAxis.x * h.y) + abs(m_cache.zAxis.x * h.z);
     float ey = abs(m_cache.xAxis.y * h.x) + abs(m_cache.yAxis.y * h.y) + abs(m_cache.zAxis.y * h.z);
     float ez = abs(m_cache.xAxis.z * h.x) + abs(m_cache.yAxis.z * h.y) + abs(m_cache.zAxis.z * h.z);
 
-    DirectX::SimpleMath::Vector3 extent(ex, ey, ez);
+    SimpleMath::Vector3 extent(ex, ey, ez);
 
     // extentからmin maxを計算
     m_boundingBox = AABB(m_worldCenterPos - extent, m_worldCenterPos + extent);
 
     // ----- ローカル座標行列の更新 ----- //
-    m_cache.localMatrix = m_pTransform->GetWorldRotationMatrix() * DirectX::SimpleMath::Matrix::CreateTranslation(m_worldCenterPos);
+    m_cache.localMatrix = m_pTransform->GetWorldRotationMatrix() * SimpleMath::Matrix::CreateTranslation(m_worldCenterPos);
 
-    m_cache.localMatrixInverse = DirectX::SimpleMath::Matrix::CreateTranslation(-m_worldCenterPos) * m_pTransform->GetWorldRotationMatrix().Transpose();
+    m_cache.localMatrixInverse = SimpleMath::Matrix::CreateTranslation(-m_worldCenterPos) * m_pTransform->GetWorldRotationMatrix().Transpose();
 
     // フラグのリセット
     m_isDirty = false;
+    m_isChanged = true;
 }
 
 void BoxCollider::DebugDraw(int color) const
 {
     // ワールド行列の算出(Rot,Pos)
-    DirectX::SimpleMath::Vector3 pos = GetWorldCenterPos();
-    DirectX::SimpleMath::Quaternion rot = m_pTransform->GetWorldRotation();
+    SimpleMath::Vector3 pos = GetWorldCenterPos();
+    SimpleMath::Quaternion rot = m_pTransform->GetWorldRotation();
 
-    DirectX::SimpleMath::Matrix world = DirectX::SimpleMath::Matrix::CreateFromQuaternion(rot) * DirectX::SimpleMath::Matrix::CreateTranslation(pos);
+    SimpleMath::Matrix world = SimpleMath::Matrix::CreateFromQuaternion(rot) * SimpleMath::Matrix::CreateTranslation(pos);
 
-    MyRenderer::SetWorld(world);
+    SimpleMath::Vector3 halfSize = GetHalfSize();
 
-    DirectX::SimpleMath::Vector3 halfSize = GetHalfSize();
+    // PointList
+    std::array<SimpleMath::Vector3, 8> points =
+    {
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3( halfSize.x,  halfSize.y,  halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3(-halfSize.x,  halfSize.y,  halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3(-halfSize.x,  halfSize.y, -halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3( halfSize.x,  halfSize.y, -halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3( halfSize.x, -halfSize.y,  halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3(-halfSize.x, -halfSize.y,  halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3(-halfSize.x, -halfSize.y, -halfSize.z), world),
+        SimpleMath::Vector3::Transform(SimpleMath::Vector3( halfSize.x, -halfSize.y, -halfSize.z), world),
+    };
 
-    MyRenderer::Draw3DBox(-halfSize, halfSize, color, false);
-
-    MyRenderer::SetWorld(DirectX::SimpleMath::Matrix::Identity);
+    std::array<int, 12 * 2> edges =
+    {
+        0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4
+    };
+    
+    for (int i = 0; i < 12; i++)
+    {
+        MyRenderer::DrawLine(points[edges[i * 2]], points[edges[i * 2 + 1]], color);
+    }
 }

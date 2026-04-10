@@ -79,38 +79,38 @@ public:
     // 各軸ベクトルを取得する関数
     DirectX::SimpleMath::Vector3 GetXAxis() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.xAxis;
     }
     DirectX::SimpleMath::Vector3 GetYAxis() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.yAxis;
     }
     DirectX::SimpleMath::Vector3 GetZAxis() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.zAxis;
     }
 
     DirectX::SimpleMath::Vector3 GetSize() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.scale;
     }
     DirectX::SimpleMath::Vector3 GetHalfSize() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.scale * 0.5f;
     }
     DirectX::SimpleMath::Matrix GetLocalMatrix() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.localMatrix;
     }
     DirectX::SimpleMath::Matrix GetLocalMatrixInverse() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_cache.localMatrixInverse;
     }
 

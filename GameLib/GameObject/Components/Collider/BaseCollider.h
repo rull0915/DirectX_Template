@@ -67,8 +67,8 @@ private:
     // メンバ変数
     //-----------------------------------------------------
 
-    // 自身のレイヤー名
-    std::string m_layerName;
+    // 自身のレイヤー
+    int m_layerNum;
 
     // コライダーのタイプ
     ColliderType m_type;
@@ -86,6 +86,9 @@ protected:
 
     // トリガーフラグ
     bool m_isTrigger;
+
+    // 変更済みフラグ
+    mutable bool m_isChanged;
 
     // 値が変更されているかのフラグ
     mutable bool m_isDirty;
@@ -107,29 +110,35 @@ public:
     //-----------------------------------------------------
     ColliderType GetType() const { return m_type; };
 
-    const std::string& GetLayerName() { return m_layerName; }
+    int GetLayer() const { return m_layerNum; }
 
     // 自身を覆うAABBを取得する関数
-    virtual AABB GetBoundingBox() const
+    inline AABB& GetBoundingBox() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_boundingBox;
     }
 
     // ワールド座標系での中心座標を返す関数
     DirectX::SimpleMath::Vector3 GetWorldCenterPos() const
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_worldCenterPos;
     }
 
     // トリガーフラグ
     bool IsTrigger() const { return m_isTrigger; }
 
+    bool IsChanged() const { return m_isChanged; }
+    bool IsDirty() const { return m_isDirty; }
+
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
-    void SetLayerName(const std::string& name) { m_layerName = name; }
+    void SetLayer(int num) 
+    { 
+        m_layerNum = std::min(num, 99); 
+    }
 
     void SetDirty() { m_isDirty = true; };
 
@@ -140,6 +149,8 @@ public:
     }
 
     void SetTrigger(bool frag) { m_isTrigger = frag; }
+
+    void ResetChangeFrag() { m_isChanged = false; }
 
     //-----------------------------------------------------
     // その他関数

@@ -364,48 +364,47 @@ void MyRenderer::DrawLine(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMat
 
 void MyRenderer::DrawCircle(DirectX::SimpleMath::Vector3 centerPos, DirectX::SimpleMath::Vector3 normal, float radius, int division, int color, bool fillFrag)
 {
-	if (division < 3) return; // 三角形以下はスキップ
+	if (division < 3) return;
 	CheckChange(DrawMode::Primitiv);
 
-	// 法線ベクトルを正規化
-	normal.Normalize();
+	// --- 色の展開 ---
+	float r = static_cast<float>((color >> 16) & 0xFF) / 255.0f;
+	float g = static_cast<float>((color >> 8) & 0xFF) / 255.0f;
+	float b = static_cast<float>((color >> 0) & 0xFF) / 255.0f;
+	SimpleMath::Vector4 col(r, g, b, m_instance.m_alphaValue);
 
-	// 法線に垂直なベクトル U を求める
-	// 法線が真上(0,1,0)に近い場合は別の軸を使う（外積がゼロになるのを防ぐ）
+	// --- 基底ベクトルの計算 ---
+	normal.Normalize();
 	SimpleMath::Vector3 up = (std::abs(normal.y) > 0.9f) ? SimpleMath::Vector3::UnitX : SimpleMath::Vector3::UnitY;
 	SimpleMath::Vector3 vU = normal.Cross(up);
 	vU.Normalize();
-
-	// 3. Uと法線に垂直なベクトル V を求める（これで円の平面が定義される）
 	SimpleMath::Vector3 vV = normal.Cross(vU);
 	vV.Normalize();
 
-	// 4. 円周上の点を計算して線で結ぶ
+	// --- sin/cos のテーブル化 ---
 	float step = XM_2PI / static_cast<float>(division);
-	SimpleMath::Vector3 firstPoint, prevPoint;
 
-	for (int i = 0; i <= division; ++i)
+	SimpleMath::Vector3 prevPoint = centerPos + vU * radius;
+
+	for (int i = 1; i <= division; ++i)
 	{
 		float theta = step * i;
-		// 円周上の座標を算出
+		// ここの cosf, sinf を static な配列からの取得に変えるとさらに速い
 		SimpleMath::Vector3 currentPoint = centerPos + (vU * cosf(theta) + vV * sinf(theta)) * radius;
 
-		if (i > 0)
-		{
-			if (fillFrag)
-			{
-				// 前の点と現在の点と中心座標の三角形を描画
-				DrawTriangle(prevPoint, currentPoint, centerPos, color);
-			}
-			else
-			{
-				// 前の点と現在の点を線で結ぶ
-				DrawLine(prevPoint, currentPoint, color);
-			}
+		if (fillFrag) {
+			m_instance.m_primitiveBatch->DrawTriangle(
+				VertexPositionColor(prevPoint, col),
+				VertexPositionColor(currentPoint, col),
+				VertexPositionColor(centerPos, col)
+			);
 		}
-		else
-		{
-			firstPoint = currentPoint; // 最後に閉じるために保存
+		else {
+			// --- DrawLineを経由せず直接描画 ---
+			m_instance.m_primitiveBatch->DrawLine(
+				VertexPositionColor(prevPoint, col),
+				VertexPositionColor(currentPoint, col)
+			);
 		}
 		prevPoint = currentPoint;
 	}

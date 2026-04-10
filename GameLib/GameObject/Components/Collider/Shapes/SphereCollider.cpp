@@ -5,9 +5,6 @@
 
 void SphereCollider::UpdateCache() const
 {
-	// 変化フラグオフなら
-	if (!m_isDirty) return;
-
 	// ワールドの拡大率を取得
 	DirectX::SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
 
@@ -25,6 +22,7 @@ void SphereCollider::UpdateCache() const
 
 	// フラグのリセット
 	m_isDirty = false;
+	m_isChanged = true;
 }
 
 void SphereCollider::DebugDraw(int color) const
@@ -33,14 +31,8 @@ void SphereCollider::DebugDraw(int color) const
 	DirectX::SimpleMath::Vector3 pos = GetWorldCenterPos();
 	DirectX::SimpleMath::Quaternion rot = m_pTransform->GetWorldRotation();
 
-	DirectX::SimpleMath::Matrix world = DirectX::SimpleMath::Matrix::CreateFromQuaternion(rot) * DirectX::SimpleMath::Matrix::CreateTranslation(pos);
-
-	MyRenderer::SetWorld(world);
-
 	float rad = GetRadius();
-	MyRenderer::DrawCircle({ 0, 0, 0 }, { 0, 1, 0 }, rad, 16, color, false);
-	MyRenderer::DrawCircle({ 0, 0, 0 }, { 1, 0, 0 }, rad, 16, color, false);
-	MyRenderer::DrawCircle({ 0, 0, 0 }, { 0, 0, 1 }, rad, 16, color, false);
-
-	MyRenderer::SetWorld(DirectX::SimpleMath::Matrix::Identity);
+	MyRenderer::DrawCircle(pos, m_pTransform->GetUp(), rad, 16, color, false);
+	MyRenderer::DrawCircle(pos, m_pTransform->GetRight(), rad, 16, color, false);
+	MyRenderer::DrawCircle(pos, m_pTransform->GetForward(), rad, 16, color, false);
 }

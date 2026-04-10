@@ -8,7 +8,7 @@ WallObject::WallObject(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::
 	rid->SetFriction(0.1f);
 	rid->SetStatic(true);
 
-	AddComponent<BoxCollider>()->SetLayerName("Wall");
+	AddComponent<BoxCollider>()->SetLayer(5);
 
 	auto* pTrans = GetComponent<Transform>();
 

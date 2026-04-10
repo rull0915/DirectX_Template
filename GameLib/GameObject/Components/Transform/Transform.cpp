@@ -94,8 +94,6 @@ void Transform::RemoveChildren()
 
 void Transform::UpdateCache() const
 {
-    if (!m_isDirty) return;
-
     using namespace DirectX::SimpleMath;
 
     // 各ワールド成分を親から継承
@@ -126,13 +124,18 @@ void Transform::UpdateCache() const
 /// <returns></returns>
 const DirectX::SimpleMath::Vector3 Transform::GetWorldPosition() const
 {
-    UpdateCache();
+    if (m_pParent)
+    {
+        if (m_isDirty) UpdateCache();
 
-    // 最新のワールド行列を取得
-    auto& world = GetWorldPositionMatrix();
+        // 最新のワールド行列を取得
+        auto& world = GetWorldPositionMatrix();
 
-    // 位置成分を返す
-    return world.Translation();
+        // 位置成分を返す
+        return world.Translation();
+    }
+
+    return m_localPosition;
 }
 
 /// <summary>
@@ -141,10 +144,14 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldPosition() const
 /// <returns></returns>
 const DirectX::SimpleMath::Quaternion Transform::GetWorldRotation() const
 {
-    UpdateCache();
+    if (m_pParent)
+    {
+        if (m_isDirty) UpdateCache();
 
-    // 回転行列からクォータニオンを作る
-    return DirectX::SimpleMath::Quaternion::CreateFromRotationMatrix(m_worldRotationMatrix);
+        // 回転行列からクォータニオンを作る
+        return DirectX::SimpleMath::Quaternion::CreateFromRotationMatrix(m_worldRotationMatrix);
+    }
+    return m_localRotation;
 }
 
 /// <summary>
@@ -153,8 +160,12 @@ const DirectX::SimpleMath::Quaternion Transform::GetWorldRotation() const
 /// <returns></returns>
 const DirectX::SimpleMath::Vector3 Transform::GetWorldEulerAngle() const
 {
-    UpdateCache();
-    return GetWorldRotation().ToEuler();
+    if (m_pParent)
+    {
+        if (m_isDirty) UpdateCache();
+        return GetWorldRotation().ToEuler();
+    }
+    return GetLocalEulerAngle();
 }
 
 /// <summary>
@@ -163,8 +174,12 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldEulerAngle() const
 /// <returns></returns>
 const DirectX::SimpleMath::Vector3 Transform::GetWorldScale() const
 {
-    UpdateCache();
-    return { m_worldScaleMatrix._11, m_worldScaleMatrix._22, m_worldScaleMatrix._33 };
+    if (m_pParent)
+    {
+        if (m_isDirty) UpdateCache();
+        return { m_worldScaleMatrix._11, m_worldScaleMatrix._22, m_worldScaleMatrix._33 };
+    }
+    return m_localScale;
 }
 
 /// <summary>
@@ -173,25 +188,25 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldScale() const
 /// <returns></returns>
 DirectX::SimpleMath::Matrix& Transform::GetWorldMatrix() const
 {
-    UpdateCache();
+    if (m_isDirty) UpdateCache();
     return m_worldMatrix;
 }
 
 DirectX::SimpleMath::Matrix& Transform::GetWorldPositionMatrix() const
 {
-    UpdateCache();
+    if (m_isDirty) UpdateCache();
     return m_worldPositionMatrix;
 }
 
 DirectX::SimpleMath::Matrix& Transform::GetWorldRotationMatrix() const
 {
-    UpdateCache();
+    if (m_isDirty) UpdateCache();
     return m_worldRotationMatrix;
 }
 
 DirectX::SimpleMath::Matrix& Transform::GetWorldScaleMatrix() const
 {
-    UpdateCache();
+    if (m_isDirty) UpdateCache();
     return m_worldScaleMatrix;
 }
 

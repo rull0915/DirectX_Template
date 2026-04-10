@@ -61,6 +61,9 @@
     <ClInclude Include="GameLib\GameObject\Components\Managers\PhysicsManager.h" />
     <ClInclude Include="Game\TestObjects\TestSphere.h" />
     <ClInclude Include="Game\TestObjects\WallObject.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\Cell.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\TreeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -98,6 +101,7 @@
     <ClCompile Include="GameLib\GameObject\Components\Managers\PhysicsManager.cpp" />
     <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
     <ClCompile Include="Game\TestObjects\WallObject.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

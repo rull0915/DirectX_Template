@@ -20,6 +20,8 @@
 #include "../RigidBody/RigidBody.h"
 #include "../Collider/CheckHit/CheckHit.h"
 
+#include "SpaceDivision/TreeManager.h"
+
 //====================================================//
 // 前方宣言
 //====================================================//
@@ -36,11 +38,23 @@ private:
     // メンバ変数
     //-----------------------------------------------------
 
+    // 登録予約中のCollider
+    std::vector<BaseCollider*> m_reserves;
+    std::unordered_set<BaseCollider*> m_removeReserves;
+
     // 管理しているコライダー
     std::vector<BaseCollider*> m_colliders;
+    std::vector<ObjectForTree*> m_treeObjects;
+
+    // 衝突リスト保持用配列
+    unsigned int m_colCount;
+    std::vector<BaseCollider*> m_collideList;
 
     // レイヤー管理
-    std::map<std::pair<std::string, std::string>, bool> m_layer;
+    std::vector<std::vector<bool>> m_layer;
+
+    // 木構造
+    TreeManager m_tree;
 
 private:
 
@@ -48,8 +62,17 @@ private:
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
     CollideManager() 
-        : m_colliders{}
+        : m_reserves{}
+        , m_removeReserves{}
+        , m_colliders{}
+        , m_treeObjects{}
+        , m_collideList{}
+        , m_layer{}
+        , m_tree{ { 64, 64, 64 }, 6 }
+        , m_colCount{ 0 }
     {
+        m_layer.resize(100);
+        for (auto& col : m_layer) col.resize(100);
     };
     ~CollideManager() = default;
 
@@ -65,7 +88,7 @@ public:
     // コライダーの追加
     void AddCollide(BaseCollider* collide)
     {
-        m_colliders.push_back(collide);
+        m_reserves.push_back(collide);
     }
 
     // コライダーの削除
@@ -75,20 +98,34 @@ public:
             std::remove(m_colliders.begin(), m_colliders.end(), collide),
             m_colliders.end()
         );
+        for (auto& oft : m_treeObjects)
+        {
+            if (oft->m_pObject == collide)
+            {
+                std::remove(m_treeObjects.begin(), m_treeObjects.end(), oft);
+                return;
+            }
+        }
     }
 
     /// <summary>
     /// レイヤー同士の衝突の有無を管理する関数
     /// </summary>
-    /// <param name="layerA">レイヤー名</param>
-    /// <param name="layerB">相手のレイヤー名</param>
-    /// <param name="isActive">アクティブ状況</param>
-    void SetCollideActive(const std::string& layerA, const std::string& layerB, bool isActive)
+    void SetCollideActive(int layerA, int layerB, bool isActive)
     {
         // 双方の条件を変更
-        m_layer[std::make_pair(layerA, layerB)] = isActive;
-        m_layer[std::make_pair(layerB, layerA)] = isActive;
+        m_layer[layerA][layerB] = isActive;
+        m_layer[layerB][layerA] = isActive;
     };
+
+    // 登録予約済みのコライダーを追加する関数
+    void AddReserved();
+
+    // 全コライダーの木構造空間での移動
+    void MoveAllColliderOnTree();
+
+    // 衝突リストの作成関数
+    void MakeCollisionList();
 
     // 全コライダーの衝突チェック
     void CheckHitAll();

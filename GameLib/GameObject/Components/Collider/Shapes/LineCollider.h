@@ -55,14 +55,4 @@ public:
     void SetStart(DirectX::SimpleMath::Vector3 start) { m_start = start; }
     void SetEnd(DirectX::SimpleMath::Vector3 end) { m_end = end; }
 
-    AABB GetBoundingBox() const override
-    {
-        return AABB(
-            {
-                std::min(m_start.x, m_end.x), std::min(m_start.y, m_end.y), std::min(m_start.z, m_end.z)
-            },
-            {
-                std::max(m_start.x, m_end.x), std::max(m_start.y, m_end.y), std::max(m_start.z, m_end.z)
-            });
-    };
 };

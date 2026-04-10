@@ -52,8 +52,16 @@ void ObjectManager::Update(float elapsedTime)
 	// リジッドボディの更新
 	PhysicsManager::Instance().Update(elapsedTime);
 
-	// 衝突判定
-	CollideManager::Instance().CheckHitAll();
+	{
+		// 木構造の更新
+		CollideManager::Instance().MoveAllColliderOnTree();
+
+		// 衝突リストの作成
+		CollideManager::Instance().MakeCollisionList();
+
+		// 衝突判定
+		CollideManager::Instance().CheckHitAll();
+	}
 
 	// 死亡オブジェクトの削除
 	RemoveDeadObject();

@@ -5,9 +5,6 @@
 
 void CapsuleCollider::UpdateCache() const
 {
-	// 変化フラグオフなら
-	if (!m_isDirty) return;
-
     // ワールドの拡大率を取得
     DirectX::SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
 
@@ -108,6 +105,7 @@ void CapsuleCollider::UpdateCache() const
 
     // フラグのリセット
     m_isDirty = false;
+    m_isChanged = true;
 }
 
 void CapsuleCollider::DebugDraw(int color) const

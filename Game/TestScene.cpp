@@ -29,16 +29,16 @@ void TestScene::Initialize()
 	m_testCamera.GetComponent<Transform>()->SetLocalPosition({ 0, 5, 15 });
 	m_testCamera.GetComponent<Transform>()->SetLocalEulerAngle({ -PI_F / 12, 0, 0 });
 
-	int ballCount = 1;
+	int ballCount = 100;
 	for (int i = 0; i < ballCount; i++)
 	{
-		SimpleMath::Vector3 pos = { Random::GetFloat(-1.0f, 1.0f), Random::GetFloat(5.0f, 9.0f), Random::GetFloat(-1.0f, 1.0f) };
+		SimpleMath::Vector3 pos = { Random::GetFloat(-2.0f, 2.0f), Random::GetFloat(5.0f, 9.0f), Random::GetFloat(-2.0f, 2.0f) };
 
-		m_objects.push_back(ObjectManager::Instance().Generate<SphereObject>(SimpleMath::Vector3{ pos }));
+		m_objects.push_back(ObjectManager::Instance().Generate<SphereObject>(SimpleMath::Vector3{ pos }, 0.5));
 	}
 
 	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, -2, -10 }, SimpleMath::Vector3{ 10, -1.5, 10 }));
-	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, 10, -10 }, SimpleMath::Vector3{ 10, 10.5, 10 }));
+//	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, 10, -10 }, SimpleMath::Vector3{ 10, 10.5, 10 }));
 	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10.5, -2, -10 }, SimpleMath::Vector3{ -10, 10, 10 }));
 	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  10, -2, -10 }, SimpleMath::Vector3{  10.5, 10, 10 }));
 	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -10, -2, 10 }, SimpleMath::Vector3{ 10, 10, 10.5 }));
@@ -48,7 +48,7 @@ void TestScene::Initialize()
 	obj->GetComponent<Transform>()->SetLocalEulerAngle({ PI_F / 4, PI_F / 4, PI_F / 4 });
 
 	m_objects.push_back(obj);
-	CollideManager::Instance().SetCollideActive("Wall", "Wall", false);
+	CollideManager::Instance().SetCollideActive(5, 5, false);
 }
 
 // çXêVä÷êî 

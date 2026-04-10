@@ -5,7 +5,8 @@ SphereObject::SphereObject(DirectX::SimpleMath::Vector3 pos, float radius)
 {
 	// コンポーネントの追加
 	AddComponent<RigidBody>()->SetRestitution(0.8f);
-	AddComponent<SphereCollider>();
+	AddComponent<RigidBody>()->SetMass(1.0f);
+	AddComponent<BoxCollider>();
 
 	auto* pTrans = GetComponent<Transform>();
 	pTrans->SetLocalPosition( pos );

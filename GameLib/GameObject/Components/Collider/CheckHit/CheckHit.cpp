@@ -501,7 +501,7 @@ bool CheckHit(BoxCollider* colA, BoxCollider* colB, HitInfomation* info)
 
 	// YŽ²
 	lA = LengthSegmentOnSeparateAxis(nbY, aX, aY, aZ);
-	lB = bSize.x;
+	lB = bSize.y;
 	l = abs(nbY.Dot(interval));
 	if (lA + lB < l) return false;
 	if ((lA + lB) - l < minOverLap)
@@ -512,7 +512,7 @@ bool CheckHit(BoxCollider* colA, BoxCollider* colB, HitInfomation* info)
 
 	// ZŽ²
 	lA = LengthSegmentOnSeparateAxis(nbZ, aX, aY, aZ);
-	lB = bSize.x;
+	lB = bSize.z;
 	l = abs(nbZ.Dot(interval));
 	if (lA + lB < l) return false;
 	if ((lA + lB) - l < minOverLap)
@@ -675,15 +675,6 @@ bool CheckHit(BoxCollider* colA, BoxCollider* colB, HitInfomation* info)
 		info->own = colA->GetOwn();
 		info->target = colB->GetOwn();
 	}
-
-	return true;
-}
-
-bool CheckAABB(const AABB& aabb1, const AABB& aabb2)
-{
-	if (aabb1.min.x > aabb2.max.x || aabb2.min.x > aabb1.max.x) return false;
-	if (aabb1.min.y > aabb2.max.y || aabb2.min.y > aabb1.max.y) return false;
-	if (aabb1.min.z > aabb2.max.z || aabb2.min.z > aabb1.max.z) return false;
 
 	return true;
 }

@@ -62,7 +62,7 @@ public:
     //-----------------------------------------------------
     float GetRadius() const 
     {
-        UpdateCache();
+        if(m_isDirty) UpdateCache();
         return m_worldRadius;
     }
 

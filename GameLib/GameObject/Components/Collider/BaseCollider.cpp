@@ -28,6 +28,7 @@ BaseCollider::BaseCollider(GameObject* own, ColliderType type, int ID, bool isMa
 	, m_isTrigger{ false }
 	, m_isDirty{ true }
 	, m_localCenterPos{ center }
+	, m_isChanged{ false }
 {
 	// 自身をマネージャーに登録
 	CollideManager::Instance().AddCollide(this);
@@ -35,10 +36,6 @@ BaseCollider::BaseCollider(GameObject* own, ColliderType type, int ID, bool isMa
 
 BaseCollider::~BaseCollider()
 {
-	int a = 0;
-
-	// 自身をマネージャーから削除
-//	CollideManager::Instance().RemoveCollide(this);
 }
 
 void AABB::DebugDraw(int color) const

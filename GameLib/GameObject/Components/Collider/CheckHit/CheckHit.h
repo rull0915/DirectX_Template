@@ -63,4 +63,11 @@ bool CheckHit(BoxCollider* col1, BoxCollider* col2, HitInfomation* info = nullpt
 /// <summary>
 /// コライダーが持つAABBの衝突判定
 /// </summary>
-bool CheckAABB(const AABB& aabb1, const AABB& aabb2);
+inline bool CheckAABB(const AABB& aabb1, const AABB& aabb2)
+{
+	if (aabb1.min.x > aabb2.max.x || aabb2.min.x > aabb1.max.x) return false;
+	if (aabb1.min.y > aabb2.max.y || aabb2.min.y > aabb1.max.y) return false;
+	if (aabb1.min.z > aabb2.max.z || aabb2.min.z > aabb1.max.z) return false;
+
+	return true;
+}
