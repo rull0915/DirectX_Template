@@ -60,6 +60,10 @@ private:
 
     std::unordered_set<Transform*> m_children; // 子
 
+    // 位置の変更をためておく変数
+    DirectX::SimpleMath::Vector3 m_addCache;
+    bool m_changeCache;
+
 public:
 
     //-----------------------------------------------------
@@ -155,6 +159,23 @@ public:
         SetWorldPosition(GetWorldPosition() + value);
         SetDirty();
     }
+    // キャッシュの値を増やす関数
+    inline void AddCache(const DirectX::SimpleMath::Vector3& value)
+    {    
+        m_addCache += value; 
+        m_changeCache = true;
+    };
+
+    // キャッシュの値を反映させる関数
+    void ReflectCache()
+    {
+        if (!m_changeCache) return; 
+
+        AddWorldPosition(m_addCache);
+        m_addCache = { 0, 0, 0 };
+        m_changeCache = false;
+    }
+
     // 前方向 (Z軸)
     DirectX::SimpleMath::Vector3 GetForward() const {
         auto f = GetWorldMatrix().Forward();

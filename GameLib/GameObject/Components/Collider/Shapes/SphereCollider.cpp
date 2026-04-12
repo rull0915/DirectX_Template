@@ -5,6 +5,8 @@
 
 void SphereCollider::UpdateCache() const
 {
+	if (!m_isDirty) return;
+
 	// ƒ[ƒ‹ƒh‚ÌŠg‘å—¦‚ðŽæ“¾
 	DirectX::SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
 

@@ -181,6 +181,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.h" />
     <ClInclude Include="GameLib\GameObject\Camera\Camera.h" />
     <ClInclude Include="GameLib\GameObject\Camera\RayCast.h" />

@@ -126,8 +126,6 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldPosition() const
 {
     if (m_pParent)
     {
-        if (m_isDirty) UpdateCache();
-
         // 最新のワールド行列を取得
         auto& world = GetWorldPositionMatrix();
 
@@ -146,7 +144,6 @@ const DirectX::SimpleMath::Quaternion Transform::GetWorldRotation() const
 {
     if (m_pParent)
     {
-        if (m_isDirty) UpdateCache();
 
         // 回転行列からクォータニオンを作る
         return DirectX::SimpleMath::Quaternion::CreateFromRotationMatrix(m_worldRotationMatrix);
@@ -162,7 +159,6 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldEulerAngle() const
 {
     if (m_pParent)
     {
-        if (m_isDirty) UpdateCache();
         return GetWorldRotation().ToEuler();
     }
     return GetLocalEulerAngle();
@@ -176,7 +172,6 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldScale() const
 {
     if (m_pParent)
     {
-        if (m_isDirty) UpdateCache();
         return { m_worldScaleMatrix._11, m_worldScaleMatrix._22, m_worldScaleMatrix._33 };
     }
     return m_localScale;
@@ -188,25 +183,21 @@ const DirectX::SimpleMath::Vector3 Transform::GetWorldScale() const
 /// <returns></returns>
 DirectX::SimpleMath::Matrix& Transform::GetWorldMatrix() const
 {
-    if (m_isDirty) UpdateCache();
     return m_worldMatrix;
 }
 
 DirectX::SimpleMath::Matrix& Transform::GetWorldPositionMatrix() const
 {
-    if (m_isDirty) UpdateCache();
     return m_worldPositionMatrix;
 }
 
 DirectX::SimpleMath::Matrix& Transform::GetWorldRotationMatrix() const
 {
-    if (m_isDirty) UpdateCache();
     return m_worldRotationMatrix;
 }
 
 DirectX::SimpleMath::Matrix& Transform::GetWorldScaleMatrix() const
 {
-    if (m_isDirty) UpdateCache();
     return m_worldScaleMatrix;
 }
 

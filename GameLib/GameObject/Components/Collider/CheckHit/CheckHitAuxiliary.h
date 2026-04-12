@@ -81,7 +81,7 @@ static float ClosedSegmentToSegment(const Vector3& p1, const Vector3& p2, const 
     }
 
     // •½s‚Ìê‡
-    if (den < 0.001f)
+    if (den < 0.0001f)
     {
         // p1‚ªÅ‹ß“_‚¾‚Æ‰¼’è
         // “Š‰e”ä—¦ t ‚ğ“àÏ‚©‚çŒvZ

@@ -19,6 +19,8 @@
 
 #include "Cell.h"
 
+#include "GameLib/MyRenderer.h" // テスト用
+
 //====================================================//
 // 前方宣言
 //====================================================//
@@ -135,25 +137,26 @@ public:
     }
 
     // 衝突判定リストを作成する
-    unsigned int GetAllCollisionList(std::vector<BaseCollider*>& ColVect)
+    template <typename TAction>
+    void GetAllCollisionList(TAction action)
     {
-        // リスト（配列）は必ず初期化
-        ColVect.clear();
-
         // ルート空間の存在をチェック
         if (!m_cells[0])
-            return 0;	// 空間が存在していない
+            return;	// 空間が存在していない
+
+        int count = 0, hit = 0;
 
         // ルート空間を処理
-        std::list<BaseCollider*> ColStac;
-        GetCollisionList(0, ColVect, ColStac);
+        std::vector<BaseCollider*> ColStac;
+        GetCollisionList(0, ColStac, action, count, hit);
 
-        // 要素数を返す
-        return static_cast<unsigned int>(ColVect.size());
+        count;
+        hit;
     }
 
     // 衝突判定リストを作成する関数
-    bool GetCollisionList(unsigned int Elem, std::vector<BaseCollider*>& ColVect, std::list<BaseCollider*>& ColStac)
+    template <typename TAction>
+    bool GetCollisionList(unsigned int Elem, std::vector<BaseCollider*>& ColStac, TAction action, int& count, int& hit)
     {
         // 空間内のオブジェクト同士の衝突リスト作成
         ObjectForTree* pObj1 = m_cells[Elem]->GetFirstObject();
@@ -161,28 +164,70 @@ public:
         {
             ObjectForTree* pObj2 = pObj1->m_pPre;
             while (pObj2 != nullptr) {
-                // 衝突リスト作成
-                ColVect.push_back(pObj1->m_pObject);
-                ColVect.push_back(pObj2->m_pObject);
+
+                count++;
+
+                BaseCollider* a = pObj1->m_pObject; 
+                BaseCollider* b = pObj2->m_pObject;
+
                 pObj2 = pObj2->m_pPre;
+
+                // コライダーのアクティブ確認
+                if (!a->m_isActive || !b->m_isActive) continue;
+
+                // コライダーの所有者が同じならスキップ
+                if (a->m_own == b->m_own) continue;
+
+                // コライダーが持つAABBが衝突していなければスキップ
+                AABB aabb1 = a->m_boundingBox, aabb2 = b->m_boundingBox;
+
+                if (aabb1.min.x > aabb2.max.x || aabb2.min.x > aabb1.max.x) continue;
+                if (aabb1.min.y > aabb2.max.y || aabb2.min.y > aabb1.max.y) continue;
+                if (aabb1.min.z > aabb2.max.z || aabb2.min.z > aabb1.max.z) continue;
+
+                hit++;
+
+                // 実行
+                action(a, b);
             }
-            // ② 衝突スタックとの衝突リスト作成
+            // 衝突スタックとの衝突リスト作成
             for (auto& col : ColStac) {
-                ColVect.push_back(pObj1->m_pObject);
-                ColVect.push_back(col);
+
+                count++;
+
+                BaseCollider* a = pObj1->m_pObject;
+                BaseCollider* b = col;
+
+                // コライダーのアクティブ確認
+                if (!a->m_isActive || !b->m_isActive) continue;
+
+                // コライダーの所有者が同じならスキップ
+                if (a->m_own == b->m_own) continue;
+
+                // コライダーが持つAABBが衝突していなければスキップ
+                AABB aabb1 = a->m_boundingBox, aabb2 = b->m_boundingBox;
+
+                if (aabb1.min.x > aabb2.max.x || aabb2.min.x > aabb1.max.x) continue;
+                if (aabb1.min.y > aabb2.max.y || aabb2.min.y > aabb1.max.y) continue;
+                if (aabb1.min.z > aabb2.max.z || aabb2.min.z > aabb1.max.z) continue;
+
+                hit++;
+
+                // 実行
+                action(a, b);
             }
             pObj1 = pObj1->m_pPre;
         }
 
         bool ChildFlag = false;
-        // ③ 子空間に移動
+        // 子空間に移動
         unsigned int ObjNum = 0;
         unsigned int i, NextElem;
         for (i = 0; i < 8; i++) {
             NextElem = Elem * 8 + 1 + i;
             if (NextElem < m_cellCount && m_cells[Elem * 8 + 1 + i]) {
                 if (!ChildFlag) {
-                    // ④ 登録オブジェクトをスタックに追加
+                    // 登録オブジェクトをスタックに追加
                     pObj1 = m_cells[Elem]->GetFirstObject();
                     while (pObj1) {
                         ColStac.push_back(pObj1->m_pObject);
@@ -191,7 +236,7 @@ public:
                     }
                 }
                 ChildFlag = true;
-                GetCollisionList(Elem * 8 + 1 + i, ColVect, ColStac);	// 子空間へ
+                GetCollisionList(Elem * 8 + 1 + i, ColStac, action, count, hit);	// 子空間へ
             }
         }
 
@@ -239,7 +284,7 @@ public:
                 HiLevel = i + 1;    // レベルを更新
         }
         // 片方の番号から自身の所属するレベルでの番号を取得する
-        unsigned int SpaceNum = (maxMorton >> (HiLevel * 3) & 0b111);
+        unsigned int SpaceNum = (maxMorton >> (HiLevel * 3));
 
         // 自分より上位のレベルの空間数を等比数列を使用し取得
         unsigned int AddNum = (m_pow[m_maxLevel - HiLevel] - 1) / 7;

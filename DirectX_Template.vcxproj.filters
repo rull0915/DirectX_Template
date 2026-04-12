@@ -64,6 +64,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.h" />
     <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\Cell.h" />
     <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\TreeManager.h" />
+    <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

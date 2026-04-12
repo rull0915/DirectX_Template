@@ -88,35 +88,30 @@ public:
     // ラインの方向ベクトルを返す関数
     DirectX::SimpleMath::Vector3 GetLineDir() const
     {
-        if(m_isDirty) UpdateCache();
         return m_cache.dir;
     }
 
     // 半径を返す関数
     float GetRadius() const
     {
-        if(m_isDirty) UpdateCache();
         return m_cache.radius;
     }
 
     // カプセルの高さを返す関数
     float GetHeight() const
     {
-        if(m_isDirty) UpdateCache();
         return m_cache.height;
     }
 
     // 線の長さを返す関数
     float GetLineLength() const
     {
-        if(m_isDirty) UpdateCache();
         return m_cache.lineLength;
     }
     
     // Lineを構成する2点を返す関数
     std::pair<DirectX::SimpleMath::Vector3, DirectX::SimpleMath::Vector3> GetPoints() const
     {
-        if(m_isDirty) UpdateCache();
         return m_cache.points;
     }
 

@@ -8,6 +8,8 @@
 //====================================================//
 #include "GameObject.h"
 
+#include "GameLib/GameMath/Color/ColorLib.h"
+
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -22,11 +24,23 @@ GameObject::GameObject()
     , m_isDead{ false }
     , m_debugColor{ 0x00FF00 }
 {
+    m_pTransform->UpdateCache();
 }
 
 void GameObject::BaseUpdate(float elapsedTime)
 {
     m_debugColor = 0x00FF00;
+
+    if (m_pRigidBody)
+    {
+        float mass = m_pRigidBody->GetMass();
+
+        float ratio = (mass / 5.0f) * 0.5f + 0.5f;
+
+        int h = m_pRigidBody->m_isSleep ? 200 : 20;
+
+        m_debugColor = MyColor::HSVToRGB(h, 255, ratio * 255);
+    }
 }
 
 void GameObject::BaseRender()
@@ -60,7 +74,7 @@ void GameObject::CollidersDebugDraw(int color, bool drawBoudingBox)
 void GameObject::BaseOnCollision(BaseCollider* other)
 {
     // 必ず行う処理
-//    m_debugColor = 0xFF0000;
+    // m_debugColor = 0xFF0000;
 
     // 派生クラスの衝突時処理
     OnCollision(other);

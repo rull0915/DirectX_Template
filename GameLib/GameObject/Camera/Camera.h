@@ -58,7 +58,7 @@ private:
 public:
 	Camera(float width, float height);
 
-	void Update();
+	void Update(float elapsedTime) override;
 
 private:
 

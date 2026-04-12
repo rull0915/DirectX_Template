@@ -44,7 +44,7 @@ private:
     // このシーンを含むゲームオブジェクトへのポインタ
     Game* m_pGame;
 
-    Camera m_testCamera;
+    Camera* m_testCamera;
 
     std::vector<GameObject*> m_objects;
 

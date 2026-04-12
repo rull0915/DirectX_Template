@@ -55,6 +55,12 @@ struct AABB
 class BaseCollider : public BaseComponent
 {
     // ----------------------------------------------------
+    // friend指定
+    // ----------------------------------------------------
+    friend class CollideManager;
+    friend class TreeManager;
+
+    // ----------------------------------------------------
     // 定数宣言
     // ----------------------------------------------------
 public:
@@ -115,22 +121,20 @@ public:
     // 自身を覆うAABBを取得する関数
     inline AABB& GetBoundingBox() const
     {
-        if(m_isDirty) UpdateCache();
         return m_boundingBox;
     }
 
     // ワールド座標系での中心座標を返す関数
     DirectX::SimpleMath::Vector3 GetWorldCenterPos() const
     {
-        if(m_isDirty) UpdateCache();
         return m_worldCenterPos;
     }
 
     // トリガーフラグ
     bool IsTrigger() const { return m_isTrigger; }
 
-    bool IsChanged() const { return m_isChanged; }
-    bool IsDirty() const { return m_isDirty; }
+    inline bool IsChanged() const { return m_isChanged; }
+    inline bool IsDirty() const { return m_isDirty; }
 
     //-----------------------------------------------------
     // セッター

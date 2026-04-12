@@ -9,6 +9,7 @@
 #include "BaseCollider.h"
 
 #include "../Managers/CollideManager.h"
+#include "../Managers/SpaceDivision/TreeManager.h"
 
 #include "../../GameObject.h"
 #include "GameLib/MyRenderer.h"

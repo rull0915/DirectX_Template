@@ -5,6 +5,8 @@
 
 void CapsuleCollider::UpdateCache() const
 {
+    if (!m_isDirty) return;
+
     // ƒ[ƒ‹ƒh‚ÌŠg‘å—¦‚ðŽæ“¾
     DirectX::SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
 
@@ -161,11 +163,11 @@ void CapsuleCollider::DebugDraw(int color) const
 
     MyRenderer::DrawArc(p1, v5, v6, rad, color);
     MyRenderer::DrawArc(p1, v7, v8, rad, color);
-    MyRenderer::DrawCircle(p1, v, rad, 32, color, false);
+    MyRenderer::DrawCircle(p1, v, rad, 16, color, false);
 
     MyRenderer::DrawArc(p2, v1, v2, rad, color);
     MyRenderer::DrawArc(p2, v3, v4, rad, color);
-    MyRenderer::DrawCircle(p2, v, rad, 32, color, false);
+    MyRenderer::DrawCircle(p2, v, rad, 16, color, false);
 
     MyRenderer::DrawLine(p1 + v1 * rad, p2 + v1 * rad, color);
     MyRenderer::DrawLine(p1 + v2 * rad, p2 + v2 * rad, color);

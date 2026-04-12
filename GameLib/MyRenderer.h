@@ -15,6 +15,9 @@
 // 自作描画用クラス
 class MyRenderer
 {
+	static const float SinCache16[16];
+	static const float CosCache16[16];
+
 	// ===== メンバ変数宣言 ===== //
 private:
 

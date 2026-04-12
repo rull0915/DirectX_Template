@@ -50,7 +50,7 @@ public:
     static constexpr int TYPE_ID = MAIN_BASE;
     static constexpr bool IS_MAIN = true;
 
-private:
+protected:
 
     //-----------------------------------------------------
     // メンバ変数
@@ -62,6 +62,7 @@ private:
     // アクティブフラグ
     bool m_isActive;
 
+private:
     // 自身のID
     const int m_myID;
     const bool m_isMain;

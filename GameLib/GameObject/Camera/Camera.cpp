@@ -15,7 +15,7 @@ Camera::Camera(float width, float height)
 	UpdateProj();
 }
 
-void Camera::Update()
+void Camera::Update(float elapsedTime)
 {
 	// ビュー行列の更新
 	UpdateView();

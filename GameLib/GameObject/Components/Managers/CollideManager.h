@@ -68,7 +68,7 @@ private:
         , m_treeObjects{}
         , m_collideList{}
         , m_layer{}
-        , m_tree{ { 64, 64, 64 }, 6 }
+        , m_tree{ { 64, 64, 64 }, 4, {0, 28, 0} }
         , m_colCount{ 0 }
     {
         m_layer.resize(100);
@@ -121,12 +121,15 @@ public:
     // 登録予約済みのコライダーを追加する関数
     void AddReserved();
 
+    // 全コライダーのキャッシュ更新
+    void UpdateCaches();
+
     // 全コライダーの木構造空間での移動
     void MoveAllColliderOnTree();
 
-    // 衝突リストの作成関数
-    void MakeCollisionList();
-
     // 全コライダーの衝突チェック
     void CheckHitAll();
+
+    // コライダーの衝突チェック
+    void CheckHitPair(BaseCollider*, BaseCollider*);
 };

@@ -33,6 +33,7 @@ class RigidBody : public BaseComponent
 public:
     static constexpr int TYPE_ID = MAIN_RIGIDBODY;
     static constexpr bool IS_MAIN = true;
+    static constexpr float SLEEP_BORDER = 2.0f;
 
 private:
 
@@ -52,6 +53,13 @@ private:
     // かかっている力
     DirectX::SimpleMath::Vector3 m_force;
 
+    // 前フレームの位置
+    DirectX::SimpleMath::Vector3 m_oldPosition;
+    DirectX::SimpleMath::Vector3 m_nowPosition;
+
+    // 静止している時間
+    float m_stoppingTime;
+
     // 係数
     float m_friction;       // 摩擦
     float m_restitution;    // 反発
@@ -59,6 +67,9 @@ private:
     // フラグ
     bool m_isStatic;    // 固定
     bool m_useGravity;  // 重力の影響
+
+public:
+    bool m_isSleep;     // スリープフラグ
 
 public:
 
@@ -77,6 +88,7 @@ public:
 
     void AddForce(DirectX::SimpleMath::Vector3 vec)
     {
+        if (m_isSleep) return;
         m_force += vec;
     }
 
@@ -98,8 +110,11 @@ public:
     // セッター
     //-----------------------------------------------------
 
-    void SetMass(float mass) { m_mass = mass; }
-    void SetInvMass(float m) { m_invMass = m; }
+    void SetMass(float mass)
+    {
+        m_mass = mass;
+        m_invMass = 1.0f / mass;
+    }
     void SetStatic(bool frag) { m_isStatic = frag; }
     void SetUseGravity(bool frag) { m_useGravity = frag; }
     void SetForce(DirectX::SimpleMath::Vector3 f) { m_force = f; }
@@ -107,6 +122,11 @@ public:
     void SetAcceleration(DirectX::SimpleMath::Vector3 a) { m_acceleration = a; }
     void SetFriction(float f) { m_friction = f; }
     void SetRestitution(float r) { m_restitution = r; }
+
+    void WakeUp() 
+    {
+        m_isSleep = false; 
+    }
 
 private:
 

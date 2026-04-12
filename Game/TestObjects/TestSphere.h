@@ -45,6 +45,8 @@ public:
     SphereObject(DirectX::SimpleMath::Vector3 pos, float radius = 0.5f);
     ~SphereObject() = default;
 
+    Transform* m_pTrans;
+
     //-----------------------------------------------------
     // ŒöŠJŠÖ”
     //-----------------------------------------------------

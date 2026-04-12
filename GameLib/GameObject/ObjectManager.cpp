@@ -38,6 +38,19 @@ void ObjectManager::Update(float elapsedTime)
 {
 	// 予約されているオブジェクトを追加
 	AddReservedObject();
+	
+	// オブジェクトのキャッシュ更新
+	{
+		for (auto& object : m_objects)
+		{
+			object->GetComponent<Transform>()->UpdateCache();	// Transform
+		}
+
+		CollideManager::Instance().UpdateCaches();		// Collider
+	}
+
+	// リジッドボディの更新
+	PhysicsManager::Instance().Update(elapsedTime);
 
 	// 全オブジェクトの更新関数呼び出し
 	for (auto& object : m_objects)
@@ -49,18 +62,27 @@ void ObjectManager::Update(float elapsedTime)
 		object->Update(elapsedTime);
 	}
 
-	// リジッドボディの更新
-	PhysicsManager::Instance().Update(elapsedTime);
+	// オブジェクトのキャッシュ更新
+	{
+		for (auto& object : m_objects)
+		{
+			object->GetComponent<Transform>()->UpdateCache();	// Transform
+		}
+		CollideManager::Instance().UpdateCaches();		// Collider
+	}
 
 	{
 		// 木構造の更新
 		CollideManager::Instance().MoveAllColliderOnTree();
 
-		// 衝突リストの作成
-		CollideManager::Instance().MakeCollisionList();
-
 		// 衝突判定
 		CollideManager::Instance().CheckHitAll();
+
+		// 値の更新
+		for (auto& object : m_objects)
+		{
+			object->GetComponent<Transform>()->ReflectCache();	// Transform
+		}
 	}
 
 	// 死亡オブジェクトの削除

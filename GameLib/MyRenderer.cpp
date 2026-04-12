@@ -6,6 +6,45 @@ using namespace DirectX;
 // é¿ëÃÇÃêÈåæ
 MyRenderer MyRenderer::m_instance;
 
+const float MyRenderer::SinCache16[16] =
+{
+	sinf(PI_F * (0.0f / 8)),
+	sinf(PI_F * (1.0f / 8)),
+	sinf(PI_F * (2.0f / 8)),
+	sinf(PI_F * (3.0f / 8)),
+	sinf(PI_F * (4.0f / 8)),
+	sinf(PI_F * (5.0f / 8)),
+	sinf(PI_F * (6.0f / 8)),
+	sinf(PI_F * (7.0f / 8)),
+	sinf(PI_F * (8.0f / 8)),
+	sinf(PI_F * (9.0f / 8)),
+	sinf(PI_F * (10.0f / 8)),
+	sinf(PI_F * (11.0f / 8)),
+	sinf(PI_F * (12.0f / 8)),
+	sinf(PI_F * (13.0f / 8)),
+	sinf(PI_F * (14.0f / 8)),
+	sinf(PI_F * (15.0f / 8))
+};
+const float MyRenderer::CosCache16[16] =
+{
+	cosf(PI_F * (0.0f / 8)),
+	cosf(PI_F * (1.0f / 8)),
+	cosf(PI_F * (2.0f / 8)),
+	cosf(PI_F * (3.0f / 8)),
+	cosf(PI_F * (4.0f / 8)),
+	cosf(PI_F * (5.0f / 8)),
+	cosf(PI_F * (6.0f / 8)),
+	cosf(PI_F * (7.0f / 8)),
+	cosf(PI_F * (8.0f / 8)),
+	cosf(PI_F * (9.0f / 8)),
+	cosf(PI_F * (10.0f / 8)),
+	cosf(PI_F * (11.0f / 8)),
+	cosf(PI_F * (12.0f / 8)),
+	cosf(PI_F * (13.0f / 8)),
+	cosf(PI_F * (14.0f / 8)),
+	cosf(PI_F * (15.0f / 8))
+};
+
 MyRenderer::MyRenderer()
 	: m_device{}
 	, m_primitiveBatch{}
@@ -389,8 +428,10 @@ void MyRenderer::DrawCircle(DirectX::SimpleMath::Vector3 centerPos, DirectX::Sim
 	for (int i = 1; i <= division; ++i)
 	{
 		float theta = step * i;
-		// Ç±Ç±ÇÃ cosf, sinf Ç static Ç»îzóÒÇ©ÇÁÇÃéÊìæÇ…ïœÇ¶ÇÈÇ∆Ç≥ÇÁÇ…ë¨Ç¢
-		SimpleMath::Vector3 currentPoint = centerPos + (vU * cosf(theta) + vV * sinf(theta)) * radius;
+
+		SimpleMath::Vector3 currentPoint;
+		if (division == 16) currentPoint = centerPos + (vU * CosCache16[i % 16] + vV * SinCache16[i % 16]) * radius;
+		else { currentPoint = centerPos + (vU * cosf(theta) + vV * sinf(theta)) * radius; }
 
 		if (fillFrag) {
 			m_instance.m_primitiveBatch->DrawTriangle(

@@ -7,6 +7,8 @@ using namespace DirectX;
 
 void BoxCollider::UpdateCache() const
 {
+    if (!m_isDirty) return;
+
     // ƒ[ƒ‹ƒh‚ÌŠg‘å—¦‚ðŽæ“¾
     SimpleMath::Vector3 worldScale = m_pTransform->GetWorldScale();
 

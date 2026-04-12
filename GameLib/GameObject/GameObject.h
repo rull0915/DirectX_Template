@@ -136,7 +136,7 @@ T* GameObject::AddComponent(Args&&... args)
 
     else if constexpr (T::TYPE_ID == MAIN_RIGIDBODY)
     {
-        m_pRigidBody = std::make_unique<RigidBody>(this, std::forward<Args>(args)...);
+        if(!m_pRigidBody) m_pRigidBody = std::make_unique<RigidBody>(this, std::forward<Args>(args)...);
 
         return m_pRigidBody.get();
     }
