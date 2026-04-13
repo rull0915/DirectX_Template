@@ -39,14 +39,14 @@ static Vector3 ClosestPointOnSegment(const Vector3& p1, const Vector3& p2, const
     Vector3 w = p - p1;     // 点からp1への方向ベクトル
 
     // 線分の長さの2乗
-    float l2 = v.LengthSquared();
-    if (l2 < 0.0001f) return p1; // 点に近い線分の場合
+    float l = v.LengthSquared();
+    if (l < 0.0001f) return p1; // 点に近い線分の場合
 
     // 投影比率 t を内積から計算
-    float t = w.Dot(v) / l2;
+    float t = w.Dot(v) / l;
 
     // 線分の範囲内にクランプ
-    t = std::max(0.0f, std::min(1.0f, t));
+    t = MyMath::Clamp(t, 0.0f, 1.0f);
 
     // 線分上の最近接点
     return p1 + v * t;

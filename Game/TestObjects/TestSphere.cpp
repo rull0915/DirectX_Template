@@ -7,6 +7,8 @@ SphereObject::SphereObject(DirectX::SimpleMath::Vector3 pos, float radius)
 	AddComponent<RigidBody>()->SetMass(Random::GetFloat(0.5f, 5.0f));
 //	AddComponent<RigidBody>()->SetUseGravity(false);
 
+//	AddComponent<SphereCollider>();
+
 	int rand = Random::Get(0, 2);
 	switch (rand)
 	{

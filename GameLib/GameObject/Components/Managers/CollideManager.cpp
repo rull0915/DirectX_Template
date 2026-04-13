@@ -83,7 +83,7 @@ void CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB)
 	// 指定した2つのレイヤーが衝突しない設定ならスキップ
 	int aLayer = colA->m_layerNum, bLayer = colB->m_layerNum;
 
-	if (!(aLayer < 0 || bLayer < 0) && m_layer[aLayer][bLayer]) return;
+	if (!(aLayer < 0 || bLayer < 0 || aLayer >= 100 || bLayer >= 100) && m_layer[aLayer][bLayer]) return;
 
 	// リジッドボディの有無をチェック
 	RigidBody* aRigid = colA->GetOwn()->GetComponent<RigidBody>();
@@ -95,7 +95,10 @@ void CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB)
 	bool aSleep = (!aRigid || aRigid->m_isSleep);
 	bool bSleep = (!bRigid || bRigid->m_isSleep);
 
-	if (aSleep && bSleep) return;
+	if (aSleep && bSleep)
+	{
+		return;
+	}
 
 	// 衝突情報を取得する変数を用意
 	HitInfomation hit;
@@ -104,8 +107,8 @@ void CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB)
 	bool hasTrigger = colA->m_isTrigger || colB->m_isTrigger;
 
 	// 各オブジェクトが動かないかどうか
-	bool AisStatic = aRigid == nullptr || (aRigid && aRigid->IsStatic());
-	bool BisStatic = bRigid == nullptr || (bRigid && bRigid->IsStatic());
+	bool AisStatic = !aRigid || (aRigid && aRigid->IsStatic());
+	bool BisStatic = !bRigid || (bRigid && bRigid->IsStatic());
 
 	// 衝突時に位置の変動が起こるかどうか
 	bool isStatic = AisStatic && BisStatic;

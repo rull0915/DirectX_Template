@@ -30,6 +30,7 @@ BaseCollider::BaseCollider(GameObject* own, ColliderType type, int ID, bool isMa
 	, m_isDirty{ true }
 	, m_localCenterPos{ center }
 	, m_isChanged{ false }
+	, m_layerNum{ -1 }
 {
 	// 自身をマネージャーに登録
 	CollideManager::Instance().AddCollide(this);

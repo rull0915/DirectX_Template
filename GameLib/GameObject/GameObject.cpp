@@ -37,7 +37,7 @@ void GameObject::BaseUpdate(float elapsedTime)
 
         float ratio = (mass / 5.0f) * 0.5f + 0.5f;
 
-        int h = m_pRigidBody->m_isSleep ? 200 : 20;
+        int h = m_pRigidBody->m_isSleep ? (KeyInput::GetKey(DirectX::Keyboard::Keys::F2) ? 200 : 120) : (KeyInput::GetKey(DirectX::Keyboard::Keys::F2) ? 20 : 120);
 
         m_debugColor = MyColor::HSVToRGB(h, 255, ratio * 255);
     }
@@ -46,6 +46,7 @@ void GameObject::BaseUpdate(float elapsedTime)
 void GameObject::BaseRender()
 {
     CollidersDebugDraw(m_debugColor, false);
+//    CollidersDebugDraw(0x00FF00, false);
 }
 
 void GameObject::BaseFinalize()

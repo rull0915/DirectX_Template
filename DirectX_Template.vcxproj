@@ -181,6 +181,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameLib\Common\ThreadPool.h" />
     <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.h" />
     <ClInclude Include="GameLib\GameObject\Camera\Camera.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="Game\TestObjects\WallObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameLib\Common\ThreadPool.cpp" />
     <ClCompile Include="GameLib\GameObject\Camera\Camera.cpp" />
     <ClCompile Include="GameLib\GameObject\Camera\RayCast.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />

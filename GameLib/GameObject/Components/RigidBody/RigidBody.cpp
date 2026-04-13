@@ -29,11 +29,20 @@ void RigidBody::Integrate(float elapsedTime)
 {
     m_stoppingTime += elapsedTime;
 
-    // 前フレームとの位置を調べる
-    m_oldPosition = m_nowPosition;
-    m_nowPosition = m_pTransform->GetWorldPosition();
+    //// 前フレームとの位置を調べる
+    //m_oldPosition = m_nowPosition;
+    //m_nowPosition = m_pTransform->GetWorldPosition();
 
-    if ((m_nowPosition - m_oldPosition).LengthSquared() >= 0.000001f) m_stoppingTime = 0;
+    //if ((m_nowPosition - m_oldPosition).LengthSquared() >= 0.000001f) m_stoppingTime = 0;
+
+    //if (m_stoppingTime >= SLEEP_BORDER)
+    //{
+    //    m_isSleep = true;
+    //    m_velocity = SimpleMath::Vector3::Zero;
+    //    m_force = SimpleMath::Vector3::Zero;
+    //}
+
+    if (m_velocity.LengthSquared() >= 0.1f) m_stoppingTime = 0;
 
     if (m_stoppingTime >= SLEEP_BORDER)
     {

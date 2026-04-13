@@ -68,7 +68,7 @@ private:
         , m_treeObjects{}
         , m_collideList{}
         , m_layer{}
-        , m_tree{ { 64, 64, 64 }, 4, {0, 28, 0} }
+        , m_tree{ { 128, 64, 128 }, 4, {0, 28, 0} }
         , m_colCount{ 0 }
     {
         m_layer.resize(100);

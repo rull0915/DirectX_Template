@@ -65,6 +65,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\Cell.h" />
     <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\TreeManager.h" />
     <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
+    <ClInclude Include="GameLib\Common\ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -103,6 +104,7 @@
     <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
     <ClCompile Include="Game\TestObjects\WallObject.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.cpp" />
+    <ClCompile Include="GameLib\Common\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

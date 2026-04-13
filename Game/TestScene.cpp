@@ -28,22 +28,22 @@ void TestScene::Initialize()
 {
 	m_testCamera = ObjectManager::Instance().Generate<Camera>(Screen::WIDTH, Screen::HEIGHT);
 
-	m_testCamera->GetComponent<Transform>()->SetLocalPosition({ 0, 8, 15 });
+	m_testCamera->GetComponent<Transform>()->SetLocalPosition({ -30, 20, 15 });
 	m_testCamera->GetComponent<Transform>()->SetLocalEulerAngle({ -PI_F / 12, 0, 0 });
 
-	int ballCount = 200;
+	int ballCount = 5000;
 	for (int i = 0; i < ballCount; i++)
 	{
-		SimpleMath::Vector3 pos = { Random::GetFloat(-2.0f, 2.0f), Random::GetFloat(5.0f, 9.0f), Random::GetFloat(-2.0f, 2.0f) };
+		SimpleMath::Vector3 pos = { Random::GetFloat(-47.0f, 47.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-47.0f, 47.0f) };
 
 		m_objects.push_back(ObjectManager::Instance().Generate<SphereObject>(SimpleMath::Vector3{ pos }, 0.5));
 	}
 
-	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -8, -2, -8 }, SimpleMath::Vector3{ 8, -1.5, 8 }));
-	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -8.5, -2, -8 }, SimpleMath::Vector3{ -8, 8, 8 }));
-	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  8, -2, -8 }, SimpleMath::Vector3{  8.5, 8, 8 }));
-	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -8, -2, 8 }, SimpleMath::Vector3{ 8, 8, 8.5 }));
-	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -8, -2, -8.5 }, SimpleMath::Vector3{ 8, 8, -8 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -50, -2, -50 }, SimpleMath::Vector3{ 50, -1.5, 50 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -50.5, -2, -50 }, SimpleMath::Vector3{ -50, 50, 50 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  50, -2, -50 }, SimpleMath::Vector3{  50.5, 50, 50 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -50, -2, 50 }, SimpleMath::Vector3{ 50, 50, 50.5 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -50, -2, -50.5 }, SimpleMath::Vector3{ 50, 50, -50 }));
 
 	auto* obj = ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -2, -2, -2 }, SimpleMath::Vector3{ 2, 2, 2 });
 	obj->GetComponent<Transform>()->SetLocalEulerAngle({ PI_F / 4, PI_F / 4, PI_F / 4 });
@@ -97,6 +97,11 @@ void TestScene::Render()
 {
 	MyRenderer::SetProjection(m_testCamera->GetProj());
 	MyRenderer::SetView(m_testCamera->GetView());
+
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 1, 0, 0 }, 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 1, 0 }, 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 0, 1 }, 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, m_testCamera->GetComponent<Transform>()->GetForward(), 2, 32, 0x00FF00, false);
 }
 
 // I—¹ŠÖ”
@@ -110,12 +115,12 @@ void TestScene::CameraMove(float elapsedTime)
 	Transform* t = m_testCamera->GetComponent<Transform>();
 
 	// ˆÚ“®
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(t->GetForward() * 2 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(t->GetRight() * -2 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(t->GetForward() * -2 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(t->GetRight() * 2 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Space)) t->AddLocalPosition(t->GetUp () * 2 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::LeftShift)) t->AddLocalPosition(t->GetUp() * -2 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(t->GetForward() * 5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(t->GetRight() * -5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(t->GetForward() * -5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(t->GetRight() * 5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Space)) t->AddLocalPosition(t->GetUp () * 5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::LeftShift)) t->AddLocalPosition(t->GetUp() * -5 * elapsedTime);
 
 	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Left)) t->AddLocalEulerAngle({0, elapsedTime, 0});
 	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Right)) t->AddLocalEulerAngle({ 0,-elapsedTime, 0 });

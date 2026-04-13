@@ -126,6 +126,7 @@ public:
     void WakeUp() 
     {
         m_isSleep = false; 
+        m_velocity = DirectX::SimpleMath::Vector3::Zero;
     }
 
 private:
