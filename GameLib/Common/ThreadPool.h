@@ -37,7 +37,7 @@ private:
 	~ThreadPool();
 
 public:
-	// シングルトン化
+	// シングルトン
 
 	// インスタンスを返す関数
 	static ThreadPool& GetInstance()
@@ -48,12 +48,12 @@ public:
 	}
 
 	// スレッド数を返す関数
-	int GetThreadCount() const { return m_threads.size(); }
+	int GetThreadCount() const { return static_cast<int>(m_threads.size()); }
 
 	// タスク追加関数
 	template<class F, class... Args>
 	auto AddTask(F&& task, Args&&... args)
-		// 分かりやすいように戻り値を後置
+		// 可読性向上のために戻り値を後置
 		-> std::future<typename std::result_of<F(Args...)>::type>;
 };
 

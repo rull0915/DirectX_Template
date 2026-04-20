@@ -1,10 +1,15 @@
 #include "pch.h"
 #include "TestSphere.h"
 
+#include "GameLib/Random.h"
+
 SphereObject::SphereObject(DirectX::SimpleMath::Vector3 pos, float radius)
 {
 	// コンポーネントの追加
-	AddComponent<RigidBody>()->SetMass(Random::GetFloat(0.5f, 5.0f));
+	auto rid = AddComponent<RigidBody>();
+
+	rid->SetMass(Random::GetFloat(0.5f, 5.0f));
+//	rid->SetRestitution(0.5f);
 //	AddComponent<RigidBody>()->SetUseGravity(false);
 
 //	AddComponent<SphereCollider>();
@@ -38,11 +43,9 @@ void SphereObject::Initialize()
 
 void SphereObject::Update(float elapsedTime)
 {
-	m_pTrans->UpdateCache();
+	elapsedTime;
 
-	//static float sum = 0;
-	//sum += elapsedTime * 0.01;
-	//m_pTrans->SetLocalEulerAngle({ sum, 0, 0 });
+	m_pTrans->UpdateCache();
 }
 
 void SphereObject::Render()
@@ -55,4 +58,5 @@ void SphereObject::Finalize()
 
 void SphereObject::OnCollision(BaseCollider* col)
 {
+	col;
 }

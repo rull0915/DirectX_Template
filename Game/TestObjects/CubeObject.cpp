@@ -19,6 +19,8 @@ void CubeObject::Initialize()
 
 void CubeObject::Update(float elapsedTime)
 {
+	elapsedTime;
+
 	m_debugColor = 0x00FF00;
 }
 
@@ -37,5 +39,7 @@ void CubeObject::Finalize()
 
 void CubeObject::OnCollision(BaseCollider* col)
 {
+	col;
+
 	m_debugColor = 0xFF4444;
 }

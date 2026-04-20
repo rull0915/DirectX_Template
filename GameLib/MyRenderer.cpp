@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "MyRenderer.h"
 
+#include "Game/Screen.h"
+
 using namespace DirectX;
 
 // 実体の宣言
@@ -478,8 +480,6 @@ void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::Si
 	vV.Normalize();
 
 	// 4. 終了角を求める
-	// vStart が基準(角度0)なので、startRadian は必ず 0
-	float startRadian = 0.0f;
 	float endRadian = std::atan2(vV.Dot(vEnd), vU.Dot(vEnd));
 
 	// atan2 は -PI ~ PI を返すため、負の角度を正の回転（あるいは最短距離）に調整する場合
@@ -642,7 +642,11 @@ void MyRenderer::DrawExtendGraph(DirectX::SimpleMath::Vector2 min, DirectX::Simp
 
 	CheckChange(DrawMode::Sprite);
 
-	RECT rect = { min.x, min.y, max.x, max.y };
+	RECT rect = { 
+		static_cast<LONG>(min.x), 
+		static_cast<LONG>(min.y), 
+		static_cast<LONG>(max.x), 
+		static_cast<LONG>(max.y) };
 
 	XMVECTOR color = XMVectorSet(1, 1, 1, m_instance.m_alphaValue);
 

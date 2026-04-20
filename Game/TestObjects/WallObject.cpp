@@ -6,6 +6,7 @@ WallObject::WallObject(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::
 	// コンポーネントの追加
 	auto* rid = AddComponent<RigidBody>();
 	rid->SetFriction(0.1f);
+//	rid->SetRestitution(0.5f);
 	rid->SetStatic(true);
 
 	AddComponent<BoxCollider>()->SetLayer(5);
@@ -24,6 +25,7 @@ void WallObject::Initialize()
 
 void WallObject::Update(float elapsedTime)
 {
+	elapsedTime;
 }
 
 void WallObject::Render()
@@ -36,4 +38,5 @@ void WallObject::Finalize()
 
 void WallObject::OnCollision(BaseCollider* col)
 {
+	col;
 }

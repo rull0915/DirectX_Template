@@ -41,7 +41,7 @@ namespace MyColor
 		// rgbÇÃç≈ëÂÇ∆ç≈è¨ÇãÅÇﬂÇÈ
 		int max, min;
 		max = v;
-		min = max - ((static_cast<float>(s) / 255) * max);
+		min =  static_cast<int>(max - ((static_cast<float>(s) / 255) * max));
 
 		// ÇªÇÍÇºÇÍÇÃílÇãÅÇﬂÇÈ
 		int r = 0, g = 0, b = 0;
@@ -49,12 +49,12 @@ namespace MyColor
 		if (0 <= h && h < 60)
 		{
 			r = max;
-			g = (static_cast<float>(h) / 60) * (max - min) + min;
+			g = static_cast<int>((static_cast<float>(h) / 60) * (max - min) + min);
 			b = min;
 		}
 		else if (h < 120)
 		{
-			r = ((120 - static_cast<float>(h)) / 60) * (max - min) + min;
+			r = static_cast<int>(((120 - static_cast<float>(h)) / 60) * (max - min) + min);
 			g = max;
 			b = min;
 		}
@@ -62,17 +62,17 @@ namespace MyColor
 		{
 			r = min;
 			g = max;
-			b = ((static_cast<float>(h) - 120) / 60) * (max - min) + min;
+			b = static_cast<int>(((static_cast<float>(h) - 120) / 60) * (max - min) + min);
 		}
 		else if (h < 240)
 		{
 			r = min;
-			g = ((240 - static_cast<float>(h)) / 60) * (max - min) + min;
+			g = static_cast<int>(((240 - static_cast<float>(h)) / 60) * (max - min) + min);
 			b = max;
 		}
 		else if (h < 300)
 		{
-			r = ((static_cast<float>(h) - 240) / 60) * (max - min) + min;
+			r = static_cast<int>(((static_cast<float>(h) - 240) / 60) * (max - min) + min);
 			g = min;
 			b = max;
 		}
@@ -80,7 +80,7 @@ namespace MyColor
 		{
 			r = max;
 			g = min;
-			b = ((360 - static_cast<float>(h)) / 60) * (max - min) + min;
+			b = static_cast<int>(((360 - static_cast<float>(h)) / 60) * (max - min) + min);
 		}
 
 		return r * 0x010000 + g * 0x0100 + b;
@@ -102,15 +102,15 @@ namespace MyColor
 		int max = ((r > g ? r : g) > b ? (r > g ? r : g) : b);
 		int min = ((r < g ? r : g) < b ? (r < g ? r : g) : b);
 
-		if (r > g && r > b) h = 60 * (static_cast<float>(g - b) / (max - min));
-		else if (g > b) h = 60 * (static_cast<float>(b - r) / (max - min)) + 120;
-		else if (max != min) h = 60 * (static_cast<float>(r - g) / (max - min)) + 240;
+		if (r > g && r > b) h = static_cast<int>(60 * (static_cast<float>(g - b) / (max - min)));
+		else if (g > b) h = static_cast<int>(60 * (static_cast<float>(b - r) / (max - min)) + 120);
+		else if (max != min) h = static_cast<int>(60 * (static_cast<float>(r - g) / (max - min)) + 240);
 		else h = 0;
 
 		if (h < 0) h += 360;
 
 		if (max == 0) s = 0;
-		else s = (static_cast<float>(max - min) / max) * 255;
+		else s = static_cast<int>((static_cast<float>(max - min) / max) * 255);
 		v = max;
 	}
 }

@@ -117,6 +117,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/Zc:__cplusplus /ZH:SHA_256 %(AdditionalOptions)</AdditionalOptions>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,6 +169,7 @@
       <AdditionalOptions>/Zc:__cplusplus /ZH:SHA_256 %(AdditionalOptions)</AdditionalOptions>
       <GuardEHContMetadata>true</GuardEHContMetadata>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,29 +185,63 @@
   <ItemGroup>
     <ClInclude Include="GameLib\Common\ThreadPool.h" />
     <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHitAuxiliary.h" />
-    <ClInclude Include="GameLib\GameObject\Camera\Camera.h" />
-    <ClInclude Include="GameLib\GameObject\Camera\RayCast.h" />
-    <ClInclude Include="GameLib\GameObject\Components\BaseComponent.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\2DComponents.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\BaseComponent2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\Collider\BaseCollider2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\Collider\CheckHit\CheckHit2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\Collider\HitInfomation\HitInfomation2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\Collider\Shapes\2DColliders.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\GameObject\2D\Components\Collider\Shapes\BoxCollider2D.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\GameObject\2D\Components\Collider\Shapes\CircleCollider2D.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\GameObject\2D\Components\RigidBody\RigidBody2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Components\Transform\Transform2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\GameObject2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Managers\CollideManager2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Managers\PhysicsManager2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Managers\SpaceDivision\Cell2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Managers\SpaceDivision\ObjectForTree2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\Managers\SpaceDivision\TreeManager2D.h" />
+    <ClInclude Include="GameLib\GameObject\2D\ObjectManager2D.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\3DComponents.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\BaseComponent.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Camera\CameraComponent.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Camera\RayCast.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\BaseCollider.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\CheckHit\CheckHit.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\CheckHit\CheckHitAuxiliary.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\HitInfomation\HitInfomation.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\Shapes\BoxCollider.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\Shapes\CapsuleCollider.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\Shapes\Colliders.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\Shapes\LineCollider.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Collider\Shapes\SphereCollider.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\RigidBody\RigidBody.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Components\Transform\Transform.h" />
+    <ClInclude Include="GameLib\GameObject\3D\GameObject.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Managers\CollideManager.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Managers\PhysicsManager.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Managers\SpaceDivision\Cell.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Managers\SpaceDivision\ObjectForTree.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Managers\SpaceDivision\TreeManager.h" />
+    <ClInclude Include="GameLib\GameObject\3D\ObjectManager.h" />
+    <ClInclude Include="GameLib\GameObject\3D\Managers\CameraManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="DeviceResources.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\BaseCollider.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Managers\CollideManager.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\HitInfomation\HitInfomation.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\Colliders.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\LineCollider.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.h" />
     <ClInclude Include="GameLib\ContainerExtensions.h" />
     <ClInclude Include="GameLib\GameMath\Easing.h" />
     <ClInclude Include="GameLib\GameMath\GameMath.h" />
     <ClInclude Include="GameLib\GameMath\Range.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Components.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\Cell.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Managers\SpaceDivision\TreeManager.h" />
-    <ClInclude Include="GameLib\GameObject\GameObject.h" />
     <ClInclude Include="GameLib\Input\KeyInput.h" />
     <ClInclude Include="GameLib\Input\MouseInput.h" />
     <ClInclude Include="GameLib\MyRenderer.h" />
@@ -224,30 +260,44 @@
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Screen.h" />
     <ClInclude Include="Game\TestObjects\CubeObject.h" />
-    <ClInclude Include="GameLib\GameObject\ObjectManager.h" />
+    <ClInclude Include="Others\Template.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="GameLib\GameObject\Components\RigidBody\RigidBody.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Managers\PhysicsManager.h" />
     <ClInclude Include="StepTimer.h" />
-    <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
     <ClInclude Include="Game\TestScene.h" />
     <ClInclude Include="Game\TestObjects\TestSphere.h" />
     <ClInclude Include="Game\TestObjects\WallObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLib\Common\ThreadPool.cpp" />
-    <ClCompile Include="GameLib\GameObject\Camera\Camera.cpp" />
-    <ClCompile Include="GameLib\GameObject\Camera\RayCast.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\BaseComponent2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\Collider\BaseCollider2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\Collider\CheckHit\CheckHit2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\Collider\Shapes\BoxCollider2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\Collider\Shapes\CircleCollider2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\RigidBody\RigidBody2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Components\Transform\Transform2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\GameObject2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Managers\CollideManager2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Managers\PhysicsManager2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\Managers\SpaceDivision\ObjectForTree2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\2D\ObjectManager2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\BaseComponent.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Camera\CameraComponent.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Camera\RayCast.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Collider\BaseCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Collider\CheckHit\CheckHit.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Collider\Shapes\BoxCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Collider\Shapes\CapsuleCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Collider\Shapes\SphereCollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\RigidBody\RigidBody.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Components\Transform\Transform.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\GameObject.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Managers\CameraManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Managers\CollideManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Managers\PhysicsManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\Managers\SpaceDivision\ObjectForTree.cpp" />
+    <ClCompile Include="GameLib\GameObject\3D\ObjectManager.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\BaseCollider.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\CheckHit\CheckHit.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Managers\CollideManager.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\BoxCollider.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\CapsuleCollider.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Collider\Shapes\SphereCollider.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Managers\SpaceDivision\ObjectForTree.cpp" />
-    <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
     <ClCompile Include="GameLib\MyRenderer.cpp" />
@@ -262,17 +312,14 @@
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\TestObjects\CubeObject.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="GameLib\GameObject\ObjectManager.cpp" />
+    <ClCompile Include="Others\Template.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
     <ClCompile Include="Game\TestScene.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\RigidBody\RigidBody.cpp" />
-    <ClCompile Include="GameLib\GameObject\Components\Managers\PhysicsManager.cpp" />
     <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
     <ClCompile Include="Game\TestObjects\WallObject.cpp" />
   </ItemGroup>

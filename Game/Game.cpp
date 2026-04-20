@@ -7,7 +7,13 @@
 
 #include "GameLib/Resources/ResourceManager.h"
 
-#include "GameLib/GameObject/ObjectManager.h"
+#include "GameLib/GameObject/3D/ObjectManager.h"
+#include "GameLib/GameObject/2D/ObjectManager2D.h"
+
+#include "GameLib/Input/KeyInput.h"
+#include "GameLib/Input/MouseInput.h"
+
+#include "Game/Screen.h"
 
 extern void ExitGame() noexcept;
 
@@ -103,11 +109,22 @@ void Game::Update(DX::StepTimer const& timer)
     static bool stop = false;
     if (KeyInput::GetKeyDown(DirectX::Keyboard::Keys::F1)) stop = !stop;
 
-    if (stop) return;
+    if (stop)
+    {
+        if (KeyInput::GetKeyDown(DirectX::Keyboard::Keys::F3))
+        {
+            // 各シーンの更新
+            m_sceneManager.Update(elapsedTime);
+            ObjectManager::Instance().Update(elapsedTime);
+            ObjectManager2D::Instance().Update(elapsedTime);
+        }
+        return;
+    }
 
     // 各シーンの更新
-    ObjectManager::Instance().Update(elapsedTime);
     m_sceneManager.Update(elapsedTime);
+    ObjectManager::Instance().Update(elapsedTime);
+    ObjectManager2D::Instance().Update(elapsedTime);
 }
 #pragma endregion
 
@@ -136,6 +153,7 @@ void Game::Render()
     m_sceneManager.Render();
 
     ObjectManager::Instance().Render();
+    ObjectManager2D::Instance().Render();
 
     // 描画の終了 ----------------------------------------
     m_sceneManager.TransitionRender();

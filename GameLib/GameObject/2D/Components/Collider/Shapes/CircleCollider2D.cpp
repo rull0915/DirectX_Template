@@ -1,0 +1,52 @@
+//====================================================//
+// ファイル名  : CircleCollider2D.cpp
+// 作成者      : Hoshino Ryunosuke
+// 作成日       : 2026/04/18
+//
+// 概要        : 2Dの円状のコライダー
+//====================================================//
+
+//====================================================//
+// インクルードファイル
+//====================================================//
+#include "pch.h"
+#include "CircleCollider2D.h"
+
+#include "GameLib/MyRenderer.h"
+
+//====================================================//
+// 関数の実体宣言
+//====================================================//
+
+void CircleCollider2D::UpdateCache() const
+{
+	if (!m_isDirty) return;
+
+	// ワールドの拡大率を取得
+	DirectX::SimpleMath::Vector2 worldScale = m_pTransform->GetWorldScale();
+
+	// ----- 中心座標の更新 ----- //
+	m_worldCenterPos = m_pTransform->TransformForWorld(m_localCenterPos);
+
+	// ----- 半径の更新 ----- //
+	float max = std::max(worldScale.x, worldScale.y);
+
+	m_worldRadius = max * m_radius;
+
+	// ----- AABBの更新 ----- //
+	DirectX::SimpleMath::Vector3 size = { m_worldRadius, m_worldRadius, m_worldRadius };
+	m_boundingBox = AABB2D(m_worldCenterPos - size, m_worldCenterPos + size);
+
+	// フラグのリセット
+	m_isDirty = false;
+	m_isChanged = true;
+}
+
+void CircleCollider2D::DebugDraw(int color) const
+{
+	// ワールド行列の算出(Rot,Pos)
+	DirectX::SimpleMath::Vector2 pos = GetWorldCenterPos();
+
+	float rad = GetRadius();
+	MyRenderer::DrawCircle({ pos.x, pos.y, 0 }, { 0, 0, 1 }, rad, 16, color, false);
+}

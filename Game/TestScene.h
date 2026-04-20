@@ -16,9 +16,9 @@
 //====================================================//
 #include "GameLib/Scene/Scene.h"
 
-#include "GameLib/GameObject/Camera/Camera.h"
-
 #include "TestObjects/CubeObject.h"
+
+#include "GameLib/GameObject/2D/GameObject2D.h"
 
 //====================================================//
 // 前方宣言
@@ -44,9 +44,10 @@ private:
     // このシーンを含むゲームオブジェクトへのポインタ
     Game* m_pGame;
 
-    Camera* m_testCamera;
+    GameObject* m_testCamera;
 
     std::vector<GameObject*> m_objects;
+    std::vector<GameObject2D*> m_objects2D;
 
 public:
 

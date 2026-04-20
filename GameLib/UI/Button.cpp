@@ -3,6 +3,8 @@
 
 #include "GameLib/MyRenderer.h"
 
+#include "GameLib/Input/MouseInput.h"
+
 Button::Button(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 size, int stColor, int hvColor, int prColor)
 	: m_position{ pos }
 	, m_size{ size }

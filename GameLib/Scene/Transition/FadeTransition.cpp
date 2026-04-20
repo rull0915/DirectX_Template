@@ -1,6 +1,22 @@
+//====================================================//
+// ファイル名  : FadeTransition.cpp
+// 作成者      : Hoshino Ryunosuke
+// 作成日       : 2026/04/01
+//
+// 概要        :  フェードイン/アウト
+//====================================================//
+
+//====================================================//
+// インクルードファイル
+//====================================================//
 #include "FadeTransition.h"
 
 #include "GameLib/MyRenderer.h"
+#include "Game/Screen.h"
+
+//====================================================//
+// 関数の実体宣言
+//====================================================//
 
 FadeTransition::FadeTransition(float transTime, Transition::Mode mode, int fadeColor)
 	: SceneTransition(transTime, mode)

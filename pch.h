@@ -94,11 +94,6 @@ namespace DX
 #include <string>
 
 #include "Game/Screen.h"
-#include "GameLib/Input/KeyInput.h"
-#include "GameLib/Input/MouseInput.h"
 
-#include "GameLib/GameMath/Easing.h"
-
-#include "GameLib/ContainerExtensions.h"
-#include "GameLib/Random.h"
-#include "GameLib/GameMath/GameMath.h"
+// ƒ}ƒNƒ‚Ì’è‹`
+#define PI_F 3.14159265
