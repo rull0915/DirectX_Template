@@ -1,12 +1,12 @@
 //====================================================//
-// ファイル名   : WallObject.h
+// ファイル名   : SphereCollider.h
 // 作成者       : Hoshino Ryunosuke
-// 作成日       : 2026/04/08
+// 作成日       : 2026/03/18
 //
-// 概要 : 壁オブジェクトクラス
+// 概要 : 球状のコライダー
 //
 // 更新履歴 :
-// 2026/04/08 新規作成
+// 2026/03/18 新規作成
 //====================================================//
 
 #pragma once
@@ -14,7 +14,7 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include "GameLib/GameObject/GameObject.h"
+#include "../BaseCollider.h"
 
 //====================================================//
 // 前方宣言
@@ -24,53 +24,58 @@
 //====================================================//
 // クラス宣言
 //====================================================//
-class WallObject : public GameObject
+class SphereCollider : public BaseCollider
 {
+    // ----------------------------------------------------
+    // 定数宣言
+    // ----------------------------------------------------
+public:
+    static constexpr int TYPE_ID = SUB_COLLIDER_SPHERE;
+    static constexpr bool IS_MAIN = false;
+
 private:
-
-    //-----------------------------------------------------
-    // 定数
-    //-----------------------------------------------------
-
 
     //-----------------------------------------------------
     // メンバ変数
     //-----------------------------------------------------
 
+    // 半径
+    float m_radius;
+
+    mutable float m_worldRadius;
+
 public:
 
     //-----------------------------------------------------
-    // コンストラクタ / デストラクタ
+    // 生成 / 破棄
     //-----------------------------------------------------
-    WallObject(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::Vector3 end);
-    ~WallObject() = default;
-
-    //-----------------------------------------------------
-    // 公開関数
-    //-----------------------------------------------------
-    void Initialize() override;
-
-    void Update(float elapsedTime) override;
-
-    void Render() override;
-
-    void Finalize() override;
-
-    void OnCollision(BaseCollider* col) override;
+    SphereCollider(GameObject* own, float radius = 0.5f, DirectX::SimpleMath::Vector3 pos = {0, 0, 0})
+        : BaseCollider(own, ColliderType::Sphere, SUB_COLLIDER_SPHERE, false, pos)
+        , m_radius{ radius }
+        , m_worldRadius{ 1 }
+    {
+    };
+    ~SphereCollider() = default;
 
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
+    float GetRadius() const 
+    {
+        if (IsDirty()) UpdateCache();
 
+        return m_worldRadius;
+    }
 
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
+    void SetRadius(float rad)
+    {
+        m_radius = rad;
+        SetDirty();
+    }
 
-private:
-
-    //-----------------------------------------------------
-    // 内部実装
-    //-----------------------------------------------------
-
+    void UpdateCache() const override;
+    void DebugDraw(int color) const override;
 };

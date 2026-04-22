@@ -1,12 +1,12 @@
 //====================================================//
-// ファイル名   : WallObject.h
+// ファイル名   : BaseComponent.h
 // 作成者       : Hoshino Ryunosuke
-// 作成日       : 2026/04/08
+// 作成日       : 2026/04/02
 //
-// 概要 : 壁オブジェクトクラス
+// 概要 : 全てのコンポーネントの基底となるクラス
 //
 // 更新履歴 :
-// 2026/04/08 新規作成
+// 2026/04/02 新規作成
 //====================================================//
 
 #pragma once
@@ -14,58 +14,65 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include "GameLib/GameObject/GameObject.h"
+#include "ComponentID.h"
 
 //====================================================//
 // 前方宣言
 //====================================================//
-
+class GameObject;
 
 //====================================================//
 // クラス宣言
 //====================================================//
-class WallObject : public GameObject
+class BaseComponent
 {
-private:
+    // ----------------------------------------------------
+    // 定数宣言
+    // ----------------------------------------------------
+public:
+    static constexpr int TYPE_ID = MAIN_BASE;
+    static constexpr bool IS_MAIN = true;
 
-    //-----------------------------------------------------
-    // 定数
-    //-----------------------------------------------------
-
+protected:
 
     //-----------------------------------------------------
     // メンバ変数
     //-----------------------------------------------------
+
+    // 自身の所有者のポインタ
+    GameObject* m_own;
+
+    // アクティブフラグ
+    bool m_isActive;
+
+private:
+    // 自身のID
+    const int m_myID;
+    const bool m_isMain;
 
 public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    WallObject(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::Vector3 end);
-    ~WallObject() = default;
-
-    //-----------------------------------------------------
-    // 公開関数
-    //-----------------------------------------------------
-    void Initialize() override;
-
-    void Update(float elapsedTime) override;
-
-    void Render() override;
-
-    void Finalize() override;
-
-    void OnCollision(BaseCollider* col) override;
+    BaseComponent(GameObject* own, int id, bool isMain);
+    virtual ~BaseComponent();
 
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
+    GameObject* GetOwn() const { return m_own; }
 
+    bool IsActive() const { return m_isActive; }
+
+    int GetID() const { return m_myID; }
+    bool IsMain() const { return m_isMain; }
 
     //-----------------------------------------------------
     // セッター
     //-----------------------------------------------------
+
+    void SetActive(bool f) { m_isActive = f; }
 
 private:
 

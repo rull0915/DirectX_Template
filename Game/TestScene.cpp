@@ -1,13 +1,12 @@
 #include "TestScene.h"
 #include "Game.h"
 
-#include "GameLib/GameObject/3D/ObjectManager.h"
-#include "GameLib/GameObject/2D/ObjectManager2D.h"
+#include "GameLib/GameObject/Managers/ObjectManager.h"
 
 #include "TestObjects/TestSphere.h"
 #include "TestObjects/WallObject.h"
 
-#include "GameLib/GameObject/3D/Managers/CollideManager.h"
+#include "GameLib/GameObject/Managers/3DManagers/Collider/CollideManager.h"
 
 #include "GameLib/Random.h"
 
@@ -40,31 +39,31 @@ void TestScene::Initialize()
 	m_testCamera->AddComponent<CameraComponent>(Screen::WIDTH, Screen::HEIGHT)->SetMain();
 
 	{
-		auto p1 = ObjectManager2D::Instance().Generate<GameObject2D>();
-		auto t1 = p1->GetComponent<Transform2D>();
+		auto p1 = ObjectManager::Instance().Generate<GameObject>();
+		auto t1 = p1->GetComponent<Transform>();
 		p1->AddComponent<BoxCollider2D>();
 
-		t1->SetLocalScale({ 100, 1 });
+		t1->SetLocalScale({ 100, 1, 1 });
 
-		auto p2 = ObjectManager2D::Instance().Generate<GameObject2D>();
-		auto t2 = p2->GetComponent<Transform2D>();
+		auto p2 = ObjectManager::Instance().Generate<GameObject>();
+		auto t2 = p2->GetComponent<Transform>();
 		p2->AddComponent<BoxCollider2D>();
 
-		t2->SetLocalPosition({ 50, 5 });
-		t2->SetLocalScale({ 1, 50 });
+		t2->SetLocalPosition({ 50, 5, 1 });
+		t2->SetLocalScale({ 1, 50, 1 });
 
-		auto p3 = ObjectManager2D::Instance().Generate<GameObject2D>();
-		auto t3 = p3->GetComponent<Transform2D>();
+		auto p3 = ObjectManager::Instance().Generate<GameObject>();
+		auto t3 = p3->GetComponent<Transform>();
 		p3->AddComponent<BoxCollider2D>();
 
-		t3->SetLocalPosition({ -50, 5 });
-		t3->SetLocalScale({ 1, 50 });
+		t3->SetLocalPosition({ -50, 5, 1 });
+		t3->SetLocalScale({ 1, 50, 1 });
 
 	}
 
 	for (int i = 0; i < 10; i++)
 	{
-		auto p = ObjectManager2D::Instance().Generate<GameObject2D>();
+		auto p = ObjectManager::Instance().Generate<GameObject>();
 
 		switch (Random::Get(0, 1))
 		{
@@ -82,33 +81,33 @@ void TestScene::Initialize()
 		p->GetComponent<RigidBody2D>()->SetUseGravity(false);
 
 		SimpleMath::Vector2 pos = { Random::GetFloat(-8.0f, 8.0f), Random::GetFloat(0.0f, 9.0f) };
-		auto t = p->GetComponent<Transform2D>();
+		auto t = p->GetComponent<Transform>();
 
-		t->SetLocalPosition(pos);
-		t->SetLocalRotation(Random::GetFloat(-10.0f, 10.0f));
+		t->SetLocalPosition({pos.x, pos.y, 1});
+		t->SetLocalEulerAngle({ 0, 0, Random::GetFloat(-10.0f, 10.0f) });
 
-		m_objects2D.push_back(p);
+		m_objects.push_back(p);
 	}
 
-	//int ballCount = 1;
-	//for (int i = 0; i < ballCount; i++)
-	//{
-	//	SimpleMath::Vector3 pos = { Random::GetFloat(-10.0f, 10.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-10.0f, 10.0f) };
+	int ballCount = 100;
+	for (int i = 0; i < ballCount; i++)
+	{
+		SimpleMath::Vector3 pos = { Random::GetFloat(-10.0f, 10.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-10.0f, 10.0f) };
 
-	//	m_objects.push_back(ObjectManager::Instance().Generate<SphereObject>(SimpleMath::Vector3{ pos }, 0.5));
-	//}
+		m_objects.push_back(ObjectManager::Instance().Generate<SphereObject>(SimpleMath::Vector3{ pos }, 0.5));
+	}
 
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20 }, SimpleMath::Vector3{ 20, -1.5, 20 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  20, -2, -20 }, SimpleMath::Vector3{  20.5, 20, 20 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, 20 }, SimpleMath::Vector3{ 20, 20, 20.5 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20.5 }, SimpleMath::Vector3{ 20, 20, -20 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20 }, SimpleMath::Vector3{ 20, -1.5, 20 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  20, -2, -20 }, SimpleMath::Vector3{  20.5, 20, 20 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, 20 }, SimpleMath::Vector3{ 20, 20, 20.5 }));
+	m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20.5 }, SimpleMath::Vector3{ 20, 20, -20 }));
 
-	//auto* obj = ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -2, -2, -2 }, SimpleMath::Vector3{ 2, 2, 2 });
-	//obj->GetComponent<Transform>()->SetLocalEulerAngle({ PI_F / 4, PI_F / 4, PI_F / 4 });
+	auto* obj = ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -2, -2, -2 }, SimpleMath::Vector3{ 2, 2, 2 });
+	obj->GetComponent<Transform>()->SetLocalEulerAngle({ PI_F / 4, PI_F / 4, PI_F / 4 });
 
-	//m_objects.push_back(obj);
-	//CollideManager::Instance().SetCollideActive(5, 5, false);
+	m_objects.push_back(obj);
+	CollideManager::Instance().SetCollideActive(5, 5, false);
 }
 
 // 更新関数 
@@ -156,10 +155,10 @@ void TestScene::Update(float elapsedTime)
 // 描画関数
 void TestScene::Render()
 {
-	MyRenderer::DrawCircle({ -20, 0, 0 }, { 1, 0, 0 }, 2, 32, 0x00FF00, false);
-	MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 1, 0 }, 2, 32, 0x00FF00, false);
-	MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 0, 1 }, 2, 32, 0x00FF00, false);
-	MyRenderer::DrawCircle({ -20, 0, 0 }, m_testCamera->GetComponent<Transform>()->GetForward(), 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 1, 0, 0 }, 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 1, 0 }, 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 0, 1 }, 2, 32, 0x00FF00, false);
+	//MyRenderer::DrawCircle({ -20, 0, 0 }, m_testCamera->GetComponent<Transform>()->GetForward(), 2, 32, 0x00FF00, false);
 }
 
 // 終了関数
@@ -170,28 +169,28 @@ void TestScene::Finalize()
 void TestScene::CameraMove(float elapsedTime)
 {
 	// カメラのトランスフォームを取得
-//	Transform* t = m_testCamera->GetComponent<Transform>();
-	if (m_objects2D.size() <= 0) return;
-	Transform2D* t = m_objects2D[0]->GetComponent<Transform2D>();
-
+	Transform* t = m_testCamera->GetComponent<Transform>();
 	// 移動
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(t->GetForward() * 5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(t->GetRight() * -5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(t->GetForward() * -5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(t->GetRight() * 5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Space)) t->AddLocalPosition(t->GetUp () * 5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::LeftShift)) t->AddLocalPosition(t->GetUp() * -5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(t->GetForward() * 5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(t->GetRight() * -5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(t->GetForward() * -5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(t->GetRight() * 5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Space)) t->AddLocalPosition(t->GetUp () * 5 * elapsedTime);
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::LeftShift)) t->AddLocalPosition(t->GetUp() * -5 * elapsedTime);
 
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Left)) t->AddLocalEulerAngle({0, elapsedTime, 0});
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Right)) t->AddLocalEulerAngle({ 0,-elapsedTime, 0 });
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Up)) t->AddLocalEulerAngle({ elapsedTime, 0, 0 });
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Down)) t->AddLocalEulerAngle({ -elapsedTime, 0, 0 });
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Left)) t->AddLocalEulerAngle({0, elapsedTime, 0});
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Right)) t->AddLocalEulerAngle({ 0,-elapsedTime, 0 });
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Up)) t->AddLocalEulerAngle({ elapsedTime, 0, 0 });
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Down)) t->AddLocalEulerAngle({ -elapsedTime, 0, 0 });
 
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(SimpleMath::Vector2::UnitY * 5 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(SimpleMath::Vector2::UnitX * -5 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(SimpleMath::Vector2::UnitY * -5 * elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(SimpleMath::Vector2::UnitX * 5 * elapsedTime);
+	//if (m_objects2D.size() <= 0) return;
+	//Transform2D* t = m_objects2D[0]->GetComponent<Transform2D>();
 
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Left)) t->AddLocalRotation(elapsedTime);
-	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Right)) t->AddLocalRotation(-elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(SimpleMath::Vector2::UnitY * 5 * elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(SimpleMath::Vector2::UnitX * -5 * elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(SimpleMath::Vector2::UnitY * -5 * elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(SimpleMath::Vector2::UnitX * 5 * elapsedTime);
+
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Left)) t->AddLocalRotation(elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Right)) t->AddLocalRotation(-elapsedTime);
 }

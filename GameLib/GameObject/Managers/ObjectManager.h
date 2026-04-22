@@ -1,12 +1,12 @@
 //====================================================//
-// ファイル名   : TestScene.h
+// ファイル名   : ObjectManager.h
 // 作成者       : Hoshino Ryunosuke
-// 作成日       : 2026/04/03
+// 作成日       : 2026/04/07
 //
 // 概要 :
 //
 // 更新履歴 :
-// 2026/04/03 新規作成
+// 2026/04/07 新規作成
 //====================================================//
 
 #pragma once
@@ -14,19 +14,18 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include "GameLib/Scene/Scene.h"
-
-#include "TestObjects/CubeObject.h"
+#include "../GameObject.h"
+#include <vector>
 
 //====================================================//
 // 前方宣言
 //====================================================//
-class Game;
+
 
 //====================================================//
 // クラス宣言
 //====================================================//
-class TestScene : public Scene
+class ObjectManager
 {
 private:
 
@@ -39,39 +38,51 @@ private:
     // メンバ変数
     //-----------------------------------------------------
 
-    // このシーンを含むゲームオブジェクトへのポインタ
-    Game* m_pGame;
+    // 生成予約中のオブジェクトリスト
+    std::vector<GameObject*> m_reservations;
 
-    GameObject* m_testCamera;
-
-    std::vector<GameObject*> m_objects;
+    // 管理しているオブジェクトリスト
+    std::vector<std::unique_ptr<GameObject>> m_objects;
 
 public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    TestScene(Game* pGame);
-    ~TestScene();
+private:
+    ObjectManager();
+
+public:
+    ~ObjectManager();
 
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
 
-    // 初期化関数
-    void Initialize() override;
+    // インスタンスを返す関数
+    static ObjectManager& Instance()
+    {
+        static ObjectManager instance;
+        return instance;
+    }
 
     // 更新関数
-    void Update(float elapsedTime) override;
+    void Update(float elapsedTime);
 
     // 描画関数
-    void Render() override;
+    void Render();
 
-    // 終了関数
-    void Finalize() override;
+    void Finalize();
 
-    // カメラの移動
-    void CameraMove(float elapsedTime);
+    // オブジェクト生成関数
+    template<typename T, typename... Args>
+    T* Generate(Args&&... args);
+
+    // オブジェクト削除関数
+    template<typename T>
+    void Destroy(T* object);
+
+    void AllDestroy();
 
     //-----------------------------------------------------
     // ゲッター
@@ -88,4 +99,39 @@ private:
     // 内部実装
     //-----------------------------------------------------
 
+    // 予約されているオブジェクトを全てリストへ追加する関数
+    void AddReservedObject();
+
+    // 死亡オブジェクトを削除する関数
+    void RemoveDeadObject();
 };
+
+template<typename T, typename ...Args>
+inline T* ObjectManager::Generate(Args && ...args)
+{
+    // GameObject派生クラスであれば
+    if constexpr (std::is_base_of_v<GameObject, T>)
+    {
+        // ポインタを作成
+        T* pObj = new T(std::forward<Args>(args)...);
+
+        // 予約リストに追加
+        m_reservations.push_back(pObj);
+
+        // 作成したポインタを返す
+        return pObj;
+    }
+
+    return nullptr;
+}
+
+template<typename T>
+inline void ObjectManager::Destroy(T* object)
+{
+    // GameObject派生クラスであれば
+    if constexpr (std::is_base_of_v<T, GameObject>)
+    {
+        // 削除フラグを立てる
+        object->Destoroy();
+    }
+}

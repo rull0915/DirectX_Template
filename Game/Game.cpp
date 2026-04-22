@@ -7,8 +7,7 @@
 
 #include "GameLib/Resources/ResourceManager.h"
 
-#include "GameLib/GameObject/3D/ObjectManager.h"
-#include "GameLib/GameObject/2D/ObjectManager2D.h"
+#include "GameLib/GameObject/Managers/ObjectManager.h"
 
 #include "GameLib/Input/KeyInput.h"
 #include "GameLib/Input/MouseInput.h"
@@ -116,7 +115,6 @@ void Game::Update(DX::StepTimer const& timer)
             // 各シーンの更新
             m_sceneManager.Update(elapsedTime);
             ObjectManager::Instance().Update(elapsedTime);
-            ObjectManager2D::Instance().Update(elapsedTime);
         }
         return;
     }
@@ -124,7 +122,6 @@ void Game::Update(DX::StepTimer const& timer)
     // 各シーンの更新
     m_sceneManager.Update(elapsedTime);
     ObjectManager::Instance().Update(elapsedTime);
-    ObjectManager2D::Instance().Update(elapsedTime);
 }
 #pragma endregion
 
@@ -153,7 +150,6 @@ void Game::Render()
     m_sceneManager.Render();
 
     ObjectManager::Instance().Render();
-    ObjectManager2D::Instance().Render();
 
     // 描画の終了 ----------------------------------------
     m_sceneManager.TransitionRender();

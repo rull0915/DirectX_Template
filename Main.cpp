@@ -5,7 +5,7 @@
 #include "pch.h"
 #include "Game/Game.h"
 
-#include "GameLib/GameObject/3D/ObjectManager.h"
+#include "GameLib/GameObject/Managers/ObjectManager.h"
 #include "GameLib/Random.h"
 #include "Game/Screen.h"
 
