@@ -184,8 +184,8 @@ void CollideManager2D::CheckHitPair(BaseCollider2D* colA, BaseCollider2D* colB)
 			SimpleMath::Vector2 corrVecA = ratioA * hit.hitDir * hit.hitLen;
 			SimpleMath::Vector2 corrVecB = ratioB * hit.hitDir * hit.hitLen;
 
-			colA->GetOwn()->GetComponent<Transform>()->AddCache({ corrVecA.x, corrVecA.y, 0 });
-			colB->GetOwn()->GetComponent<Transform>()->AddCache({ corrVecA.x, corrVecA.y, 0 });
+			colA->GetTransform()->AddCache({corrVecA.x, corrVecA.y, 0});
+			colB->GetTransform()->AddCache({corrVecB.x, corrVecB.y, 0});
 
 			// ----- ‘¬“x‚Ì•â³ ----- //
 

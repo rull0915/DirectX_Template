@@ -61,17 +61,20 @@ void TestScene::Initialize()
 
 	}
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		auto p = ObjectManager::Instance().Generate<GameObject>();
 
-		switch (Random::Get(0, 1))
+		switch (Random::Get(2, 2))
 		{
 		case 0:
 			p->AddComponent<BoxCollider2D>();
 			break;
 		case 1:
 			p->AddComponent<CircleCollider2D>();
+			break;
+		case 2:
+			p->AddComponent<CapsuleCollider2D>(2.0f, 0.3f);
 			break;
 		default:
 			break;
@@ -80,7 +83,7 @@ void TestScene::Initialize()
 		p->AddComponent<RigidBody2D>()->SetFriction(0.1f);
 		p->GetComponent<RigidBody2D>()->SetUseGravity(false);
 
-		SimpleMath::Vector2 pos = { Random::GetFloat(-8.0f, 8.0f), Random::GetFloat(0.0f, 9.0f) };
+		SimpleMath::Vector2 pos = { Random::GetFloat(-8.0, 8.0), Random::GetFloat(0.0f, 9.0f) };
 		auto t = p->GetComponent<Transform>();
 
 		t->SetLocalPosition({pos.x, pos.y, 1});
@@ -89,7 +92,7 @@ void TestScene::Initialize()
 		m_objects.push_back(p);
 	}
 
-	int ballCount = 100;
+	int ballCount = 0;
 	for (int i = 0; i < ballCount; i++)
 	{
 		SimpleMath::Vector3 pos = { Random::GetFloat(-10.0f, 10.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-10.0f, 10.0f) };
@@ -148,7 +151,31 @@ void TestScene::Update(float elapsedTime)
 
 	if (KeyInput::GetKeyDown(DirectX::Keyboard::Keys::Enter))
 	{
-		m_testCamera->GetComponent<CameraComponent>()->ChangeType();
+				auto p = ObjectManager::Instance().Generate<GameObject>();
+
+		switch (Random::Get(0, 1))
+		{
+		case 0:
+			p->AddComponent<BoxCollider2D>();
+			break;
+		case 1:
+			p->AddComponent<CircleCollider2D>();
+			break;
+		default:
+			break;
+		} 
+
+		p->AddComponent<RigidBody2D>()->SetFriction(0.1f);
+//		p->GetComponent<RigidBody2D>()->SetUseGravity(false);
+
+		SimpleMath::Vector2 pos = { Random::GetFloat(-8.0f, 8.0f), Random::GetFloat(3.0f, 9.0f) };
+		auto t = p->GetComponent<Transform>();
+
+		t->SetLocalPosition({pos.x, pos.y, 1});
+		t->SetLocalEulerAngle({ 0, 0, Random::GetFloat(-10.0f, 10.0f) });
+
+		m_objects.push_back(p);
+//		m_testCamera->GetComponent<CameraComponent>()->ChangeType();
 	}
 }
 
@@ -183,14 +210,10 @@ void TestScene::CameraMove(float elapsedTime)
 	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Up)) t->AddLocalEulerAngle({ elapsedTime, 0, 0 });
 	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Down)) t->AddLocalEulerAngle({ -elapsedTime, 0, 0 });
 
-	//if (m_objects2D.size() <= 0) return;
-	//Transform2D* t = m_objects2D[0]->GetComponent<Transform2D>();
+	//Transform* t = m_objects[0]->GetComponent<Transform>();
 
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(SimpleMath::Vector2::UnitY * 5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(SimpleMath::Vector2::UnitX * -5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(SimpleMath::Vector2::UnitY * -5 * elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(SimpleMath::Vector2::UnitX * 5 * elapsedTime);
-
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Left)) t->AddLocalRotation(elapsedTime);
-	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::Right)) t->AddLocalRotation(-elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::W)) t->AddLocalPosition(DirectX::SimpleMath::Vector3{ 0, 1, 0 } * 5 * elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::A)) t->AddLocalPosition(DirectX::SimpleMath::Vector3{ 1, 0, 0 } * -5 * elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::S)) t->AddLocalPosition(DirectX::SimpleMath::Vector3{ 0, 1, 0 } * -5 * elapsedTime);
+	//if (KeyInput::GetKey(DirectX::Keyboard::Keys::D)) t->AddLocalPosition(DirectX::SimpleMath::Vector3{ 1, 0, 0 } * 5 * elapsedTime);
 }

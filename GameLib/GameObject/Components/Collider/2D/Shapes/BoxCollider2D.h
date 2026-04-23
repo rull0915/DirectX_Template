@@ -44,6 +44,8 @@ private:
 
     // 計算済みワールド情報
     struct WorldCache {
+        float angle;
+
         DirectX::SimpleMath::Vector2 xAxis;
         DirectX::SimpleMath::Vector2 yAxis;
 
@@ -73,20 +75,29 @@ public:
     //-----------------------------------------------------
 
     // 各軸ベクトルを取得する関数
+    float GetAngle() const
+    {
+        if (IsDirty()) UpdateCache();
+        return m_cache.angle;
+    }
     DirectX::SimpleMath::Vector2 GetXAxis() const
     {
+        if (IsDirty()) UpdateCache();
         return m_cache.xAxis;
     }
     DirectX::SimpleMath::Vector2 GetYAxis() const
     {
+        if (IsDirty()) UpdateCache();
         return m_cache.yAxis;
     }
     DirectX::SimpleMath::Vector2 GetSize() const
     {
+        if (IsDirty()) UpdateCache();
         return m_cache.scale;
     }
     DirectX::SimpleMath::Vector2 GetHalfSize() const
     {
+        if (IsDirty()) UpdateCache();
         return m_cache.scale * 0.5f;
     }
 

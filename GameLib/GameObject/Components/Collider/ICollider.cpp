@@ -22,6 +22,6 @@ ICollider::ICollider(GameObject* own, int id, bool isMain)
 	, m_isDirty{ true }
 	, m_isChanged{ false }
 	, m_layerNum{ -1 }
-	, m_latestVersion{ 0 }
+	, m_latestVersion{ 1 }
 {
 }

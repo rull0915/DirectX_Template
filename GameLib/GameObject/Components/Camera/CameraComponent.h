@@ -78,7 +78,7 @@ public:
     CameraComponent(GameObject* own, int width, int height, 
         ProjectionType type = ProjectionType::Perspective, 
         float fov = 45.0f, float nearZ = 0.1f, float farZ = 100.0f,
-        float size = 30.0f);
+        float size = 10.0f);
     ~CameraComponent();
 
     //-----------------------------------------------------

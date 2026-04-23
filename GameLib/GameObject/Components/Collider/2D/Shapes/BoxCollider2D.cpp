@@ -38,6 +38,7 @@ void BoxCollider2D::UpdateCache() const
 
     // ----- ŠeŽ²‚ÌXV ----- //
     float zAngle = pT->GetWorldEulerAngle().z;
+    m_cache.angle = zAngle;
     m_cache.xAxis = { cosf(zAngle), sinf(zAngle) };
     m_cache.yAxis = { -sinf(zAngle), cosf(zAngle) };
 

@@ -400,7 +400,7 @@ void MyRenderer::DrawLine(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMat
 	VertexPositionColor v1 = VertexPositionColor(start, SimpleMath::Vector4{ r, g, b, a });
 	VertexPositionColor v2 = VertexPositionColor(end, SimpleMath::Vector4{ r, g, b, a });
 
-	DrawLine(v1, v2);
+	m_instance.m_primitiveBatch->DrawLine(v1, v2);
 }
 
 void MyRenderer::DrawCircle(DirectX::SimpleMath::Vector3 centerPos, DirectX::SimpleMath::Vector3 normal, float radius, int division, int color, bool fillFrag)
@@ -455,41 +455,47 @@ void MyRenderer::DrawCircle(DirectX::SimpleMath::Vector3 centerPos, DirectX::Sim
 
 void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::SimpleMath::Vector3 vStart, DirectX::SimpleMath::Vector3 vEnd, float radius, int color, int segments)
 {
+	// 初期化していなければスキップ
+	if (!m_instance.m_initialized) return;
+
+	// 描画開始していなければスキップ
+	if (!m_instance.m_isDrawStarted) return;
+
+	CheckChange(DrawMode::Primitiv);
+
 	if (radius <= 0.0f || segments <= 0) return;
 
-	// 1. ベクトルの正規化（中心からの方向ベクトルとして扱う）
+	// ベクトルの正規化（中心からの方向ベクトルとして扱う）
 	vStart.Normalize();
 	vEnd.Normalize();
 
-	// 2. 平面の法線を求める
+	// 平面の法線を求める
 	DirectX::SimpleMath::Vector3 normal = vStart.Cross(vEnd);
 
-	// 開始と終了が同じ、または真逆（180度）の場合は外積がゼロになる
+	// 法線が決まらなかった場合スキップ
 	if (normal.LengthSquared() < 0.000001f) {
-		// 真逆の場合は法線が一意に決まらないため、何らかのデフォルト軸が必要
-		// ここでは簡易的に描画をスキップするか、直線を引くなどの処理
 		return;
 	}
 	normal.Normalize();
 
-	// 3. 基底ベクトル U, V を作成
-	// vStart をそのまま角度 0 (U) とする
+	// 基底ベクトル U, V を作成
+	// vStart を角度 0 とする
 	DirectX::SimpleMath::Vector3 vU = vStart;
-	// U と法線に垂直なベクトルを V (角度 90) とする
+	// U と法線に垂直なベクトルを V とする
 	DirectX::SimpleMath::Vector3 vV = normal.Cross(vU);
 	vV.Normalize();
 
-	// 4. 終了角を求める
+	// 終了角を求める
 	float endRadian = std::atan2(vV.Dot(vEnd), vU.Dot(vEnd));
 
-	// atan2 は -PI ~ PI を返すため、負の角度を正の回転（あるいは最短距離）に調整する場合
-	if (endRadian < 0) {
-		// 必要に応じて 2*PI を足して正の回転にする、
-		// もしくはそのままにして最短距離で描画させる
-	}
+	// --- 色の展開 ---
+	float r = static_cast<float>((color >> 16) & 0xFF) / 255.0f;
+	float g = static_cast<float>((color >> 8) & 0xFF) / 255.0f;
+	float b = static_cast<float>((color >> 0) & 0xFF) / 255.0f;
+	SimpleMath::Vector4 col(r, g, b, m_instance.m_alphaValue);
 
-	// 5. 描画ループ
-	float step = endRadian / static_cast<float>(segments); // startRadian(0) を引いたもの
+	// 描画
+	float step = endRadian / static_cast<float>(segments);
 	DirectX::SimpleMath::Vector3 prevPoint = center + vU * radius;
 
 	for (int i = 1; i <= segments; ++i)
@@ -500,7 +506,10 @@ void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::Si
 		DirectX::SimpleMath::Vector3 currentPoint = center + (vU * cosf(theta) + vV * sinf(theta)) * radius;
 
 		// 前の点と現在の点を線で結ぶ
-		DrawLine(prevPoint, currentPoint, color);
+		m_instance.m_primitiveBatch->DrawLine(
+			VertexPositionColor(prevPoint, col),
+			VertexPositionColor(currentPoint, col)
+		);
 
 		prevPoint = currentPoint;
 	}

@@ -194,6 +194,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\BaseCollider2D.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\2DColliders.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\BoxCollider2D.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\CircleCollider2D.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\3D\BaseCollider.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\3D\Shapes\BoxCollider.h" />
@@ -268,6 +269,7 @@
     <ClCompile Include="GameLib\GameObject\Components\Camera\RayCast.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\2D\BaseCollider2D.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\BoxCollider2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\CircleCollider2D.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\3D\BaseCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\3D\Shapes\BoxCollider.cpp" />

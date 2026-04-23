@@ -44,6 +44,8 @@ CameraComponent::CameraComponent(GameObject* own, int width, int height, Project
 	UpdateProj();
 
 	UpdateView();
+
+	SetMain();
 }
 
 /// <summary>

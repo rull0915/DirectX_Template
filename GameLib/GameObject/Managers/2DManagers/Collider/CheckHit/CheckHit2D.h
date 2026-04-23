@@ -36,3 +36,19 @@ bool CheckHit2D(BaseCollider2D* colA, BaseCollider2D* colB, HitInfomation2D* inf
 /// 球同士の衝突判定
 /// </summary>
 bool CheckHit2D(CircleCollider2D* colA, CircleCollider2D* colB, HitInfomation2D* info);
+
+/// <summary>
+/// 球とカプセル
+/// </summary>
+bool CheckHit2D(CircleCollider2D* colA, CapsuleCollider2D* colB, HitInfomation2D* info);
+
+/// <summary>
+/// 球とボックス
+/// </summary>
+bool CheckHit2D(CircleCollider2D* colA, BoxCollider2D* colB, HitInfomation2D* info);
+
+/// <summary>
+/// ボックス同士
+/// </summary>
+bool CheckHit2D(BoxCollider2D* colA, BoxCollider2D* colB, HitInfomation2D* info);
+

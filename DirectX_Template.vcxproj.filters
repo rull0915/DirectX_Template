@@ -83,6 +83,7 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\CollideManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.h" />
     <ClInclude Include="GameLib\GameObject\Components\Camera\RayCast.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="GameLib\GameObject\Managers\3DManagers\Collider\CollideManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Camera\RayCast.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

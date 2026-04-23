@@ -68,20 +68,18 @@ void ObjectManager::Update(float elapsedTime)
 	// カメラの更新
 	CameraManager::Instance().Update();
 
-	// 3Dコライダーの更新
 	{
+		// 3Dコライダーの更新
+		
 		// 木構造の更新
 		CollideManager::Instance().MoveAllColliderOnTree();
-
 		// 衝突判定
 		CollideManager::Instance().CheckHitAll();
-	}
 
-	// 2Dコライダーの更新
-	{
+		// 2Dコライダーの更新
+
 		// 木構造の更新
 		CollideManager2D::Instance().MoveAllColliderOnTree();
-
 		// 衝突判定
 		CollideManager2D::Instance().CheckHitAll();
 	}
