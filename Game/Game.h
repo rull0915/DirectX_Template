@@ -68,7 +68,17 @@ private:
     // Rendering loop timer.
     DX::StepTimer                           m_timer;
 
+    // FPSカウンタ
+    uint32_t m_frameCount;
+    float m_timeAccumulator;
+    float m_fps;
+
     // ================ 自分の処理 ==================//
+    
+    // タイトルの文字列
+public:
+    static constexpr const wchar_t TITLE_STRING[]{ L"Template" };
+
 private:
     // シーンマネージャー
     SceneManager m_sceneManager;
@@ -92,4 +102,7 @@ public:
     {
         m_exitTrans = std::make_unique<FadeTransition>(1.0f, Transition::Mode::In, 0x000000);
     };
+
+private:
+    void TitleNameUpdate(float elapsedTime);
 };

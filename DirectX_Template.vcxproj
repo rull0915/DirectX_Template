@@ -222,6 +222,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Transform\Transform.h" />
     <ClInclude Include="GameLib\GameObject\GameObject.h" />
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CheckHit\CheckHit2D.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CheckHit\CheckHitAuxiliary2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CollideManager2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\HitInfomation\HitInfomation2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\SpaceDivision\Cell2D.h" />
@@ -235,6 +236,10 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\SpaceDivision\Cell.h" />
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\SpaceDivision\ObjectForTree.h" />
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\SpaceDivision\TreeManager.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\3DManagers\HitContact.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\CameraManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\ObjectManager.h" />

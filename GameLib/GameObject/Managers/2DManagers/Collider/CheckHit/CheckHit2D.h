@@ -48,6 +48,16 @@ bool CheckHit2D(CircleCollider2D* colA, CapsuleCollider2D* colB, HitInfomation2D
 bool CheckHit2D(CircleCollider2D* colA, BoxCollider2D* colB, HitInfomation2D* info);
 
 /// <summary>
+/// カプセル同士
+/// </summary>
+bool CheckHit2D(CapsuleCollider2D* colA, CapsuleCollider2D* colB, HitInfomation2D* info);
+
+/// <summary>
+/// カプセルとボックス
+/// </summary>
+bool CheckHit2D(CapsuleCollider2D* colA, BoxCollider2D* colB, HitInfomation2D* info);
+
+/// <summary>
 /// ボックス同士
 /// </summary>
 bool CheckHit2D(BoxCollider2D* colA, BoxCollider2D* colB, HitInfomation2D* info);

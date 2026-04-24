@@ -12,6 +12,8 @@
 #include "pch.h"
 #include "PhysicsManager.h"
 
+#include "Collider/CollideManager.h"
+
 //====================================================//
 // ŠÖ”‚ÌÀ‘ÌéŒ¾
 //====================================================//
@@ -49,4 +51,15 @@ void PhysicsManager::Update(float elapsedTime)
 
 		body->Integrate(elapsedTime);
 	}
+
+	// --- Õ“Ë”»’è --- //
+
+	// ‹óŠÔ•ªŠ„‚ÌXV
+	CollideManager::Instance().MoveAllColliderOnTree();
+}
+
+// Õ“ËŒã‚Ì•â³‚ğs‚¤ŠÖ”
+void PhysicsManager::HittedCorrection()
+{
+
 }

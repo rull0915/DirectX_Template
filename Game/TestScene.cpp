@@ -33,8 +33,8 @@ void TestScene::Initialize()
 {
 	m_testCamera = ObjectManager::Instance().Generate<GameObject>();
 
-	m_testCamera->GetComponent<Transform>()->SetLocalPosition({ 0, 10, 10 });
-	m_testCamera->GetComponent<Transform>()->SetLocalEulerAngle({ -PI_F / 12, 0, 0 });
+	m_testCamera->GetComponent<Transform>()->SetLocalPosition({ 0, 0, 5 });
+//	m_testCamera->GetComponent<Transform>()->SetLocalEulerAngle({ -PI_F / 12, 0, 0 });
 
 	m_testCamera->AddComponent<CameraComponent>(Screen::WIDTH, Screen::HEIGHT)->SetMain();
 
@@ -65,13 +65,13 @@ void TestScene::Initialize()
 	{
 		auto p = ObjectManager::Instance().Generate<GameObject>();
 
-		switch (Random::Get(2, 2))
+		switch (Random::Get(1, 2))
 		{
 		case 0:
-			p->AddComponent<BoxCollider2D>();
+			p->AddComponent<CircleCollider2D>();
 			break;
 		case 1:
-			p->AddComponent<CircleCollider2D>();
+			p->AddComponent<BoxCollider2D>();
 			break;
 		case 2:
 			p->AddComponent<CapsuleCollider2D>(2.0f, 0.3f);
@@ -81,7 +81,7 @@ void TestScene::Initialize()
 		} 
 
 		p->AddComponent<RigidBody2D>()->SetFriction(0.1f);
-		p->GetComponent<RigidBody2D>()->SetUseGravity(false);
+//		p->GetComponent<RigidBody2D>()->SetUseGravity(false);
 
 		SimpleMath::Vector2 pos = { Random::GetFloat(-8.0, 8.0), Random::GetFloat(0.0f, 9.0f) };
 		auto t = p->GetComponent<Transform>();
@@ -92,7 +92,7 @@ void TestScene::Initialize()
 		m_objects.push_back(p);
 	}
 
-	int ballCount = 0;
+	int ballCount = 10;
 	for (int i = 0; i < ballCount; i++)
 	{
 		SimpleMath::Vector3 pos = { Random::GetFloat(-10.0f, 10.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-10.0f, 10.0f) };
@@ -153,13 +153,16 @@ void TestScene::Update(float elapsedTime)
 	{
 				auto p = ObjectManager::Instance().Generate<GameObject>();
 
-		switch (Random::Get(0, 1))
+		switch (Random::Get(1, 2))
 		{
 		case 0:
-			p->AddComponent<BoxCollider2D>();
+			p->AddComponent<CircleCollider2D>();
 			break;
 		case 1:
-			p->AddComponent<CircleCollider2D>();
+			p->AddComponent<BoxCollider2D>();
+			break;
+		case 2:
+			p->AddComponent<CapsuleCollider2D>(2.0f, 0.5f);
 			break;
 		default:
 			break;
@@ -182,10 +185,6 @@ void TestScene::Update(float elapsedTime)
 // ï`âÊä÷êî
 void TestScene::Render()
 {
-	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 1, 0, 0 }, 2, 32, 0x00FF00, false);
-	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 1, 0 }, 2, 32, 0x00FF00, false);
-	//MyRenderer::DrawCircle({ -20, 0, 0 }, { 0, 0, 1 }, 2, 32, 0x00FF00, false);
-	//MyRenderer::DrawCircle({ -20, 0, 0 }, m_testCamera->GetComponent<Transform>()->GetForward(), 2, 32, 0x00FF00, false);
 }
 
 // èIóπä÷êî

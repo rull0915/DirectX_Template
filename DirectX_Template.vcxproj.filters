@@ -84,6 +84,8 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.h" />
     <ClInclude Include="GameLib\GameObject\Components\Camera\RayCast.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CheckHit\CheckHitAuxiliary2D.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\3DManagers\HitContact.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

@@ -31,18 +31,6 @@
 // クラス宣言
 //====================================================//
 
-// 衝突リスト格納用構造体
-struct ContactPair
-{
-    BaseCollider* a;
-    BaseCollider* b;
-
-    bool operator==(const ContactPair& other) const {
-        return (a == other.a && b == other.b) ||
-            (a == other.b && b == other.a);
-    }
-};
-
 class CollideManager
 {
 private:

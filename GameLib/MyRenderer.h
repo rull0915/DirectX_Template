@@ -286,5 +286,7 @@ public:
 	{
 		m_instance.m_alphaValue = ratio; 
 	}
+
+	static DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* GetPrimitiveBatch() { return m_instance.m_primitiveBatch.get(); }
 };
 

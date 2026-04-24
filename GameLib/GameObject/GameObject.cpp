@@ -62,7 +62,7 @@ void GameObject::BaseFinalize()
 /// <summary>
 /// コライダーのデバッグ描画をする関数
 /// </summary>
-void GameObject::CollidersDebugDraw(int color, bool drawBoudingBox)
+void GameObject::CollidersDebugDraw(int color, bool drawBoundingBox)
 {
     static std::vector<BaseCollider*> colliders;
     static std::vector<BaseCollider2D*> colliders2D;
@@ -74,14 +74,14 @@ void GameObject::CollidersDebugDraw(int color, bool drawBoudingBox)
     {
         col->DebugDraw(color);
 
-        if (drawBoudingBox) col->DebugDrawAABB(color);
+        if (drawBoundingBox) col->DebugDrawAABB(color);
     }
 
     for (auto& col : colliders2D)
     {
         col->DebugDraw(color);
 
-        if (drawBoudingBox) col->DebugDrawAABB(color);
+        if (drawBoundingBox) col->DebugDrawAABB(color);
     }
 }
 

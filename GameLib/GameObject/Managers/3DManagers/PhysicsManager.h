@@ -16,13 +16,15 @@
 //====================================================//
 #include "GameLib/GameObject/Components/RigidBody/3D/RigidBody.h"
 
+#include "HitContact.h"
+
 #include <vector>
 #include <unordered_set>
 
 //====================================================//
 // ‘O•ûéŒ¾
 //====================================================//
-
+ 
 //====================================================//
 // ƒNƒ‰ƒXéŒ¾
 //====================================================//
@@ -48,6 +50,9 @@ private:
 
     // “o˜^‚³‚ê‚Ä‚¢‚éRigidBody
     std::vector<RigidBody*> m_rigidBodies;
+
+    // Õ“Ëî•ñ
+    std::vector<HitContact> m_contacts;
 
 
     //-----------------------------------------------------
@@ -118,4 +123,7 @@ private:
 
         m_removeReserves.clear();
     }
+
+    // Õ“ËŒã‚Ì•â³
+    void HittedCorrection();
 };

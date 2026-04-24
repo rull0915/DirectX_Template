@@ -23,7 +23,10 @@ using Microsoft::WRL::ComPtr;
 Game::Game() noexcept(false)
     : m_states{}
     , m_stageCount{ 0 }
-, m_exitTrans{ nullptr }
+    , m_exitTrans{ nullptr }
+    , m_fps{}
+    , m_timeAccumulator{}
+    , m_frameCount{}
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
@@ -100,6 +103,8 @@ void Game::Update(DX::StepTimer const& timer)
         if (m_exitTrans->Update(elapsedTime)) ExitGame();
     }
 
+    TitleNameUpdate(elapsedTime);
+
     // 入力情報の更新
     KeyInput::KeyUpdate();
     MouseInput::MouseUpdate();
@@ -172,6 +177,7 @@ void Game::Clear()
     auto depthStencil = m_deviceResources->GetDepthStencilView();
 
     DirectX::XMVECTORF32 color = { 0.6f, 0.6f, 0.7f, 1.0f };
+//    DirectX::XMVECTORF32 color = { 0.0f, 0.0f, 0.0f, 1.0f };
     context->ClearRenderTargetView(renderTarget, color);
     context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     context->OMSetRenderTargets(1, &renderTarget, depthStencil);
@@ -264,6 +270,37 @@ void Game::CreateDeviceDependentResources()
 void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
+}
+
+void Game::TitleNameUpdate(float elapsedTime)
+{
+    // FPSの計算
+    m_timeAccumulator += elapsedTime;
+    ++m_frameCount;
+
+    // FPSを1秒ごとに更新
+    if (m_timeAccumulator > 1.0f)
+    {
+        m_fps = static_cast<float>(m_frameCount) / m_timeAccumulator;
+
+        // windowタイトルをFPSで更新
+        HWND hwnd = m_deviceResources->GetWindow();
+
+        if (hwnd)
+        {
+            std::wstring titleStr = TITLE_STRING;
+
+            wchar_t title[128]{};
+
+            swprintf_s(title, L"(FPS: %.1f)", m_fps);
+            titleStr += title;
+
+            SetWindowTextW(hwnd, titleStr.data());
+        }
+
+        m_frameCount = 0;
+        m_timeAccumulator = 0;
+    }
 }
 
 void Game::OnDeviceLost()

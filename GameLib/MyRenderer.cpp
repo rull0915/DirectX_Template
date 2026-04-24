@@ -425,32 +425,29 @@ void MyRenderer::DrawCircle(DirectX::SimpleMath::Vector3 centerPos, DirectX::Sim
 	// --- sin/cos のテーブル化 ---
 	float step = XM_2PI / static_cast<float>(division);
 
-	SimpleMath::Vector3 prevPoint = centerPos + vU * radius;
+	DX11::VertexPositionColor* vertexes = new DX11::VertexPositionColor[division * 2];
 
+	DirectX::SimpleMath::Vector3 prevPoint = centerPos + vU * radius;
+	// 分割数分ループ
 	for (int i = 1; i <= division; ++i)
 	{
 		float theta = step * i;
 
 		SimpleMath::Vector3 currentPoint;
-		if (division == 16) currentPoint = centerPos + (vU * CosCache16[i % 16] + vV * SinCache16[i % 16]) * radius;
-		else { currentPoint = centerPos + (vU * cosf(theta) + vV * sinf(theta)) * radius; }
+		currentPoint = centerPos + (vU * cosf(theta) + vV * sinf(theta)) * radius;
 
-		if (fillFrag) {
-			m_instance.m_primitiveBatch->DrawTriangle(
-				VertexPositionColor(prevPoint, col),
-				VertexPositionColor(currentPoint, col),
-				VertexPositionColor(centerPos, col)
-			);
-		}
-		else {
-			// --- DrawLineを経由せず直接描画 ---
-			m_instance.m_primitiveBatch->DrawLine(
-				VertexPositionColor(prevPoint, col),
-				VertexPositionColor(currentPoint, col)
-			);
-		}
+		VertexPositionColor v1 = VertexPositionColor(prevPoint, col);
+		VertexPositionColor v2 = VertexPositionColor(currentPoint, col);
+
+		vertexes[i * 2 - 2] = v1;
+		vertexes[i * 2 - 1] = v2;
+
 		prevPoint = currentPoint;
 	}
+
+	m_instance.m_primitiveBatch->Draw(D3D10_PRIMITIVE_TOPOLOGY_LINELIST, vertexes, division * 2);
+
+	delete[] vertexes;
 }
 
 void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::SimpleMath::Vector3 vStart, DirectX::SimpleMath::Vector3 vEnd, float radius, int color, int segments)
@@ -496,8 +493,10 @@ void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::Si
 
 	// 描画
 	float step = endRadian / static_cast<float>(segments);
-	DirectX::SimpleMath::Vector3 prevPoint = center + vU * radius;
 
+	DX11::VertexPositionColor* vertexes = new DX11::VertexPositionColor[segments * 2];
+
+	DirectX::SimpleMath::Vector3 prevPoint = center + vU * radius;
 	for (int i = 1; i <= segments; ++i)
 	{
 		float theta = step * i;
@@ -505,14 +504,18 @@ void MyRenderer::DrawArc(const DirectX::SimpleMath::Vector3& center, DirectX::Si
 		// 円周上の座標を算出
 		DirectX::SimpleMath::Vector3 currentPoint = center + (vU * cosf(theta) + vV * sinf(theta)) * radius;
 
-		// 前の点と現在の点を線で結ぶ
-		m_instance.m_primitiveBatch->DrawLine(
-			VertexPositionColor(prevPoint, col),
-			VertexPositionColor(currentPoint, col)
-		);
+		VertexPositionColor v1 = VertexPositionColor(prevPoint, col);
+		VertexPositionColor v2 = VertexPositionColor(currentPoint, col);
+
+		vertexes[i * 2 - 2] = v1;
+		vertexes[i * 2 - 1] = v2;
 
 		prevPoint = currentPoint;
 	}
+
+	m_instance.m_primitiveBatch->Draw(D3D10_PRIMITIVE_TOPOLOGY_LINELIST, vertexes, segments * 2);
+
+	delete[] vertexes;
 }
 
 #pragma endregion

@@ -129,9 +129,9 @@ template<typename T>
 inline void ObjectManager::Destroy(T* object)
 {
     // GameObject派生クラスであれば
-    if constexpr (std::is_base_of_v<T, GameObject>)
+    if constexpr (std::is_base_of_v<GameObject, T>)
     {
         // 削除フラグを立てる
-        object->Destoroy();
+        object->Destory();
     }
 }

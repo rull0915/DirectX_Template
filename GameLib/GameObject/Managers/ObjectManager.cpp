@@ -172,7 +172,11 @@ void ObjectManager::RemoveDeadObject()
 			for (auto& col : cols) CollideManager::Instance().RemoveCollide(col);
 
 			// リジッドボディをマネージャーから削除
-			PhysicsManager::Instance().RemoveRigidBody(obj->GetComponent<RigidBody>());
+			if (auto rb = obj->GetComponent<RigidBody>())
+				PhysicsManager::Instance().RemoveRigidBody(rb);
+
+			if (auto rb2d = obj->GetComponent<RigidBody2D>())
+				PhysicsManager2D::Instance().RemoveRigidBody2D(rb2d);
 
 			// リストから削除
 			m_objects.erase(m_objects.begin() + i);

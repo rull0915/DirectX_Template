@@ -38,12 +38,12 @@ void RigidBody2D::Integrate(float elapsedTime)
     // ‘¬“x‚ð’²‚×‚é
     if (m_velocity.LengthSquared() >= 0.1f) SetStoppintTime(0);
 
-    //if (m_stoppingTime >= SLEEP_BORDER)
-    //{
-    //    m_isSleep = true;
-    //    m_velocity = SimpleMath::Vector2::Zero;
-    //    m_force = SimpleMath::Vector2::Zero;
-    //}
+    if (GetStoppingTime() >= SLEEP_BORDER)
+    {
+        SetSleep(true);
+        m_velocity = SimpleMath::Vector2::Zero;
+        m_force = SimpleMath::Vector2::Zero;
+    }
 
     if (IsSleep()) return;
 
