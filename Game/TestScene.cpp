@@ -61,7 +61,7 @@ void TestScene::Initialize()
 
 	}
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 0; i++)
 	{
 		auto p = ObjectManager::Instance().Generate<GameObject>();
 
@@ -92,7 +92,7 @@ void TestScene::Initialize()
 		m_objects.push_back(p);
 	}
 
-	int ballCount = 10;
+	int ballCount = 500;
 	for (int i = 0; i < ballCount; i++)
 	{
 		SimpleMath::Vector3 pos = { Random::GetFloat(-10.0f, 10.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-10.0f, 10.0f) };

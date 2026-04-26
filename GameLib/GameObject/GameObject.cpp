@@ -85,21 +85,6 @@ void GameObject::CollidersDebugDraw(int color, bool drawBoundingBox)
     }
 }
 
-void GameObject::BaseOnCollision(BaseCollider* other)
-{
-    // 必ず行う処理
-    // m_debugColor = 0xFF0000;
-
-    // 派生クラスの衝突時処理
-    OnCollision(other);
-}
-
-void GameObject::BaseOnTrigger(BaseCollider* other)
-{
-    // 派生クラスのトリガー時処理
-    OnTrigger(other);
-}
-
 void GameObject::BaseOnCollision2D(BaseCollider2D* other)
 {
     OnCollision2D(other);

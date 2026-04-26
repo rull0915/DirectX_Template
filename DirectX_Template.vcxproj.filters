@@ -44,7 +44,6 @@
     <ClInclude Include="Game\TestObjects\WallObject.h" />
     <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
     <ClInclude Include="GameLib\Common\ThreadPool.h" />
-    <ClInclude Include="Others\Template.h" />
     <ClInclude Include="GameLib\GameObject\GameObject.h" />
     <ClInclude Include="GameLib\GameObject\Components\Components.h" />
     <ClInclude Include="GameLib\GameObject\Components\BaseComponent.h" />
@@ -86,6 +85,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CheckHit\CheckHitAuxiliary2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\HitContact.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -110,7 +110,6 @@
     <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
     <ClCompile Include="Game\TestObjects\WallObject.cpp" />
     <ClCompile Include="GameLib\Common\ThreadPool.cpp" />
-    <ClCompile Include="Others\Template.cpp" />
     <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Transform\Transform.cpp" />
@@ -138,6 +137,7 @@
     <ClCompile Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Camera\RayCast.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.cpp" />
+    <ClCompile Include="GameLib\GameObject\Managers\System\CollideEventSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

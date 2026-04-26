@@ -37,7 +37,7 @@ void CubeObject::Finalize()
 {
 }
 
-void CubeObject::OnCollision(BaseCollider* col)
+void CubeObject::OnCollisionEnter(BaseCollider* col)
 {
 	col;
 

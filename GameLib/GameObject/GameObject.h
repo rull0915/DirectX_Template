@@ -104,14 +104,17 @@ private:
 
     // Õ“ËŠÖ˜A
 public:
-    void BaseOnCollision(BaseCollider* other);
-    void BaseOnTrigger(BaseCollider* other);
+
     void BaseOnCollision2D(BaseCollider2D* other);
     void BaseOnTrigger2D(BaseCollider2D* other);
 
     // Õ“Ë‚ÉŒÄ‚Ño‚³‚ê‚éŠÖ”
-    virtual void OnCollision(BaseCollider* other) {};
-    virtual void OnTrigger(BaseCollider* other) {};
+    virtual void OnCollisionEnter(BaseCollider* other) {};
+    virtual void OnCollisionStay(BaseCollider* other) {};
+    virtual void OnCollisionExit(BaseCollider* other) {};
+    virtual void OnTriggerEnter(BaseCollider* other) {};
+    virtual void OnTriggerStay(BaseCollider* other) {};
+    virtual void OnTriggerExit(BaseCollider* other) {};
     virtual void OnCollision2D(BaseCollider2D* other) {};
     virtual void OnTrigger2D(BaseCollider2D* other) {};
 

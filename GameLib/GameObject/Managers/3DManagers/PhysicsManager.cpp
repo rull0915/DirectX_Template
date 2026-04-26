@@ -14,6 +14,8 @@
 
 #include "Collider/CollideManager.h"
 
+#include "GameLib/GameMath/GameMath.h"
+
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -56,10 +58,146 @@ void PhysicsManager::Update(float elapsedTime)
 
 	// 空間分割の更新
 	CollideManager::Instance().MoveAllColliderOnTree();
+
+	// 判定
+	CollideManager::Instance().CheckHitAll(m_contacts);
+
+	// 位置補正
+	HittedCorrection();
 }
 
 // 衝突後の補正を行う関数
 void PhysicsManager::HittedCorrection()
 {
+	// ペアリストの初期化
+	m_contactMap.clear();
 
+	for (auto& contact : m_contacts)
+	{
+		// レイヤー管理
+
+		// リストに追加
+		ObjectPair pair = ObjectPair(contact.a, contact.b);
+		m_contactMap.insert(std::make_pair(pair, contact));
+
+		// トリガーチェック
+		if (contact.isTrigger){ continue; }
+
+		// どちらも起こす
+		if (contact.aRigid && contact.aRigid->IsSleep()) contact.aRigid->WakeUp();
+		if (contact.bRigid && contact.bRigid->IsSleep()) contact.bRigid->WakeUp();
+
+		// 位置補正
+		PositionCorrection(contact);
+
+		// 速度補正
+		VelocityCorrection(contact);
+	}
+}
+
+void PhysicsManager::PositionCorrection(HitContact& contact)
+{
+	auto aRigid = contact.aRigid, bRigid = contact.bRigid;
+
+	// 動く割合の算出
+	float ratioA = 0, ratioB = 0;
+	{
+		// どちらかがStaticな場合
+		if (contact.aIsStatic) {
+			ratioA = 0;   // Aは動かない
+			ratioB = 1;   // Bが100%押し戻される
+		}
+		else if (contact.bIsStatic) {
+			ratioA = -1;  // Aが100%押し戻される
+			ratioB = 0;   // Bは動かない
+		}
+		// どちらも移動する場合
+		else
+		{
+			// 双方の質量を取得
+			float massA = aRigid->GetMass(), massB = bRigid->GetMass();
+
+			// 質量の比率で移動量を決定
+			ratioA = -massB / (massA + massB);
+			ratioB = massA / (massA + massB);
+		}
+	}
+
+	// ----- 位置の補正 ----- //
+	{
+		DirectX::SimpleMath::Vector3 corrVecA = ratioA * contact.normal * contact.penetration;
+		DirectX::SimpleMath::Vector3 corrVecB = ratioB * contact.normal * contact.penetration;
+
+		contact.a->GetComponent<Transform>()->AddCache(corrVecA);
+		contact.b->GetComponent<Transform>()->AddCache(corrVecB);
+	}
+}
+
+void PhysicsManager::VelocityCorrection(HitContact& contact)
+{
+	// ----- 速度の補正 ----- //
+	auto aRigid = contact.aRigid, bRigid = contact.bRigid;
+
+	// --- 衝突法線方向 --- // 
+
+	// 双方の速度を取得
+	DirectX::SimpleMath::Vector3 aVel = (aRigid ? aRigid->GetVelocity() : DirectX::SimpleMath::Vector3::Zero);
+	DirectX::SimpleMath::Vector3 bVel = (bRigid ? bRigid->GetVelocity() : DirectX::SimpleMath::Vector3::Zero);
+
+	// 相対速度の計算
+	DirectX::SimpleMath::Vector3 relativeVel = bVel - aVel;
+
+	// 投影して衝突法線方向の速度成分を計算
+	float hitDirVel = relativeVel.Dot(contact.normal);
+
+	// ぶつかっていれば
+	if (hitDirVel < 0)
+	{
+		// 反発係数の小さいほうを適用
+		float aRes = (!contact.aIsStatic && aRigid ? aRigid->GetRestitution() : 1), bRes = (!contact.bIsStatic && bRigid ? bRigid->GetRestitution() : 1);
+		float e = aRes < bRes ? aRes : bRes;
+
+		// インパルスの算出
+		float aInvMass = !contact.aIsStatic && aRigid ? aRigid->GetInvMass() : 0, bInvMass = (!contact.bIsStatic && bRigid ? bRigid->GetInvMass() : 0);
+		float j = (-(1 + e) * hitDirVel) / (aInvMass + bInvMass);	// 打ち消しと反発を同時に行うために-(1 + e)
+
+		// 摩擦係数を取得
+		float aFric = (aRigid ? aRigid->GetFriction() : 0), bFric = (bRigid ? bRigid->GetFriction() : 0);
+		float mu = (aFric + bFric) / 2;	// 平均値を扱う
+
+		// --- 接線方向の処理 --- //
+
+		// 接線ベクトルの作成
+		// 相対速度から「法線方向の成分」を抜き出す
+		DirectX::SimpleMath::Vector3 normalVel = hitDirVel * contact.normal;
+
+		// 全体の相対速度から法線成分を引く
+		DirectX::SimpleMath::Vector3 tangentVel = relativeVel - normalVel;
+
+		// 正規化して接線とする
+		float tangentSpeed = tangentVel.Length();
+		DirectX::SimpleMath::Vector3 tangential = DirectX::SimpleMath::Vector3::Zero;
+
+		if (tangentSpeed > 0.0001f) {
+			tangential = tangentVel / tangentSpeed;
+		}
+
+		// 接線方向の速度をゼロにするインパルスを計算
+		float j_tangent = -(relativeVel.Dot(tangential)) / (aInvMass + bInvMass);
+
+		// 摩擦の限界値を計算 垂直抗力 j に 摩擦係数 mu を掛ける
+		float maxFriction = mu * abs(j);
+
+		// ブレーキの強さを限界値内に収める
+		float actualFrictionImpulse = MyMath::Clamp(j_tangent, -maxFriction, maxFriction);
+
+		// 接線方向のインパルス
+		DirectX::SimpleMath::Vector3 tangentImpulse = actualFrictionImpulse * tangential;
+		// 法線方向のインパルス
+		DirectX::SimpleMath::Vector3 normalImpulse = j * contact.normal;
+
+		// 双方の速度を変更
+		if (aRigid) aRigid->SetVelocity(aVel - aInvMass * (tangentImpulse + normalImpulse));
+		if (bRigid) bRigid->SetVelocity(bVel + bInvMass * (tangentImpulse + normalImpulse));
+	}
 }

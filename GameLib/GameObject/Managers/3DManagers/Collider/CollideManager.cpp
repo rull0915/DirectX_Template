@@ -82,7 +82,7 @@ void CollideManager::MoveAllColliderOnTree()
 /// <summary>
 /// 全てのコライダーの衝突判定を行う関数
 /// </summary>
-void CollideManager::CheckHitAll()
+void CollideManager::CheckHitAll(std::vector<HitContact>& contacts)
 {
 	// 条件のラムダ式
 	auto condition = [&](BaseCollider* a, BaseCollider* b)
@@ -106,35 +106,37 @@ void CollideManager::CheckHitAll()
 	// 衝突判定を行うラムダ式
 	auto action = [&](BaseCollider* a, BaseCollider* b)
 		{
-			CheckHitPair(a, b);
+			HitContact contact;
+
+			bool hit = CheckHitPair(a, b, contact);
+
+			if (hit)
+			{
+				contacts.push_back(contact);
+			}
 		};
+
+	// 衝突リストの初期化
+	contacts.clear();
 
 	// 衝突判定
 	m_tree.CheckAllCollisionList(condition, action);
 }
 
-void CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB)
+bool CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB, HitContact& contact)
 {
-	// 指定した2つのレイヤーが衝突しない設定ならスキップ
-	int aLayer = colA->GetLayer(), bLayer = colB->GetLayer();
-
-	if (!(aLayer < 0 || bLayer < 0 || aLayer >= 100 || bLayer >= 100) && m_layer[aLayer][bLayer]) return;
-
 	// リジッドボディの有無をチェック
 	RigidBody* aRigid = colA->GetOwn()->GetComponent<RigidBody>();
 	RigidBody* bRigid = colB->GetOwn()->GetComponent<RigidBody>();
 
 	// どちらも物理挙動を持っていなければ判定スキップ
-	if (!aRigid && !bRigid) return;
+	if (!aRigid && !bRigid) return false;
 
 	bool aSleep = (!aRigid || aRigid->IsSleep());
 	bool bSleep = (!bRigid || bRigid->IsSleep());
 
 	// どちらもスリープであれば判定スキップ
-	if (aSleep && bSleep)
-	{
-		return;
-	}
+	if (aSleep && bSleep) return false;
 
 	// 衝突情報を取得する変数を用意
 	HitInfomation hit;
@@ -146,128 +148,30 @@ void CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB)
 	bool AisStatic = !aRigid || (aRigid && aRigid->IsStatic());
 	bool BisStatic = !bRigid || (bRigid && bRigid->IsStatic());
 
-	// 衝突時に位置の変動が起こるかどうか
-	bool isStatic = AisStatic && BisStatic;
+	// 両方staticなら判定スキップ
+	if (AisStatic&& BisStatic) return false;
 
 	// 衝突判定
-	if (CheckHit(colA, colB, (!hasTrigger && !isStatic) ? &hit : nullptr))
+	if (CheckHit(colA, colB, !hasTrigger ? &hit : nullptr))
 	{
-		// 移動が発生する状態の場合
-		if (!hasTrigger && !isStatic)
+		contact.a = colA->GetOwn(), contact.b = colB->GetOwn();
+
+		contact.aCol = colA, contact.bCol = colB;
+
+		contact.aRigid = aRigid, contact.bRigid = bRigid;
+
+		contact.aIsStatic = AisStatic, contact.bIsStatic = BisStatic;
+
+		contact.isTrigger = hasTrigger;
+
+		if (!hasTrigger)
 		{
-			// どちらも起こす
-			if (aRigid && aSleep) aRigid->WakeUp();
-			if (bRigid && bSleep) bRigid->WakeUp();
-
-			// 動く割合の算出
-			float ratioA = 0, ratioB = 0;
-			{
-				// どちらかがStaticな場合
-				if (AisStatic) {
-					ratioA = 0;   // Aは動かない
-					ratioB = 1;   // Bが100%押し戻される
-				}
-				else if (BisStatic) {
-					ratioA = -1;  // Aが100%押し戻される
-					ratioB = 0;   // Bは動かない
-				}
-				// どちらも移動する場合
-				else
-				{
-					// 双方の質量を取得
-					float massA = aRigid->GetMass(), massB = bRigid->GetMass();
-
-					// 質量の比率で移動量を決定
-					ratioA = -massB / (massA + massB);
-					ratioB = massA / (massA + massB);
-				}
-			}
-
-			// ----- 位置の補正 ----- //
-			{
-				SimpleMath::Vector3 corrVecA = ratioA * hit.hitDir * hit.hitLen;
-				SimpleMath::Vector3 corrVecB = ratioB * hit.hitDir * hit.hitLen;
-
-				colA->GetTransform()->AddCache(corrVecA);
-				colB->GetTransform()->AddCache(corrVecB);
-			}
-
-			// ----- 速度の補正 ----- //
-
-			// --- 衝突法線方向 --- // 
-
-			// 双方の速度を取得
-			SimpleMath::Vector3 aVel = (aRigid ? aRigid->GetVelocity() : SimpleMath::Vector3::Zero);
-			SimpleMath::Vector3 bVel = (bRigid ? bRigid->GetVelocity() : SimpleMath::Vector3::Zero);
-
-			// 相対速度の計算
-			SimpleMath::Vector3 relativeVel = bVel - aVel;
-
-			// 投影して衝突法線方向の速度成分を計算
-			float hitDirVel = relativeVel.Dot(hit.hitDir);
-
-			// ぶつかっていれば
-			if (hitDirVel < 0)
-			{
-				// 反発係数の小さいほうを適用
-				float aRes = (!AisStatic ? aRigid->GetRestitution() : 1), bRes = (!BisStatic ? bRigid->GetRestitution() : 1);
-				float e = aRes < bRes ? aRes : bRes;
-
-				// インパルスの算出
-				float aInvMass = !AisStatic ? aRigid->GetInvMass() : 0, bInvMass = (!BisStatic ? bRigid->GetInvMass() : 0);
-				float j = (-(1 + e) * hitDirVel) / (aInvMass + bInvMass);	// 打ち消しと反発を同時に行うために-(1 + e)
-
-				// 摩擦係数を取得
-				float aFric = (aRigid ? aRigid->GetFriction() : 0), bFric = (bRigid ? bRigid->GetFriction() : 0);
-				float mu = (aFric + bFric) / 2;	// 平均値を扱う
-
-				// --- 接線方向の処理 --- //
-
-				// 接線ベクトルの作成
-				// 相対速度から「法線方向の成分」を抜き出す
-				SimpleMath::Vector3 normalVel = hitDirVel * hit.hitDir;
-
-				// 全体の相対速度から法線成分を引く
-				SimpleMath::Vector3 tangentVel = relativeVel - normalVel;
-
-				// 正規化して接線とする
-				float tangentSpeed = tangentVel.Length();
-				SimpleMath::Vector3 tangential = SimpleMath::Vector3::Zero;
-
-				if (tangentSpeed > 0.0001f) {
-					tangential = tangentVel / tangentSpeed;
-				}
-
-				// 接線方向の速度をゼロにするインパルスを計算
-				float j_tangent = -(relativeVel.Dot(tangential)) / (aInvMass + bInvMass);
-
-				// 摩擦の限界値を計算 垂直抗力 j に 摩擦係数 mu を掛ける
-				float maxFriction = mu * abs(j);
-
-				// ブレーキの強さを限界値内に収める
-				float actualFrictionImpulse = MyMath::Clamp(j_tangent, -maxFriction, maxFriction);
-
-				// 接線方向のインパルス
-				SimpleMath::Vector3 tangentImpulse = actualFrictionImpulse * tangential;
-				// 法線方向のインパルス
-				SimpleMath::Vector3 normalImpulse = j * hit.hitDir;
-
-				// 双方の速度を変更
-				if (aRigid) aRigid->SetVelocity(aVel - aInvMass * (tangentImpulse + normalImpulse));
-				if (bRigid) bRigid->SetVelocity(bVel + bInvMass * (tangentImpulse + normalImpulse));
-			}
+			contact.normal = hit.hitDir;
+			contact.penetration = hit.hitLen;
 		}
 
-		// 双方の衝突応答を呼び出す
-		if (hasTrigger)
-		{
-			colA->GetOwn()->BaseOnTrigger(colB);
-			colB->GetOwn()->BaseOnTrigger(colA);
-		}
-		else
-		{
-			colA->GetOwn()->BaseOnCollision(colB);
-			colB->GetOwn()->BaseOnCollision(colA);
-		}
+		return true;
 	}
+
+	return false;
 }

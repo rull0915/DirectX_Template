@@ -17,6 +17,7 @@
 
 #include "3DManagers/Collider/CollideManager.h"
 #include "3DManagers/PhysicsManager.h"
+#include "System/CollideEventSystem.h"
 
 #include "CameraManager.h"
 
@@ -69,13 +70,6 @@ void ObjectManager::Update(float elapsedTime)
 	CameraManager::Instance().Update();
 
 	{
-		// 3Dコライダーの更新
-		
-		// 木構造の更新
-		CollideManager::Instance().MoveAllColliderOnTree();
-		// 衝突判定
-		CollideManager::Instance().CheckHitAll();
-
 		// 2Dコライダーの更新
 
 		// 木構造の更新
@@ -89,6 +83,9 @@ void ObjectManager::Update(float elapsedTime)
 	{
 		object->GetComponent<Transform>()->ReflectCache();	// Transform
 	}
+
+	// 衝突後関数の呼び出し
+	CollideEventSystem::Instance().CallCollideFunctions(PhysicsManager::Instance().GetHitList());
 
 	// 死亡オブジェクトの削除
 	RemoveDeadObject();

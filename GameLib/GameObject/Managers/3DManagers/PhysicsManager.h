@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 //====================================================//
 // 前方宣言
@@ -53,7 +54,7 @@ private:
 
     // 衝突情報
     std::vector<HitContact> m_contacts;
-
+    std::unordered_map<ObjectPair, HitContact, ObjectPairHash> m_contactMap;
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
@@ -82,7 +83,7 @@ public:
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
-
+    std::unordered_map<ObjectPair, HitContact, ObjectPairHash>& GetHitList() { return m_contactMap; }
 
     //-----------------------------------------------------
     // セッター
@@ -126,4 +127,7 @@ private:
 
     // 衝突後の補正
     void HittedCorrection();
+
+    void PositionCorrection(HitContact& contact);
+    void VelocityCorrection(HitContact& contact);
 };

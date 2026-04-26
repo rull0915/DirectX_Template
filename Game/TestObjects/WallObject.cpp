@@ -36,7 +36,7 @@ void WallObject::Finalize()
 {
 }
 
-void WallObject::OnCollision(BaseCollider* col)
+void WallObject::OnCollisionEnter(BaseCollider* col)
 {
 	col;
 }

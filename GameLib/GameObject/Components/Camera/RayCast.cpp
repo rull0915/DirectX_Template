@@ -74,7 +74,7 @@ void RayCast::DebugDraw()
 {
 }
 
-void RayCast::OnCollision(BaseCollider* col)
+void RayCast::OnCollisionEnter(BaseCollider* col)
 {
 	// レイの開始地点
 	SimpleMath::Vector3 camPos = GetComponent<Transform>()->GetWorldPosition();

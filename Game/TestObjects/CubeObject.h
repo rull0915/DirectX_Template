@@ -57,7 +57,7 @@ public:
 
     void Finalize() override;
 
-    void OnCollision(BaseCollider* col) override;
+    void OnCollisionEnter(BaseCollider* col) override;
 
     //-----------------------------------------------------
     // ÉQÉbÉ^Å[

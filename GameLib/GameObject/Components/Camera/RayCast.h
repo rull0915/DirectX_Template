@@ -58,7 +58,7 @@ public:
 
     void DebugDraw();
 
-    void OnCollision(BaseCollider* col) override;
+    void OnCollisionEnter(BaseCollider* col) override;
 
     GameObject* GetHitObject() const { return m_pGameObject; };
 };

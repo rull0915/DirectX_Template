@@ -243,6 +243,10 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\CameraManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\ObjectManager.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameLib\Input\KeyInput.h" />
     <ClInclude Include="GameLib\Input\MouseInput.h" />
     <ClInclude Include="GameLib\MyRenderer.h" />
@@ -261,7 +265,6 @@
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Screen.h" />
     <ClInclude Include="Game\TestObjects\CubeObject.h" />
-    <ClInclude Include="Others\Template.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Game\TestScene.h" />
@@ -298,6 +301,7 @@
     <ClCompile Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\CameraManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\ObjectManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Managers\System\CollideEventSystem.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
     <ClCompile Include="GameLib\MyRenderer.cpp" />
@@ -312,7 +316,6 @@
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\TestObjects\CubeObject.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Others\Template.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

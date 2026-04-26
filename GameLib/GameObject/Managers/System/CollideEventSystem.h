@@ -1,12 +1,12 @@
 //====================================================//
-// ファイル名   : WallObject.h
-// 作成者       : Hoshino Ryunosuke
-// 作成日       : 2026/04/08
+// ファイル名   : CollideEventSystem.h
+// 作成者       : 
+// 作成日       : 2026/04/26
 //
-// 概要 : 壁オブジェクトクラス
+// 概要 : 衝突系の関数呼び出しを担当するクラス
 //
 // 更新履歴 :
-// 2026/04/08 新規作成
+// 2026/04/26 新規作成
 //====================================================//
 
 #pragma once
@@ -14,7 +14,7 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include "GameLib/GameObject/GameObject.h"
+#include "../3DManagers/HitContact.h"
 
 //====================================================//
 // 前方宣言
@@ -24,7 +24,7 @@
 //====================================================//
 // クラス宣言
 //====================================================//
-class WallObject : public GameObject
+class CollideEventSystem
 {
 private:
 
@@ -36,32 +36,30 @@ private:
     //-----------------------------------------------------
     // メンバ変数
     //-----------------------------------------------------
+    std::unordered_map<ObjectPair, HitContact, ObjectPairHash> m_prevMap;
 
-public:
-
+private:
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    WallObject(DirectX::SimpleMath::Vector3 start, DirectX::SimpleMath::Vector3 end);
-    ~WallObject() = default;
+    CollideEventSystem() : m_prevMap{} 
+    {};
+    ~CollideEventSystem() {};
 
+public:
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-    void Initialize() override;
-
-    void Update(float elapsedTime) override;
-
-    void Render() override;
-
-    void Finalize() override;
-
-    void OnCollisionEnter(BaseCollider* col) override;
+    static CollideEventSystem& Instance()
+    {
+        static CollideEventSystem instance;
+        return instance;
+    }
 
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
-
+    void CallCollideFunctions(std::unordered_map<ObjectPair, HitContact, ObjectPairHash>& nowMap);
 
     //-----------------------------------------------------
     // セッター
@@ -72,5 +70,7 @@ private:
     //-----------------------------------------------------
     // 内部実装
     //-----------------------------------------------------
-
+    void OnEnter(HitContact& contact);
+    void OnStay(HitContact& contact);
+    void OnExit(HitContact& contact);
 };

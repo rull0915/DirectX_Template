@@ -56,7 +56,7 @@ void SphereObject::Finalize()
 {
 }
 
-void SphereObject::OnCollision(BaseCollider* col)
+void SphereObject::OnCollisionEnter(BaseCollider* col)
 {
 	col;
 }
