@@ -16,7 +16,7 @@
 //====================================================//
 #include "../BaseComponent.h"
 #include "../Transform/Transform.h"
-
+#include "PhysicsMaterial.h"
 
 //====================================================//
 // 前方宣言
@@ -57,6 +57,9 @@ private:
     // 最新のバージョン
     mutable uint32_t m_latestVersion;
 
+    // 物理マテリアル
+    PhysicsMaterial* m_physicsMaterial;
+
 public:
 
     //-----------------------------------------------------
@@ -81,6 +84,10 @@ public:
     inline bool IsDirty() const { return m_isDirty || m_pTransform->GetVersion() != m_latestVersion; }
 
     inline Transform* GetTransform() const { return m_pTransform; }
+    inline const PhysicsMaterial& GetPhysicsMaterial() const 
+    {
+        return (m_physicsMaterial ? *m_physicsMaterial : Physics::DEFAULT_MATERIAL); 
+    }
 
     //-----------------------------------------------------
     // セッター
@@ -90,6 +97,7 @@ public:
     void SetDirty() { m_isDirty = true; };
     void SetTrigger(bool frag) { m_isTrigger = frag; }
     void ResetChangeFrag() { m_isChanged = false; }
+    void SetPhysicsMaterial(PhysicsMaterial* mat) { m_physicsMaterial = mat; }
 
 protected:
 

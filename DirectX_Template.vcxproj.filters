@@ -86,6 +86,8 @@
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CheckHit\CheckHitAuxiliary2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\HitContact.h" />
     <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h" />
+    <ClInclude Include="GameLib\GameObject\TemplateObjects\BoxTemplate.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Collider\PhysicsMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -138,6 +140,7 @@
     <ClCompile Include="GameLib\GameObject\Components\Camera\RayCast.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\System\CollideEventSystem.cpp" />
+    <ClCompile Include="GameLib\GameObject\TemplateObjects\BoxTemplate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

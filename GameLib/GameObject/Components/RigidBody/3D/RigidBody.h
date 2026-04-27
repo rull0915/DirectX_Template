@@ -66,10 +66,15 @@ public:
 
     void Integrate(float elapsedTime) override;
 
-    void AddForce(DirectX::SimpleMath::Vector3 vec)
+    void AddForce(DirectX::SimpleMath::Vector3 vec, bool wakeUp = true)
     {
-        if (IsSleep()) return;
         m_force += vec;
+        if (wakeUp) WakeUp();
+    }
+    void AddImpulse(DirectX::SimpleMath::Vector3 impulse, bool wakeUp = true)
+    {
+        m_velocity += impulse * GetInvMass();
+        if(wakeUp) WakeUp();
     }
 
     //-----------------------------------------------------
@@ -87,11 +92,6 @@ public:
     void SetForce(DirectX::SimpleMath::Vector3 f) { m_force = f; }
     void SetVelocity(DirectX::SimpleMath::Vector3 v) { m_velocity = v; }
     void SetAcceleration(DirectX::SimpleMath::Vector3 a) { m_acceleration = a; }
-
-    void WakeUp() override
-    {
-        SetSleep(false); 
-    }
 
 private:
 

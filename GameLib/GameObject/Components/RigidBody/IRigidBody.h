@@ -37,10 +37,6 @@ private:
     // Ã~‚µ‚Ä‚¢‚éŠÔ
     float m_stoppingTime;
 
-    // ŒW”
-    float m_friction;       // –€C
-    float m_restitution;    // ”½”­
-
     // Œ¸Š—¦
     float m_linearDamping;  // Œ¸Š—¦
 
@@ -67,8 +63,6 @@ public:
     inline bool IsStatic() const { return m_isStatic; }
     inline bool IsUseGravity() const { return m_useGravity; }
     inline bool IsSleep() const { return m_isSleep; }
-    inline float GetFriction() const { return m_friction; }
-    inline float GetRestitution() const { return m_restitution; }
     inline float GetLinearDamping() const { return m_linearDamping; }
 
     //-----------------------------------------------------
@@ -80,18 +74,24 @@ public:
         m_invMass = 1.0f / mass;
     }
     void SetStatic(bool frag) { m_isStatic = frag; }
-    void SetUseGravity(bool frag) { m_useGravity = frag; }
+    void SetUseGravity(bool frag) 
+    { 
+        m_useGravity = frag;
+        WakeUp();
+    }
     void SetSleep(bool frag) { m_isSleep = frag; }
-    void SetFriction(float f) { m_friction = f; }
-    void SetRestitution(float r) { m_restitution = r; }
-    void SetLinearDamping(float r) { m_linearDamping = std::min(0.0f, r); }
+    void SetLinearDamping(float r) { m_linearDamping = std::max(0.0f, r); }
 
     //-----------------------------------------------------
     // ‚»‚Ì‘¼ŠÖ”
     //-----------------------------------------------------
     virtual void Integrate(float elapsedTime) = 0;
 
-    virtual void WakeUp() = 0;
+    void WakeUp()
+    {
+        SetSleep(false);
+        SetStoppintTime(0);
+    }
 
     // protectedŠÖ”ŒQ
 protected:

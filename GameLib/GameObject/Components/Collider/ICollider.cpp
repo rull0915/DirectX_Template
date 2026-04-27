@@ -23,5 +23,6 @@ ICollider::ICollider(GameObject* own, int id, bool isMain)
 	, m_isChanged{ false }
 	, m_layerNum{ -1 }
 	, m_latestVersion{ 1 }
+, m_physicsMaterial{ nullptr }
 {
 }

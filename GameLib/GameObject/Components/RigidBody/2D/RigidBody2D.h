@@ -61,10 +61,10 @@ public:
         m_force += vec;
         if(wakeUp) WakeUp();
     }
-    void AddImpulse(DirectX::SimpleMath::Vector2 impulse)
+    void AddImpulse(DirectX::SimpleMath::Vector2 impulse, bool wakeUp = true)
     {
         m_velocity += impulse * GetInvMass();
-        WakeUp();
+        if(wakeUp) WakeUp();
     }
 
     //-----------------------------------------------------
@@ -82,12 +82,6 @@ public:
     void SetForce(DirectX::SimpleMath::Vector2 f) { m_force = f; }
     void SetVelocity(DirectX::SimpleMath::Vector2 v) { m_velocity = v; }
     void SetAcceleration(DirectX::SimpleMath::Vector2 a) { m_acceleration = a; }
-
-    void WakeUp() 
-    {
-        SetSleep(false);
-        if(m_velocity.LengthSquared() > 0.1f) SetStoppintTime(0);
-    }
 
 private:
 

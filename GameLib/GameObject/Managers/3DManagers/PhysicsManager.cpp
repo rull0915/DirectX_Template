@@ -43,7 +43,8 @@ void PhysicsManager::Update(float elapsedTime)
 	for (auto* body : m_rigidBodies) 
 	{
 		if (body->IsStatic() || !body->IsUseGravity()) continue;
-		body->AddForce(m_gravityVec * m_gravityPower * body->GetMass());
+
+		if (!body->IsSleep()) body->AddForce(m_gravityVec * m_gravityPower * body->GetMass(), false);
 	}
 
 	// 位置の更新
@@ -81,11 +82,11 @@ void PhysicsManager::HittedCorrection()
 		m_contactMap.insert(std::make_pair(pair, contact));
 
 		// トリガーチェック
-		if (contact.isTrigger){ continue; }
+		if (contact.isTrigger) continue;
 
 		// どちらも起こす
-		if (contact.aRigid && contact.aRigid->IsSleep()) contact.aRigid->WakeUp();
-		if (contact.bRigid && contact.bRigid->IsSleep()) contact.bRigid->WakeUp();
+		if (!contact.bIsStatic && (contact.aRigid && contact.aRigid->IsSleep())) contact.aRigid->WakeUp();
+		if (!contact.aIsStatic && (contact.bRigid && contact.bRigid->IsSleep())) contact.bRigid->WakeUp();
 
 		// 位置補正
 		PositionCorrection(contact);
@@ -153,25 +154,37 @@ void PhysicsManager::VelocityCorrection(HitContact& contact)
 	// ぶつかっていれば
 	if (hitDirVel < 0)
 	{
-		// 反発係数の小さいほうを適用
-		float aRes = (!contact.aIsStatic && aRigid ? aRigid->GetRestitution() : 1), bRes = (!contact.bIsStatic && bRigid ? bRigid->GetRestitution() : 1);
-		float e = aRes < bRes ? aRes : bRes;
+		// 双方の物理マテリアルを取得
+		PhysicsMaterial aMat = contact.aCol->GetPhysicsMaterial(), bMat = contact.bCol->GetPhysicsMaterial();
+
+		// 反発係数を適用
+		float aBounce = aMat.GetBounciness(), bBounce = bMat.GetBounciness();
+		float e = Physics::GetValue(aBounce, bBounce, aMat.GetBounceCombine(), bMat.GetBounceCombine());
 
 		// インパルスの算出
-		float aInvMass = !contact.aIsStatic && aRigid ? aRigid->GetInvMass() : 0, bInvMass = (!contact.bIsStatic && bRigid ? bRigid->GetInvMass() : 0);
-		float j = (-(1 + e) * hitDirVel) / (aInvMass + bInvMass);	// 打ち消しと反発を同時に行うために-(1 + e)
 
-		// 摩擦係数を取得
-		float aFric = (aRigid ? aRigid->GetFriction() : 0), bFric = (bRigid ? bRigid->GetFriction() : 0);
-		float mu = (aFric + bFric) / 2;	// 平均値を扱う
+		// それぞれの質量の逆数を取得
+		float aInvMass = !contact.aIsStatic ? aRigid->GetInvMass() : 0, bInvMass = !contact.bIsStatic ? bRigid->GetInvMass() : 0;
+		float jToZero = -(hitDirVel / (aInvMass + bInvMass));
+		float j = jToZero - (e * hitDirVel) / (aInvMass + bInvMass);	// 打ち消しと反発を同時に行うために-(1 + e)
+
+		// 法線方向のインパルス
+		DirectX::SimpleMath::Vector3 normalImpulse = j * contact.normal;
 
 		// --- 接線方向の処理 --- //
 
+		// 摩擦係数を取得
+		float s_aFric = aMat.GetStaticFriction(), s_bFric = bMat.GetStaticFriction();
+		float d_aFric = aMat.GetDynamicFriction(), d_bFric = bMat.GetDynamicFriction();
+
+		float s_mu = Physics::GetValue(s_aFric, s_bFric, aMat.GetFrictionCombine(), bMat.GetFrictionCombine());
+		float d_mu = Physics::GetValue(d_aFric, d_bFric, aMat.GetFrictionCombine(), bMat.GetFrictionCombine());
+
 		// 接線ベクトルの作成
-		// 相対速度から「法線方向の成分」を抜き出す
+		// 相対速度から法線方向の成分を抜き出す
 		DirectX::SimpleMath::Vector3 normalVel = hitDirVel * contact.normal;
 
-		// 全体の相対速度から法線成分を引く
+		// 全体の相対速度から法線成分を引くことで接線方向の成分にする
 		DirectX::SimpleMath::Vector3 tangentVel = relativeVel - normalVel;
 
 		// 正規化して接線とする
@@ -185,19 +198,29 @@ void PhysicsManager::VelocityCorrection(HitContact& contact)
 		// 接線方向の速度をゼロにするインパルスを計算
 		float j_tangent = -(relativeVel.Dot(tangential)) / (aInvMass + bInvMass);
 
-		// 摩擦の限界値を計算 垂直抗力 j に 摩擦係数 mu を掛ける
-		float maxFriction = mu * abs(j);
+		// 静止摩擦力の限界値を計算
+		float maxStaticFriction = s_mu * abs(j);
 
-		// ブレーキの強さを限界値内に収める
-		float actualFrictionImpulse = MyMath::Clamp(j_tangent, -maxFriction, maxFriction);
+		float actualFrictionImpulse;
+
+		if (abs(j_tangent) < maxStaticFriction)
+		{
+			// 静止摩擦
+			actualFrictionImpulse = j_tangent;
+		}
+		else
+		{
+			// 動摩擦
+			float maxDynamicFriction = d_mu * abs(jToZero);
+			actualFrictionImpulse = MyMath::Clamp(j_tangent, -maxDynamicFriction, maxDynamicFriction);
+		}
 
 		// 接線方向のインパルス
 		DirectX::SimpleMath::Vector3 tangentImpulse = actualFrictionImpulse * tangential;
-		// 法線方向のインパルス
-		DirectX::SimpleMath::Vector3 normalImpulse = j * contact.normal;
+
 
 		// 双方の速度を変更
-		if (aRigid) aRigid->SetVelocity(aVel - aInvMass * (tangentImpulse + normalImpulse));
-		if (bRigid) bRigid->SetVelocity(bVel + bInvMass * (tangentImpulse + normalImpulse));
+		if (aRigid && !contact.aIsStatic) aRigid->AddImpulse(-(tangentImpulse + normalImpulse), false);
+		if (bRigid && !contact.bIsStatic) bRigid->AddImpulse(tangentImpulse + normalImpulse, false);
 	}
 }
