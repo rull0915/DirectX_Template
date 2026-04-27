@@ -56,10 +56,15 @@ public:
 
     void Integrate(float elapsedTime);
 
-    void AddForce(DirectX::SimpleMath::Vector2 vec)
+    void AddForce(DirectX::SimpleMath::Vector2 vec, bool wakeUp = true)
     {
-        if (IsSleep()) return;
         m_force += vec;
+        if(wakeUp) WakeUp();
+    }
+    void AddImpulse(DirectX::SimpleMath::Vector2 impulse)
+    {
+        m_velocity += impulse * GetInvMass();
+        WakeUp();
     }
 
     //-----------------------------------------------------
@@ -81,7 +86,7 @@ public:
     void WakeUp() 
     {
         SetSleep(false);
-        m_velocity = DirectX::SimpleMath::Vector2::Zero;
+        if(m_velocity.LengthSquared() > 0.1f) SetStoppintTime(0);
     }
 
 private:

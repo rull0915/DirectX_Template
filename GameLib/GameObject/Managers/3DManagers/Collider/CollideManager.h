@@ -22,7 +22,7 @@
 
 #include "SpaceDivision/TreeManager.h"
 
-#include "../HitContact.h"
+#include "../../HitContact.h"
 
 //====================================================//
 // ‘O•ûéŒ¾

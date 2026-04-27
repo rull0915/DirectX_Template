@@ -28,36 +28,44 @@ RigidBody2D::RigidBody2D(GameObject* own)
     , m_force{ 0.0f }
 {
     // マネージャーへ自信を登録
-    PhysicsManager2D::Instance().AddRigidBody2D(this);
+    PhysicsManager2D::Instance().AddRigidBody(this);
 }
 
 void RigidBody2D::Integrate(float elapsedTime)
 {
-    AddStoppingTime(elapsedTime);
+    // 非アクティブならスキップ
+    if (!IsActive()) return;
+
+    // スリープ中ならスキップ
+    if (IsSleep()) return;
 
     // 速度を調べる
-    if (m_velocity.LengthSquared() >= 0.1f) SetStoppintTime(0);
+    if (m_velocity.LengthSquared() < 0.1f)
+    {
+        AddStoppingTime(elapsedTime);
+    }
+    else SetStoppintTime(0);
 
+    // 一定時間止まっていたら
     if (GetStoppingTime() >= SLEEP_BORDER)
     {
+        // スリープにセット
         SetSleep(true);
         m_velocity = SimpleMath::Vector2::Zero;
         m_force = SimpleMath::Vector2::Zero;
     }
 
-    if (IsSleep()) return;
-
     // 加速度を力から計算
-    if (m_force == SimpleMath::Vector2::Zero) return;
-
     SimpleMath::Vector2 acceleration = m_force * GetInvMass();
 
     // 速度に反映
     m_velocity += acceleration * elapsedTime;
 
+    // 速度の減衰
+    m_velocity *= 1.0f / (1.0f + GetLinearDamping() * elapsedTime);
+
     // 座標に反映
-    DirectX::SimpleMath::Vector3 vel3D = { m_velocity.x, m_velocity.y, 0 };
-    GetTransform()->AddWorldPosition(vel3D * elapsedTime);
+    GetTransform()->AddWorldPosition({m_velocity * elapsedTime });
 
     // 貯まった力をリセット
     m_force = SimpleMath::Vector2::Zero;

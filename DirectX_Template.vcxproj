@@ -236,7 +236,7 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\SpaceDivision\Cell.h" />
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\SpaceDivision\ObjectForTree.h" />
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\Collider\SpaceDivision\TreeManager.h" />
-    <ClInclude Include="GameLib\GameObject\Managers\3DManagers\HitContact.h">
+    <ClInclude Include="GameLib\GameObject\Managers\HitContact.h">
       <SubType>
       </SubType>
     </ClInclude>

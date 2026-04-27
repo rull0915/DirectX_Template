@@ -22,6 +22,7 @@ IRigidBody::IRigidBody(GameObject* own, int id)
     , m_invMass{ 1.0f / m_mass }
     , m_friction{ 0.0f }
     , m_restitution{ 0.5f }
+    , m_linearDamping{ 0.0f }
     , m_isStatic{ false }
     , m_useGravity{ true }
     , m_isSleep{ false }

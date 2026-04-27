@@ -91,7 +91,6 @@ public:
     void WakeUp() override
     {
         SetSleep(false); 
-        m_velocity = DirectX::SimpleMath::Vector3::Zero;
     }
 
 private:

@@ -13,7 +13,9 @@
 
 class GameObject;
 class BaseCollider;
+class BaseCollider2D;
 class RigidBody;
+class RigidBody2D;
 
 //====================================================//
 // 構造体宣言
@@ -77,4 +79,35 @@ struct HitContact
 
     // 衝突点(未使用)
     DirectX::SimpleMath::Vector3 point;
+};
+
+struct HitContact2D
+{
+    // 衝突した2つのオブジェクト
+    GameObject* a;
+    GameObject* b;
+
+    // 衝突したリジッドボディ
+    RigidBody2D* aRigid;
+    RigidBody2D* bRigid;
+
+    // 衝突したコライダー
+    BaseCollider2D* aCol;
+    BaseCollider2D* bCol;
+
+    // トリガーフラグ
+    bool isTrigger;
+
+    // スタティックかどうか
+    bool aIsStatic;
+    bool bIsStatic;
+
+    // 衝突法線
+    DirectX::SimpleMath::Vector2 normal;
+
+    // めり込み量
+    float penetration;
+
+    // 衝突点(未使用)
+    DirectX::SimpleMath::Vector2 point;
 };

@@ -16,7 +16,7 @@
 //====================================================//
 #include "GameLib/GameObject/Components/RigidBody/3D/RigidBody.h"
 
-#include "HitContact.h"
+#include "../HitContact.h"
 
 #include <vector>
 #include <unordered_set>

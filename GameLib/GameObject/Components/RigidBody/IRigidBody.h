@@ -41,6 +41,9 @@ private:
     float m_friction;       // 摩擦
     float m_restitution;    // 反発
 
+    // 減衰率
+    float m_linearDamping;  // 減衰率
+
     // フラグ
     bool m_isStatic;    // 固定
     bool m_useGravity;  // 重力の影響
@@ -66,6 +69,7 @@ public:
     inline bool IsSleep() const { return m_isSleep; }
     inline float GetFriction() const { return m_friction; }
     inline float GetRestitution() const { return m_restitution; }
+    inline float GetLinearDamping() const { return m_linearDamping; }
 
     //-----------------------------------------------------
     // セッター
@@ -80,6 +84,7 @@ public:
     void SetSleep(bool frag) { m_isSleep = frag; }
     void SetFriction(float f) { m_friction = f; }
     void SetRestitution(float r) { m_restitution = r; }
+    void SetLinearDamping(float r) { m_linearDamping = std::min(0.0f, r); }
 
     //-----------------------------------------------------
     // その他関数

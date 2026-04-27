@@ -92,7 +92,7 @@ void TestScene::Initialize()
 		m_objects.push_back(p);
 	}
 
-	int ballCount = 500;
+	int ballCount = 0;
 	for (int i = 0; i < ballCount; i++)
 	{
 		SimpleMath::Vector3 pos = { Random::GetFloat(-10.0f, 10.0f), Random::GetFloat(3.0f, 15.0f), Random::GetFloat(-10.0f, 10.0f) };
@@ -149,11 +149,11 @@ void TestScene::Update(float elapsedTime)
 		p->GetComponent<RigidBody>()->AddForce((end - start) * p->GetComponent<RigidBody>()->GetMass() * 2000);
 	}
 
-	if (KeyInput::GetKeyDown(DirectX::Keyboard::Keys::Enter))
+	if (KeyInput::GetKey(DirectX::Keyboard::Keys::Enter))
 	{
-				auto p = ObjectManager::Instance().Generate<GameObject>();
+		auto p = ObjectManager::Instance().Generate<GameObject>();
 
-		switch (Random::Get(1, 2))
+		switch (Random::Get(0, 2))
 		{
 		case 0:
 			p->AddComponent<CircleCollider2D>();

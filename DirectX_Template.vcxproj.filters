@@ -84,7 +84,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Camera\RayCast.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.h" />
     <ClInclude Include="GameLib\GameObject\Managers\2DManagers\Collider\CheckHit\CheckHitAuxiliary2D.h" />
-    <ClInclude Include="GameLib\GameObject\Managers\3DManagers\HitContact.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\HitContact.h" />
     <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h" />
   </ItemGroup>
   <ItemGroup>

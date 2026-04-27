@@ -15,6 +15,7 @@
 // インクルードファイル
 //====================================================//
 #include "GameLib/GameObject/Components/RigidBody/2D/RigidBody2D.h"
+#include "../HitContact.h"
 
 #include <vector>
 #include <unordered_set>
@@ -42,13 +43,16 @@ private:
     // メンバ変数
     //-----------------------------------------------------
 
-    // 登録予約中のRigidBody2D
+    // 登録予約中のRigidBody
     std::vector<RigidBody2D*> m_reserves;
     std::unordered_set<RigidBody2D*> m_removeReserves;
 
     // 登録されているRigidBody2D
     std::vector<RigidBody2D*> m_rigidBodies;
 
+    // 衝突情報
+    std::vector<HitContact2D> m_contacts;
+    std::unordered_map<ObjectPair, HitContact2D, ObjectPairHash> m_contactMap;
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
@@ -71,13 +75,13 @@ public:
     void Update(float elapsedTime);
 
     // 登録予約
-    void AddRigidBody2D(RigidBody2D* r) { m_reserves.push_back(r); }
-    void RemoveRigidBody2D(RigidBody2D* r) { m_removeReserves.insert(r); }
+    void AddRigidBody(RigidBody2D* r) { m_reserves.push_back(r); }
+    void RemoveRigidBody(RigidBody2D* r) { m_removeReserves.insert(r); }
 
     //-----------------------------------------------------
     // ゲッター
     //-----------------------------------------------------
-
+    std::unordered_map<ObjectPair, HitContact2D, ObjectPairHash>& GetHitList() { return m_contactMap; }
 
     //-----------------------------------------------------
     // セッター
@@ -118,4 +122,10 @@ private:
 
         m_removeReserves.clear();
     }
+
+    // 衝突後の補正
+    void HittedCorrection();
+
+    void PositionCorrection(HitContact2D& contact);
+    void VelocityCorrection(HitContact2D& contact);
 };

@@ -69,15 +69,6 @@ void ObjectManager::Update(float elapsedTime)
 	// カメラの更新
 	CameraManager::Instance().Update();
 
-	{
-		// 2Dコライダーの更新
-
-		// 木構造の更新
-		CollideManager2D::Instance().MoveAllColliderOnTree();
-		// 衝突判定
-		CollideManager2D::Instance().CheckHitAll();
-	}
-
 	// 衝突判定後の値の更新
 	for (auto& object : m_objects)
 	{
@@ -173,7 +164,7 @@ void ObjectManager::RemoveDeadObject()
 				PhysicsManager::Instance().RemoveRigidBody(rb);
 
 			if (auto rb2d = obj->GetComponent<RigidBody2D>())
-				PhysicsManager2D::Instance().RemoveRigidBody2D(rb2d);
+				PhysicsManager2D::Instance().RemoveRigidBody(rb2d);
 
 			// リストから削除
 			m_objects.erase(m_objects.begin() + i);

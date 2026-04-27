@@ -22,6 +22,8 @@
 
 #include "SpaceDivision/TreeManager2D.h"
 
+#include "../../HitContact.h"
+
 //====================================================//
 // 前方宣言
 //====================================================//
@@ -128,8 +130,8 @@ public:
     void MoveAllColliderOnTree();
 
     // 全コライダーの衝突チェック
-    void CheckHitAll();
+    void CheckHitAll(std::vector<HitContact2D>& contacts);
 
     // コライダーの衝突チェック
-    void CheckHitPair(BaseCollider2D*, BaseCollider2D*);
+    bool CheckHitPair(BaseCollider2D*, BaseCollider2D*, HitContact2D& contact);
 };
