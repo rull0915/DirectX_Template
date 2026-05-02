@@ -73,7 +73,7 @@ private:
     float m_timeAccumulator;
     float m_fps;
 
-    // ================ 自分の処理 ==================//
+    // ================ 自分の処理 ================== //
     
     // タイトルの文字列
 public:
@@ -94,9 +94,8 @@ public:
     // シーンマネージャーを返す関数
     SceneManager* GetSceneManager() { return &m_sceneManager; }
 
-    // ステージ番号をセットする関数
-    void SetStageCount(int count) { m_stageCount = count; }
-    int GetStageCount() const { return m_stageCount; }
+    // 描画担当
+    Renderer m_renderer;
 
     void RequestExit()
     {

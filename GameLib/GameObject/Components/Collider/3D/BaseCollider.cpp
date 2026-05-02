@@ -37,7 +37,31 @@ BaseCollider::~BaseCollider()
 {
 }
 
-void AABB::DebugDraw(int color) const
+void AABB::DebugDraw(Renderer& renderer, int color) const
 {
-	MyRenderer::Draw3DBox(min, max, color, false);
+	// --- êFÇÃìWäJ ---
+	float r = static_cast<float>((color >> 16) & 0xFF) / 255.0f;
+	float g = static_cast<float>((color >> 8) & 0xFF) / 255.0f;
+	float b = static_cast<float>((color >> 0) & 0xFF) / 255.0f;
+
+	DirectX::SimpleMath::Vector4 col(r, g, b, 1.0f);
+
+	DirectX::VertexPositionColor vertexes[8]
+	{
+		{ {min.x, min.y, min.z}, col},
+		{ {min.x, min.y, max.z}, col},
+		{ {min.x, max.y, max.z}, col},
+		{ {min.x, max.y, min.z}, col},
+		{ {max.x, min.y, min.z}, col},
+		{ {max.x, min.y, max.z}, col},
+		{ {max.x, max.y, max.z}, col},
+		{ {max.x, max.y, min.z}, col},
+	};
+
+	uint16_t indexes[]
+	{
+		0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7
+	};
+
+	renderer.Draw().PrimitiveIndex(D3D10_PRIMITIVE_TOPOLOGY_LINELIST, indexes, 24, vertexes, 8);
 }

@@ -23,6 +23,8 @@
 
 #include "GameLib/MyRenderer.h"
 
+#include "GameLib/Resources/ResourceManager.h"
+
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -85,21 +87,25 @@ void ObjectManager::Update(float elapsedTime)
 /// <summary>
 /// 描画関数
 /// </summary>
-void ObjectManager::Render()
+void ObjectManager::Render(Renderer& renderer)
 {
 	// メインカメラの行列を適用
-	MyRenderer::SetView(CameraManager::Instance().GetView());
-	MyRenderer::SetProjection(CameraManager::Instance().GetProj());
+	renderer.SetView(CameraManager::Instance().GetView());
+	renderer.SetProjection(CameraManager::Instance().GetProj());
+
+	DirectX::SimpleMath::Matrix world;
 
 	// 全オブジェクトの描画
 	for (auto& object : m_objects)
 	{
 		// 基底クラスの描画処理
-		object->BaseRender();
+		object->BaseRender(renderer);
 
 		// 派生クラスの描画処理
 		object->Render();
 	}
+
+	renderer.Draw().Model(ResourceManager::Instance().GetModel("Animal"), world);
 }
 
 /// <summary>

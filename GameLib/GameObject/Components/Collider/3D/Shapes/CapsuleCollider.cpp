@@ -12,8 +12,6 @@
 #include "pch.h"
 #include "CapsuleCollider.h"
 
-#include "GameLib/MyRenderer.h"
-
 //====================================================//
 // ŠÖ”‚ÌÀ‘ÌéŒ¾
 //====================================================//
@@ -127,7 +125,7 @@ void CapsuleCollider::UpdateCache() const
     ApplyVersion();
 }
 
-void CapsuleCollider::DebugDraw(int color) const
+void CapsuleCollider::DebugDraw(Renderer& renderer, int color) const
 {
     float rad = GetRadius();
     float len = GetLineLength();
@@ -152,7 +150,7 @@ void CapsuleCollider::DebugDraw(int color) const
 
     DirectX::SimpleMath::Matrix world = DirectX::SimpleMath::Matrix::CreateFromQuaternion(rot) * DirectX::SimpleMath::Matrix::CreateTranslation(pos);
 
-    MyRenderer::SetWorld(world);
+    renderer.SetWorld(world);
 
     // 4‚Â‚ÌƒxƒNƒgƒ‹‚ğì¬
     DirectX::SimpleMath::Vector3 v1, v2, v3, v4, v5, v6, v7, v8;
@@ -178,18 +176,18 @@ void CapsuleCollider::DebugDraw(int color) const
 
     v1.Normalize(); v2.Normalize(); v3.Normalize(); v4.Normalize();
 
-    MyRenderer::DrawArc(p1, v5, v6, rad, color);
-    MyRenderer::DrawArc(p1, v7, v8, rad, color);
-    MyRenderer::DrawCircle(p1, v, rad, 16, color, false);
+    renderer.Draw().Arc(p1, v5, v6, 16, rad, color, false);
+    renderer.Draw().Arc(p1, v7, v8, 16, rad, color, false);
+    renderer.Draw().Circle(p1, v, rad, 16, color, false);
 
-    MyRenderer::DrawArc(p2, v1, v2, rad, color);
-    MyRenderer::DrawArc(p2, v3, v4, rad, color);
-    MyRenderer::DrawCircle(p2, v, rad, 16, color, false);
+    renderer.Draw().Arc(p2, v1, v2, 16, rad, color, false);
+    renderer.Draw().Arc(p2, v3, v4, 16, rad, color, false);
+    renderer.Draw().Circle(p2, v, rad, 16, color, false);
 
-    MyRenderer::DrawLine(p1 + v1 * rad, p2 + v1 * rad, color);
-    MyRenderer::DrawLine(p1 + v2 * rad, p2 + v2 * rad, color);
-    MyRenderer::DrawLine(p1 + v3 * rad, p2 + v3 * rad, color);
-    MyRenderer::DrawLine(p1 + v4 * rad, p2 + v4 * rad, color);
+    renderer.Draw().Line(p1 + v1 * rad, p2 + v1 * rad, color);
+    renderer.Draw().Line(p1 + v2 * rad, p2 + v2 * rad, color);
+    renderer.Draw().Line(p1 + v3 * rad, p2 + v3 * rad, color);
+    renderer.Draw().Line(p1 + v4 * rad, p2 + v4 * rad, color);
 
-    MyRenderer::SetWorld(DirectX::SimpleMath::Matrix::Identity);
+    renderer.SetWorld(DirectX::SimpleMath::Matrix::Identity);
 }

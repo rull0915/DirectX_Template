@@ -56,16 +56,29 @@ public:
 
     void Integrate(float elapsedTime);
 
-    void AddForce(DirectX::SimpleMath::Vector2 vec, bool wakeUp = true)
+    void AddForce(DirectX::SimpleMath::Vector2 vec, ForceMode mode = ForceMode::Force, bool wakeUp = true)
     {
-        m_force += vec;
-        if(wakeUp) WakeUp();
+        switch (mode)
+        {
+        case ForceMode::Force:
+            m_force += vec;
+            break;
+        case ForceMode::Acceleration:
+            m_force += vec * GetMass();
+            break;
+        case ForceMode::Impulse:
+            m_velocity += vec * GetInvMass();
+            break;
+        case ForceMode::VelocityChange:
+            m_velocity += vec;
+            break;
+        default:
+            break;
+        }
+
+        if (wakeUp) WakeUp();
     }
-    void AddImpulse(DirectX::SimpleMath::Vector2 impulse, bool wakeUp = true)
-    {
-        m_velocity += impulse * GetInvMass();
-        if(wakeUp) WakeUp();
-    }
+
 
     //-----------------------------------------------------
     // ÉQÉbÉ^Å[

@@ -12,8 +12,6 @@
 #include "pch.h"
 #include "CapsuleCollider2D.h"
 
-#include "GameLib/MyRenderer.h"
-
 //====================================================//
 // ŠÖ”‚ÌÀ‘ÌéŒ¾
 //====================================================//
@@ -122,7 +120,7 @@ void CapsuleCollider2D::UpdateCache() const
     ApplyVersion();
 }
 
-void CapsuleCollider2D::DebugDraw(int color) const
+void CapsuleCollider2D::DebugDraw(Renderer& renderer, int color) const
 {
     float rad = GetRadius();
     float len = GetLineLength();
@@ -139,7 +137,7 @@ void CapsuleCollider2D::DebugDraw(int color) const
 
     if (nV.LengthSquared() < 0.001f)
     {
-        MyRenderer::DrawCircle({ p1 }, { 0, 0, 1 }, rad, 16, color, false);
+        renderer.Draw().Circle({ p1 }, { 0, 0, 1 }, rad, 16, color, false);
     }
     else
     {
@@ -151,10 +149,10 @@ void CapsuleCollider2D::DebugDraw(int color) const
         p5 = { p2 + nV * rad };
         p6 = { p2 - nV * rad + v * 0.01f };
 
-        MyRenderer::DrawArc({ p1 }, { p3 - p1 }, { p4 - p1 }, rad, color);
-        MyRenderer::DrawArc({ p2 }, { p5 - p2 }, { p6 - p2 }, rad, color);
+        renderer.Draw().Arc({ p1 }, { p3 - p1 }, { p4 - p1 }, 16, rad, color, false);
+        renderer.Draw().Arc({ p2 }, { p5 - p2 }, { p6 - p2 }, 16, rad, color, false);
 
-        MyRenderer::DrawLine({ p3 }, { p5 }, color);
-        MyRenderer::DrawLine({ p4 }, { p6 }, color);
+        renderer.Draw().Line({ p3 }, { p5 }, color);
+        renderer.Draw().Line({ p4 }, { p6 }, color);
     }
 }

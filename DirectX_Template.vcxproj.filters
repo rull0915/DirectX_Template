@@ -88,6 +88,15 @@
     <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h" />
     <ClInclude Include="GameLib\GameObject\TemplateObjects\BoxTemplate.h" />
     <ClInclude Include="GameLib\GameObject\Components\Collider\PhysicsMaterial.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Renderer\BaseRenderer.h" />
+    <ClInclude Include="GameLib\Common\Renderer\Renderer.h" />
+    <ClInclude Include="GameLib\Common\Renderer\RenderStateCache.h" />
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Primitive\PrimitiveRenderer.h" />
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Sprite\SpriteRenderer.h" />
+    <ClInclude Include="GameLib\Common\Renderer\RenderProxy.h" />
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.h" />
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\IRenderer.h" />
+    <ClInclude Include="GameLib\GameObject\Components\Renderer\Model\ModelComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -141,6 +150,12 @@
     <ClCompile Include="GameLib\GameObject\Components\Collider\2D\Shapes\CapsuleCollider2D.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\System\CollideEventSystem.cpp" />
     <ClCompile Include="GameLib\GameObject\TemplateObjects\BoxTemplate.cpp" />
+    <ClCompile Include="GameLib\Common\Renderer\RenderProxy.cpp" />
+    <ClCompile Include="GameLib\Common\Renderer\Renderer.cpp" />
+    <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Primitive\PrimitiveRenderer.cpp" />
+    <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Sprite\SpriteRenderer.cpp" />
+    <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Renderer\BaseRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

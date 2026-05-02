@@ -17,6 +17,7 @@
 #include "../BaseComponent.h"
 #include "../Transform/Transform.h"
 #include "PhysicsMaterial.h"
+#include "GameLib/Common/Renderer/Renderer.h"
 
 //====================================================//
 // 前方宣言
@@ -71,8 +72,8 @@ public:
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-    virtual void DebugDraw(int color) const = 0;
-    virtual void DebugDrawAABB(int color) const = 0;
+    virtual void DebugDraw(Renderer& renderer, int color) const = 0;
+    virtual void DebugDrawAABB(Renderer& renderer, int color) const = 0;
 
     //-----------------------------------------------------
     // ゲッター

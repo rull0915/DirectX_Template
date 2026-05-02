@@ -47,9 +47,9 @@ void GameObject::BaseUpdate(float elapsedTime)
     }
 }
 
-void GameObject::BaseRender()
+void GameObject::BaseRender(Renderer& renderer)
 {
-    CollidersDebugDraw(m_debugColor, false);
+    CollidersDebugDraw(renderer, m_debugColor, false);
 //    CollidersDebugDraw(0x00FF00, false);
 }
 
@@ -62,7 +62,7 @@ void GameObject::BaseFinalize()
 /// <summary>
 /// コライダーのデバッグ描画をする関数
 /// </summary>
-void GameObject::CollidersDebugDraw(int color, bool drawBoundingBox)
+void GameObject::CollidersDebugDraw(Renderer& renderer, int color, bool drawBoundingBox)
 {
     static std::vector<BaseCollider*> colliders;
     static std::vector<BaseCollider2D*> colliders2D;
@@ -72,16 +72,16 @@ void GameObject::CollidersDebugDraw(int color, bool drawBoundingBox)
 
     for (auto& col : colliders)
     {
-        col->DebugDraw(color);
+        col->DebugDraw(renderer, color);
 
-        if (drawBoundingBox) col->DebugDrawAABB(color);
+        if (drawBoundingBox) col->DebugDrawAABB(renderer, color);
     }
 
     for (auto& col : colliders2D)
     {
-        col->DebugDraw(color);
+        col->DebugDraw(renderer, color);
 
-        if (drawBoundingBox) col->DebugDrawAABB(color);
+        if (drawBoundingBox) col->DebugDrawAABB(renderer, color);
     }
 }
 

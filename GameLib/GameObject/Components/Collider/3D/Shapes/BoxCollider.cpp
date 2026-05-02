@@ -12,7 +12,6 @@
 #include "pch.h"
 #include "BoxCollider.h"
 
-#include "GameLib/MyRenderer.h"
 #include <array>
 
 using namespace DirectX;
@@ -66,7 +65,7 @@ void BoxCollider::UpdateCache() const
     ApplyVersion();
 }
 
-void BoxCollider::DebugDraw(int color) const
+void BoxCollider::DebugDraw(Renderer& renderer, int color) const
 {
     // ワールド行列の算出(Rot,Pos)
     SimpleMath::Vector3 pos = GetWorldCenterPos();
@@ -96,6 +95,6 @@ void BoxCollider::DebugDraw(int color) const
     
     for (int i = 0; i < 12; i++)
     {
-        MyRenderer::DrawLine(points[edges[i * 2]], points[edges[i * 2 + 1]], color);
+        renderer.Draw().Line(points[edges[i * 2]], points[edges[i * 2 + 1]], color);
     }
 }

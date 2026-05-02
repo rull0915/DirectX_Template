@@ -9,6 +9,8 @@
 
 #include "GameLib/GameObject/Managers/ObjectManager.h"
 
+#include "GameLib/GameObject/Managers/CameraManager.h"
+
 #include "GameLib/Input/KeyInput.h"
 #include "GameLib/Input/MouseInput.h"
 
@@ -27,6 +29,7 @@ Game::Game() noexcept(false)
     , m_fps{}
     , m_timeAccumulator{}
     , m_frameCount{}
+    , m_renderer{}
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
@@ -69,7 +72,8 @@ void Game::Initialize(HWND window, int width, int height)
     // フォントの追加
 
     // モデルの追加
-
+    ResourceManager::Instance().AddModel("Animal", L"Resources/Models/Monkey.cmo");
+    
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
     /*
@@ -149,18 +153,27 @@ void Game::Render()
     context;
 
     // 描画の開始 ----------------------------------------
-    MyRenderer::StartDraw(context);
+//    //MyRenderer::StartDraw(context);
+    m_renderer.Start(context);
+
+    auto view = CameraManager::Instance().GetView();
+    auto proj = CameraManager::Instance().GetProj();
+
+    m_renderer.SetView(view);
+    m_renderer.SetProjection(proj);
 
     // 現在のシーンの描画
-    m_sceneManager.Render();
+    m_sceneManager.Render(m_renderer);
 
-    ObjectManager::Instance().Render();
+    ObjectManager::Instance().Render(m_renderer);
 
     // 描画の終了 ----------------------------------------
     m_sceneManager.TransitionRender();
     if (m_exitTrans) m_exitTrans->Render();
     m_deviceResources->PIXEndEvent();
-    MyRenderer::EndDraw();
+//    //MyRenderer::EndDraw();
+
+    m_renderer.End();
 
     // Show the new frame.
     m_deviceResources->Present();
@@ -256,7 +269,10 @@ void Game::CreateDeviceDependentResources()
     m_states = std::make_unique<CommonStates>(device);
 
     // 描画関連クラスの初期化
-    MyRenderer::Initialize(device, context, m_states.get());
+    //MyRenderer::Initialize(device, context, m_states.get());
+
+    // 描画クラスの初期化
+    m_renderer.Initialize(device, context, m_states.get());
 
     // 画面サイズを取得する
     int w, h;

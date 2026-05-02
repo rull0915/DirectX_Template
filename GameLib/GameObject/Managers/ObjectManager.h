@@ -16,6 +16,7 @@
 //====================================================//
 #include "../GameObject.h"
 #include <vector>
+#include "GameLib/Common/Renderer/Renderer.h"
 
 //====================================================//
 // ‘O•ûéŒ¾
@@ -70,7 +71,7 @@ public:
     void Update(float elapsedTime);
 
     // •`‰æŠÖ”
-    void Render();
+    void Render(Renderer& renderer);
 
     void Finalize();
 

@@ -83,10 +83,10 @@ void SceneManager::Update(float elapsedTime)
 }
 
 // •`‰æˆ—
-void SceneManager::Render()
+void SceneManager::Render(Renderer& renderer)
 {
 	// ƒV[ƒ“‚Ì•`‰æˆ—
-	if (m_pCurrentScene) m_pCurrentScene->Render();
+	if (m_pCurrentScene) m_pCurrentScene->Render(renderer);
 }
 
 void SceneManager::TransitionRender()

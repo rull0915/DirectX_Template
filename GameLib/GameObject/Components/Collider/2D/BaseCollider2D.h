@@ -53,7 +53,7 @@ struct AABB2D
     {
     }
 
-    void DebugDraw(int color) const;
+    void DebugDraw(Renderer& renderer, int color) const;
 };
 
 //====================================================//
@@ -130,8 +130,8 @@ public:
     //-----------------------------------------------------
 
     // デバッグ描画関数
-    virtual void DebugDraw(int color) const override = 0;
-    void DebugDrawAABB(int color) const override { m_boundingBox.DebugDraw(color); }
+    virtual void DebugDraw(Renderer& renderer, int color) const override = 0;
+    void DebugDrawAABB(Renderer& renderer, int color) const override { m_boundingBox.DebugDraw(renderer, color); }
 
     // キャッシュの更新をする関数
     virtual void UpdateCache() const = 0;

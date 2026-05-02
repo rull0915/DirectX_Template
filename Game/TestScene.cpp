@@ -20,7 +20,8 @@ TestScene::TestScene(Game* pGame)
 	: Scene(pGame->GetSceneManager())
 	, m_pGame{ pGame }
 	, m_testCamera{}
-	, m_material{0.2f, 0.1f, 0.6f, CombineMode::Minimum, CombineMode::Average}
+	, m_material{0.2f, 0.1f, 0.6f, CombineMode::Average, CombineMode::Average}
+	, m_floor{}
 {
 }
 
@@ -59,10 +60,10 @@ void TestScene::Initialize()
 
 	m_floor = (ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -60, -2, -60 }, SimpleMath::Vector3{ 60, -1.5, 60 }));
 	m_floor->GetComponent<Transform>()->SetLocalEulerAngle({ 0, 0, 0 });
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  20, -2, -20 }, SimpleMath::Vector3{  20.5, 20, 20 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, 20 }, SimpleMath::Vector3{ 20, 20, 20.5 }));
-	//m_objects.push_back(ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20.5 }, SimpleMath::Vector3{ 20, 20, -20 }));
+	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 });
+	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  20, -2, -20 }, SimpleMath::Vector3{  20.5, 20, 20 });
+	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, 20 }, SimpleMath::Vector3{ 20, 20, 20.5 });
+	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20.5 }, SimpleMath::Vector3{ 20, 20, -20 });
 
 	CollideManager::Instance().SetCollideActive(5, 5, false);
 }
@@ -74,14 +75,14 @@ void TestScene::Update(float elapsedTime)
 
 	if (KeyInput::GetKeyDown(DirectX::Keyboard::Keys::Z))
 	{
-		static DirectX::SimpleMath::Vector3 force = { 1500.0f, 1500.0f, 0.0f };
+		static DirectX::SimpleMath::Vector3 force = { 20.0f, 20.0f, 0.0f };
 
 		for (auto cube : m_cubes)
 		{
 			auto rid = cube->GetComponent<RigidBody>();
 			if (rid)
 			{
-				rid->AddForce(force);
+				rid->AddForce(force, ForceMode::Impulse);
 //				rid->SetUseGravity(true);
 			}
 		}
@@ -93,8 +94,35 @@ void TestScene::Update(float elapsedTime)
 }
 
 // ï`âÊä÷êî
-void TestScene::Render()
+void TestScene::Render(Renderer& renderer)
 {
+//	renderer.Draw().Triangle({ 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, 0xFFFFFF);
+//	renderer.Draw().Triangle({ 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, 0xFF0000, false);
+//	renderer.Draw().Rect({ 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, { 1, 0, 0 }, 0xFFFFFF, false);
+
+	// ê›íË
+	int circleNum = 3;
+
+	int divCount = 64;
+
+	float radius = 3.0f;
+
+	// ï`âÊ
+	//float step = PI_F * 2 / circleNum;
+	//for (int i = 0; i < circleNum; i++)
+	//{
+	//	float rad = step * i;
+
+	//	DirectX::SimpleMath::Vector3 normal1(sinf(rad), 0, cosf(rad));
+	//	DirectX::SimpleMath::Vector3 normal2(0, sinf(rad), cosf(rad));
+	//	DirectX::SimpleMath::Vector3 normal3(sinf(rad), cosf(rad), 0);
+
+	//	renderer.Draw().Circle({ 0, 0, 0 }, normal1, radius, divCount, 0xFF0000, false);
+	//	renderer.Draw().Circle({ 0, 0, 0 }, normal2, radius, divCount, 0x00FF00, false);
+	//	renderer.Draw().Circle({ 0, 0, 0 }, normal3, radius, divCount, 0x0000FF, false);
+	//}
+
+	renderer.Draw().Arc({ 0, 0, 0 }, { 1, 1, 0 }, { 0, 1, 0 }, 16, radius, 0xFFFFFF, true);
 }
 
 // èIóπä÷êî

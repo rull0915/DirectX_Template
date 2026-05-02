@@ -183,6 +183,34 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\IRenderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Primitive\PrimitiveRenderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Sprite\SpriteRenderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\Common\Renderer\RenderProxy.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\Common\Renderer\Renderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\Common\Renderer\RenderStateCache.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameLib\Common\ThreadPool.h" />
     <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
     <ClInclude Include="DeviceResources.h" />
@@ -211,6 +239,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="GameLib\GameObject\Components\ComponentID.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\GameObject\Components\Renderer\BaseRenderer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\GameObject\Components\Renderer\Model\ModelComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -280,6 +316,20 @@
     <ClInclude Include="Game\TestObjects\WallObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Primitive\PrimitiveRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Sprite\SpriteRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameLib\Common\Renderer\Renderer.cpp" />
+    <ClCompile Include="GameLib\Common\Renderer\RenderProxy.cpp" />
     <ClCompile Include="GameLib\Common\ThreadPool.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Camera\RayCast.cpp" />
@@ -292,6 +342,7 @@
     <ClCompile Include="GameLib\GameObject\Components\Collider\3D\Shapes\CapsuleCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\3D\Shapes\SphereCollider.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Collider\ICollider.cpp" />
+    <ClCompile Include="GameLib\GameObject\Components\Renderer\BaseRenderer.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\RigidBody\2D\RigidBody2D.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\RigidBody\3D\RigidBody.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
@@ -349,12 +400,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\directxtk_desktop_2019.2025.10.28.2\build\native\directxtk_desktop_2019.targets" Condition="Exists('packages\directxtk_desktop_2019.2025.10.28.2\build\native\directxtk_desktop_2019.targets')" />
+    <Import Project="packages\directxtk_desktop_win10.2026.4.1.1\build\native\directxtk_desktop_win10.targets" Condition="Exists('packages\directxtk_desktop_win10.2026.4.1.1\build\native\directxtk_desktop_win10.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\directxtk_desktop_2019.2025.10.28.2\build\native\directxtk_desktop_2019.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2019.2025.10.28.2\build\native\directxtk_desktop_2019.targets'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_win10.2026.4.1.1\build\native\directxtk_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_win10.2026.4.1.1\build\native\directxtk_desktop_win10.targets'))" />
   </Target>
 </Project>

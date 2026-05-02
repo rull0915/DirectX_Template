@@ -82,24 +82,23 @@ void ResourceManager::AddModel(const std::string& key, const std::wstring& fileP
 
 ID3D11ShaderResourceView* ResourceManager::GetTexture(const std::string& key) const
 {
-    // 存在しないキーなら
-    if (m_textures.find(key) == m_textures.end()) return nullptr;
-
-    return m_textures.at(key).Get();
+    auto it = m_textures.find(key);
+    if (it == m_textures.end()) return nullptr;
+    return it->second.Get();
 }
 
 SpriteFont* ResourceManager::GetSpriteFont(const std::string& key) const
 {
     // 存在しないキーなら
-    if (m_spriteFonts.find(key) == m_spriteFonts.end()) return nullptr;
-
-    return m_spriteFonts.at(key).get();
+    auto it = m_spriteFonts.find(key);
+    if (it == m_spriteFonts.end()) return nullptr;
+    return it->second.get();
 }
 
 DirectX::Model* ResourceManager::GetModel(const std::string& key) const
 {
     // 存在しないキーなら
-    if (m_models.find(key) == m_models.end()) return nullptr;
-
-    return m_models.at(key).get();
+    auto it = m_models.find(key);
+    if (it == m_models.end()) return nullptr;
+    return it->second.get();
 }

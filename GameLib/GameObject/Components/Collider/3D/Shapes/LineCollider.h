@@ -56,5 +56,5 @@ public:
     void SetEnd(DirectX::SimpleMath::Vector3 end) { m_end = end; }
 
     void UpdateCache() const override {};
-    void DebugDraw(int color) const override {};
+    void DebugDraw(Renderer& renderer, int color) const override {};
 };

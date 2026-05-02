@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "GameLib/Common/Renderer/Renderer.h"
 #include "Transition/Transitions.h"
 
 // ‘O•ûQÆ
@@ -66,7 +67,7 @@ public:
 	void Update(float elapsedTime);
 
 	// •`‰æˆ—
-	void Render();
+	void Render(Renderer& renderer);
 
 	void TransitionRender();
 

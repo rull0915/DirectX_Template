@@ -197,7 +197,11 @@ void MyRenderer::CheckChange(DrawMode next)
 			// エフェクトを即時適用
 			if(m_instance.m_nowContext) m_instance.m_basicEffect->Apply(m_instance.m_nowContext);
 			m_instance.m_isChangeWVP = false; // 適用済みなのでフラグを下ろす
+
+			// 共通設定のためbreakなし
+
 		case MyRenderer::DrawMode::Primitiv:
+
 			// InputLayout をプリミティブ用に再設定
 			m_instance.m_nowContext->IASetInputLayout(m_instance.m_inputLayout.Get());
 

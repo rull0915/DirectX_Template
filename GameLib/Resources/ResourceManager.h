@@ -14,7 +14,7 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
-#include <map>
+#include <unordered_map>
 #include <string>
 
 #include <SpriteFont.h>
@@ -49,13 +49,13 @@ private:
     std::unique_ptr<DirectX::EffectFactory> m_effect;
 
     // 画像リソース
-    std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_textures;
+    std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_textures;
 
     // フォント
-    std::map<std::string, std::unique_ptr<DirectX::SpriteFont>> m_spriteFonts;
+    std::unordered_map<std::string, std::unique_ptr<DirectX::SpriteFont>> m_spriteFonts;
 
     // モデル
-    std::map<std::string, std::unique_ptr<DirectX::Model>> m_models;
+    std::unordered_map<std::string, std::unique_ptr<DirectX::Model>> m_models;
 
 private:
 

@@ -12,8 +12,6 @@
 #include "pch.h"
 #include "SphereCollider.h"
 
-#include "GameLib/MyRenderer.h"
-
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -44,7 +42,7 @@ void SphereCollider::UpdateCache() const
 	ApplyVersion();
 }
 
-void SphereCollider::DebugDraw(int color) const
+void SphereCollider::DebugDraw(Renderer& renderer, int color) const
 {
 	// ワールド行列の算出(Rot,Pos)
 	Transform* pT = GetTransform();
@@ -52,7 +50,7 @@ void SphereCollider::DebugDraw(int color) const
 	DirectX::SimpleMath::Quaternion rot = pT->GetWorldRotation();
 
 	float rad = GetRadius();
-	MyRenderer::DrawCircle(pos, pT->GetUp(), rad, 16, color, false);
-	MyRenderer::DrawCircle(pos, pT->GetRight(), rad, 16, color, false);
-	MyRenderer::DrawCircle(pos, pT->GetForward(), rad, 16, color, false);
+	renderer.Draw().Circle(pos, pT->GetUp(), rad, 16, color, false);
+	renderer.Draw().Circle(pos, pT->GetRight(), rad, 16, color, false);
+	renderer.Draw().Circle(pos, pT->GetForward(), rad, 16, color, false);
 }

@@ -12,8 +12,6 @@
 #include "pch.h"
 #include "CircleCollider2D.h"
 
-#include "GameLib/MyRenderer.h"
-
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -48,11 +46,11 @@ void CircleCollider2D::UpdateCache() const
 	ApplyVersion();
 }
 
-void CircleCollider2D::DebugDraw(int color) const
+void CircleCollider2D::DebugDraw(Renderer& renderer, int color) const
 {
 	// ワールド行列の算出(Rot,Pos)
 	DirectX::SimpleMath::Vector2 pos = GetWorldCenterPos();
 
 	float rad = GetRadius();
-	MyRenderer::DrawCircle({ pos.x, pos.y, 0 }, { 0, 0, 1 }, rad, 16, color, false);
+	renderer.Draw().Circle({ pos.x, pos.y, 0 }, { 0, 0, 1 }, rad, 16, color, false);
 }

@@ -31,10 +31,10 @@ BaseCollider2D::BaseCollider2D(GameObject* own, ColliderType2D type, int ID, boo
 	CollideManager2D::Instance().AddCollide(this);
 }
 
-void AABB2D::DebugDraw(int color) const
+void AABB2D::DebugDraw(Renderer& renderer, int color) const
 {
-	MyRenderer::DrawLine({ min.x, min.y, 0 }, { max.x, min.y, 0 }, color);
-	MyRenderer::DrawLine({ min.x, max.y, 0 }, { max.x, max.y, 0 }, color);
-	MyRenderer::DrawLine({ min.x, min.y, 0 }, { min.x, max.y, 0 }, color);
-	MyRenderer::DrawLine({ max.x, min.y, 0 }, { max.x, max.y, 0 }, color);
+	renderer.Draw().Line({ min.x, min.y, 0 }, { max.x, min.y, 0 }, color);
+	renderer.Draw().Line({ min.x, max.y, 0 }, { max.x, max.y, 0 }, color);
+	renderer.Draw().Line({ min.x, min.y, 0 }, { min.x, max.y, 0 }, color);
+	renderer.Draw().Line({ max.x, min.y, 0 }, { max.x, max.y, 0 }, color);
 }

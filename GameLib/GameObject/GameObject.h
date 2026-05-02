@@ -19,6 +19,7 @@
 #include <type_traits>
 
 #include "Components/Components.h"
+#include "GameLib/Common/Renderer/Renderer.h"
 
 //====================================================//
 // 前方宣言
@@ -80,7 +81,7 @@ public:
     // 基底クラスで必ず行う処理
     void BaseUpdate(float elapsedTime);
 
-    void BaseRender();
+    void BaseRender(Renderer& renderer);
 
     void BaseFinalize();
 
@@ -100,7 +101,7 @@ public:
 
 private:
     // コライダーのデバッグ描画をする関数
-    void CollidersDebugDraw(int color, bool drawAABB = false);
+    void CollidersDebugDraw(Renderer& renderer, int color, bool drawAABB = false);
 
     // 衝突関連
 public:

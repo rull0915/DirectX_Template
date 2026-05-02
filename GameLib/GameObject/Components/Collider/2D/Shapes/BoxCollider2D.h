@@ -112,5 +112,5 @@ public:
     }
 
     // •`‰æŠÖ”
-    void DebugDraw(int color) const override;
+    void DebugDraw(Renderer& renderer, int color) const override;
 };

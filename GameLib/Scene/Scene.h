@@ -2,6 +2,8 @@
 
 #include "Transition/Transitions.h"
 
+#include "GameLib/Common/Renderer/Renderer.h"
+
 // ‘O•ûéŒ¾
 class SceneManager;
 
@@ -28,7 +30,7 @@ public:
 	virtual void Update(float elapsedTime) = 0;
 
 	// •`‰æˆ—
-	virtual void Render() = 0;
+	virtual void Render(Renderer& renderer) = 0;
 
 	// I—¹ˆ—
 	virtual void Finalize() = 0;

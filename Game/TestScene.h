@@ -70,7 +70,7 @@ public:
     void Update(float elapsedTime) override;
 
     // •`‰æŠÖ”
-    void Render() override;
+    void Render(Renderer& renderer) override;
 
     // I—¹ŠÖ”
     void Finalize() override;

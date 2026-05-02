@@ -44,7 +44,7 @@ void PhysicsManager::Update(float elapsedTime)
 	{
 		if (body->IsStatic() || !body->IsUseGravity()) continue;
 
-		if (!body->IsSleep()) body->AddForce(m_gravityVec * m_gravityPower * body->GetMass(), false);
+		if (!body->IsSleep()) body->AddForce(m_gravityVec * m_gravityPower, ForceMode::Acceleration, false);
 	}
 
 	// 位置の更新
@@ -220,7 +220,7 @@ void PhysicsManager::VelocityCorrection(HitContact& contact)
 
 
 		// 双方の速度を変更
-		if (aRigid && !contact.aIsStatic) aRigid->AddImpulse(-(tangentImpulse + normalImpulse), false);
-		if (bRigid && !contact.bIsStatic) bRigid->AddImpulse(tangentImpulse + normalImpulse, false);
+		if (aRigid && !contact.aIsStatic) aRigid->AddForce(-(tangentImpulse + normalImpulse), ForceMode::Impulse, false);
+		if (bRigid && !contact.bIsStatic) bRigid->AddForce(tangentImpulse + normalImpulse, ForceMode::Impulse, false);
 	}
 }
