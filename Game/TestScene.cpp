@@ -58,6 +58,9 @@ void TestScene::Initialize()
 		m_cubes.push_back(cube);
 	}
 
+	auto model = m_cubes[0]->AddComponent<ModelComponent>();
+	model->SetModel("Animal");
+
 	m_floor = (ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -60, -2, -60 }, SimpleMath::Vector3{ 60, -1.5, 60 }));
 	m_floor->GetComponent<Transform>()->SetLocalEulerAngle({ 0, 0, 0 });
 	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 });
@@ -89,7 +92,10 @@ void TestScene::Update(float elapsedTime)
 	}
 	if (KeyInput::GetKey(DirectX::Keyboard::Keys::X))
 	{
-		m_floor->GetComponent<Transform>()->AddLocalEulerAngle({ 0, 0, (XM_PI / 8) * elapsedTime });
+		auto model = m_cubes[0]->GetComponent<Transform>();
+		model->AddLocalEulerAngle({ 0, elapsedTime, 0 });
+
+//		m_floor->GetComponent<Transform>()->AddLocalEulerAngle({ 0, 0, (XM_PI / 8) * elapsedTime });
 	}
 }
 

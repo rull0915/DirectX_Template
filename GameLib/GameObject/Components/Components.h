@@ -20,3 +20,4 @@
 #include "Collider/3D/Shapes/Colliders.h"
 #include "RigidBody/2D/RigidBody2D.h"
 #include "RigidBody/3D/RigidBody.h"
+#include "Renderer/Model/ModelComponent.h"

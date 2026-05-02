@@ -12,14 +12,18 @@
 #include "pch.h"
 #include "ObjectManager.h"
 
+// 2Dマネージャー
 #include "2DManagers/Collider/CollideManager2D.h"
 #include "2DManagers/PhysicsManager2D.h"
 
+// 3Dマネージャー
 #include "3DManagers/Collider/CollideManager.h"
 #include "3DManagers/PhysicsManager.h"
 #include "System/CollideEventSystem.h"
 
+// その他マネージャー
 #include "CameraManager.h"
+#include "Renderer/RendererComponentManager.h"
 
 #include "GameLib/MyRenderer.h"
 
@@ -80,6 +84,9 @@ void ObjectManager::Update(float elapsedTime)
 	// 衝突後関数の呼び出し
 	CollideEventSystem::Instance().CallCollideFunctions(PhysicsManager::Instance().GetHitList());
 
+	// 描画管理クラスの更新
+	RendererComponentManager::Instance().Update();
+
 	// 死亡オブジェクトの削除
 	RemoveDeadObject();
 }
@@ -93,7 +100,8 @@ void ObjectManager::Render(Renderer& renderer)
 	renderer.SetView(CameraManager::Instance().GetView());
 	renderer.SetProjection(CameraManager::Instance().GetProj());
 
-	DirectX::SimpleMath::Matrix world;
+	// 描画管理クラスの描画処理
+	RendererComponentManager::Instance().DrawAll(renderer);
 
 	// 全オブジェクトの描画
 	for (auto& object : m_objects)
@@ -105,7 +113,7 @@ void ObjectManager::Render(Renderer& renderer)
 		object->Render();
 	}
 
-	renderer.Draw().Model(ResourceManager::Instance().GetModel("Animal"), world);
+//	renderer.Draw().Model(ResourceManager::Instance().GetModel("Animal"), world);
 }
 
 /// <summary>

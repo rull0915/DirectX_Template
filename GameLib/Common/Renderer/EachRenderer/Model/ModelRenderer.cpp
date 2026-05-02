@@ -59,7 +59,7 @@ void ModelRenderer::DrawModel(DirectX::Model* model, DirectX::SimpleMath::Matrix
 	model->Draw(
 		m_renderer.GetContext(), 
 		*m_renderer.GetStates(), 
-		m_renderState.GetWorld(), 
+		world, 
 		m_renderState.GetView(), 
 		m_renderState.GetProjection()
 	);

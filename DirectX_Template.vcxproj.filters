@@ -97,6 +97,7 @@
     <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.h" />
     <ClInclude Include="GameLib\Common\Renderer\EachRenderer\IRenderer.h" />
     <ClInclude Include="GameLib\GameObject\Components\Renderer\Model\ModelComponent.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Sprite\SpriteRenderer.cpp" />
     <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Renderer\BaseRenderer.cpp" />
+    <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

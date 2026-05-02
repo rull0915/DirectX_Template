@@ -283,6 +283,10 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\CameraManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\ObjectManager.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h">
       <SubType>
       </SubType>
@@ -360,6 +364,7 @@
     <ClCompile Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\CameraManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\ObjectManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\System\CollideEventSystem.cpp" />
     <ClCompile Include="GameLib\GameObject\TemplateObjects\BoxTemplate.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
