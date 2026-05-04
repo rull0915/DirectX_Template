@@ -53,6 +53,13 @@ void ObjectManager::Update(float elapsedTime)
 	// 予約されているオブジェクトを追加
 	AddReservedObject();
 
+	// 全オブジェクトのコンポーネントを追加
+	for (auto& object : m_objects)
+	{
+		// 予約されたコンポーネントを追加
+		object->RegisterComponents();
+	}
+
 	// 全オブジェクトの更新関数呼び出し
 	for (auto& object : m_objects)
 	{

@@ -38,9 +38,6 @@ GameObject::GameObject()
 
 void GameObject::BaseUpdate(float elapsedTime)
 {
-    // 予約済みコンポーネントを登録
-    RegisterComponents();
-
     // 派生クラスの更新処理
     Update(elapsedTime);
 }

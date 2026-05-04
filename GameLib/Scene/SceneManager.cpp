@@ -46,14 +46,11 @@ void SceneManager::RegisterScene(const std::string& sceneName, std::unique_ptr<S
 // 更新処理
 void SceneManager::Update(float elapsedTime)
 {
+	// シーンの更新
+	if (m_pCurrentScene) m_pCurrentScene->BaseUpdate(elapsedTime);
+
 	switch (m_condition)
 	{
-	case TransCondition::None:
-
-		// シーンの更新
-		if (m_pCurrentScene) m_pCurrentScene->BaseUpdate(elapsedTime);
-
-		break;
 	case TransCondition::In:
 
 		if (m_inTrans->Update(elapsedTime))

@@ -142,12 +142,12 @@ public:
     // コンポーネントを全て削除する関数
     void RemoveComponents();
 
+    // 予約済みのコンポーネントを登録する関数
+    void RegisterComponents();
+
     // ----- 内部実装 ------- //
 private:
     void RegisterComponentToScene(BaseComponent* component);
-
-    // 予約済みのコンポーネントを登録する関数
-    void RegisterComponents();
 };
 
 /// <summary>
@@ -206,9 +206,7 @@ inline T* GameObject::GetComponent()
     if constexpr (T::TYPE_ID == MAIN_TRANSFORM) return m_pTransform.get();
     if constexpr (T::TYPE_ID == MAIN_RIGIDBODY || T::TYPE_ID == MAIN_RIGIDBODY_2D)
     {
-        return static_cast<T*>(m_pRigidBody.get());
-
-        // 予約済みをチェック
+        if (m_pRigidBody) return static_cast<T*>(m_pRigidBody.get());
         return static_cast<T*>(m_pReserveRigidBody.get());
     }
 
