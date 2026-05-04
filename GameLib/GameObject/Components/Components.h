@@ -14,6 +14,8 @@
 //====================================================//
 // インクルードファイル
 //====================================================//
+#include "ComponentID.h"
+
 #include "Transform/Transform.h"
 #include "Camera/CameraComponent.h"
 #include "Collider/2D/Shapes/2DColliders.h"

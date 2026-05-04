@@ -11,7 +11,6 @@
 //====================================================//
 #include "FadeTransition.h"
 
-#include "GameLib/MyRenderer.h"
 #include "Game/Screen.h"
 
 //====================================================//
@@ -39,7 +38,7 @@ bool FadeTransition::Update(float elapsedTime)
 	return (m_elapsedTime >= m_transSec);
 }
 
-void FadeTransition::Render()
+void FadeTransition::Render(Renderer& renderer)
 {
 	// “§–¾“x‚ÌŒvŽZ
 	float alpha = 0;
@@ -62,9 +61,9 @@ void FadeTransition::Render()
 		break;
 	}
 
-	MyRenderer::SetAlpha(alpha / 255.0f);
+	renderer.SetAlpha(alpha / 255.0f);
 
-	MyRenderer::DrawBox({ 0, 0 }, { Screen::WIDTH, Screen::HEIGHT }, m_fadeColor);
+//	renderer.Draw().Rect({ 0, 0 }, { Screen::WIDTH, Screen::HEIGHT }, m_fadeColor);
 
-	MyRenderer::SetAlpha(1.0f);
+	renderer.SetAlpha(1.0f);
 }

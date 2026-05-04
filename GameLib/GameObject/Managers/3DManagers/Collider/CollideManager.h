@@ -3,10 +3,11 @@
 // 作成者       : Hoshino Ryunosuke
 // 作成日       : 2026/03/19
 //
-// 概要 : 衝突を管理するクラスです シングルトンで作成します
+// 概要 : 衝突を管理するクラス
 //
 // 更新履歴 :
 // 2026/03/19 新規作成
+// 2026/05/04 シングルトンから通常のクラスへ変更
 //====================================================//
 
 #pragma once
@@ -55,7 +56,7 @@ private:
     // 木構造
     TreeManager m_tree;
 
-private:
+public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
@@ -71,16 +72,8 @@ private:
         m_layer.resize(100);
         for (auto& col : m_layer) col.resize(100);
     };
+
     ~CollideManager() = default;
-
-public:
-    // シングルトン化
-    static CollideManager& Instance()
-    {
-        static CollideManager instance;
-
-        return instance;
-    }
 
     // コライダーの追加
     void AddCollide(BaseCollider* collide)

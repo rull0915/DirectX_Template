@@ -112,6 +112,7 @@ public:
     void SetWorld(DirectX::SimpleMath::Matrix world) { m_drawState.SetWorld(world); }
     void SetView(DirectX::SimpleMath::Matrix view) { m_drawState.SetView(view); }
     void SetProjection(DirectX::SimpleMath::Matrix proj) { m_drawState.SetProjection(proj); }
+    void SetAlpha(float alpha) { m_drawState.SetAlpha(alpha); }
 
 private:
 

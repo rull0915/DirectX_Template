@@ -49,22 +49,13 @@ public:
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-
-private:
+public:
     CameraManager();
     ~CameraManager();
 
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-public:
-
-    // シングルトン化
-    static CameraManager& Instance()
-    {
-        static CameraManager instance;
-        return instance;
-    }
 
     void Update();
 
@@ -81,10 +72,10 @@ public:
     }
 
     // メインカメラの行列の取得関数
-    const DirectX::SimpleMath::Matrix& GetView() { return m_mainCamera->GetView(); }
-    const DirectX::SimpleMath::Matrix& GetProj() { return m_mainCamera->GetProj(); }
-    const DirectX::SimpleMath::Matrix& GetInverseView() { return m_mainCamera->GetInverseView(); }
-    const DirectX::SimpleMath::Matrix& GetInverseProj() { return m_mainCamera->GetInverseProj(); }
+    const DirectX::SimpleMath::Matrix& GetView() { return m_mainCamera ? m_mainCamera->GetView() : DirectX::SimpleMath::Matrix::Identity; }
+    const DirectX::SimpleMath::Matrix& GetProj() { return m_mainCamera ? m_mainCamera->GetProj() : DirectX::SimpleMath::Matrix::Identity; }
+    const DirectX::SimpleMath::Matrix& GetInverseView() { return m_mainCamera ? m_mainCamera->GetInverseView() : DirectX::SimpleMath::Matrix::Identity; }
+    const DirectX::SimpleMath::Matrix& GetInverseProj() { return m_mainCamera ? m_mainCamera->GetInverseProj() : DirectX::SimpleMath::Matrix::Identity; }
 
 private:
 

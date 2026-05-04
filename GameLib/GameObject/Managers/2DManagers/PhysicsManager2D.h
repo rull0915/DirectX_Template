@@ -16,6 +16,7 @@
 //====================================================//
 #include "GameLib/GameObject/Components/RigidBody/2D/RigidBody2D.h"
 #include "../HitContact.h"
+#include "Collider/CollideManager2D.h"
 
 #include <vector>
 #include <unordered_set>
@@ -50,6 +51,9 @@ private:
     // 登録されているRigidBody2D
     std::vector<RigidBody2D*> m_rigidBodies;
 
+    // 衝突管理クラス
+    CollideManager2D m_collideManager;
+
     // 衝突情報
     std::vector<HitContact2D> m_contacts;
     std::unordered_map<ObjectPair, HitContact2D, ObjectPairHash> m_contactMap;
@@ -57,19 +61,12 @@ private:
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-private:
-    PhysicsManager2D();
 public:
+    PhysicsManager2D();
     ~PhysicsManager2D();
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-public:
-    static PhysicsManager2D& Instance()
-    {
-        static PhysicsManager2D instance;
-        return instance;
-    }
 
     // 更新処理
     void Update(float elapsedTime);
@@ -82,6 +79,8 @@ public:
     // ゲッター
     //-----------------------------------------------------
     std::unordered_map<ObjectPair, HitContact2D, ObjectPairHash>& GetHitList() { return m_contactMap; }
+
+    CollideManager2D& GetCollideManager() { return m_collideManager; }
 
     //-----------------------------------------------------
     // セッター

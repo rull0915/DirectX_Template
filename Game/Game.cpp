@@ -43,7 +43,6 @@ Game::Game() noexcept(false)
 /// </summary>
 Game::~Game()
 {
-    ObjectManager::Instance().Finalize();
 }
 
 // Initialize the Direct3D resources required to run.
@@ -123,14 +122,12 @@ void Game::Update(DX::StepTimer const& timer)
         {
             // 各シーンの更新
             m_sceneManager.Update(elapsedTime);
-            ObjectManager::Instance().Update(elapsedTime);
         }
         return;
     }
 
     // 各シーンの更新
     m_sceneManager.Update(elapsedTime);
-    ObjectManager::Instance().Update(elapsedTime);
 }
 #pragma endregion
 
@@ -156,20 +153,12 @@ void Game::Render()
 //    //MyRenderer::StartDraw(context);
     m_renderer.Start(context);
 
-    auto view = CameraManager::Instance().GetView();
-    auto proj = CameraManager::Instance().GetProj();
-
-    m_renderer.SetView(view);
-    m_renderer.SetProjection(proj);
-
     // 現在のシーンの描画
     m_sceneManager.Render(m_renderer);
 
-    ObjectManager::Instance().Render(m_renderer);
-
     // 描画の終了 ----------------------------------------
-    m_sceneManager.TransitionRender();
-    if (m_exitTrans) m_exitTrans->Render();
+    m_sceneManager.TransitionRender(m_renderer);
+    if (m_exitTrans) m_exitTrans->Render(m_renderer);
     m_deviceResources->PIXEndEvent();
 //    //MyRenderer::EndDraw();
 

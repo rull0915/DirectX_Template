@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameLib/Common/Renderer/Renderer.h"
+
 // ‘JˆÚƒ‚[ƒh
 namespace Transition
 {
@@ -35,6 +37,6 @@ public:
 	// ‘JˆÚI—¹‚Étrue
 	virtual bool Update(float elapsedTime) = 0;
 
-	virtual void Render() = 0;
+	virtual void Render(Renderer& renderer) = 0;
 };
 

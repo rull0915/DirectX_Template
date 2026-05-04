@@ -12,8 +12,6 @@
 #include "pch.h"
 #include "PhysicsManager.h"
 
-#include "Collider/CollideManager.h"
-
 #include "GameLib/GameMath/GameMath.h"
 
 //====================================================//
@@ -21,11 +19,13 @@
 //====================================================//
 
 PhysicsManager::PhysicsManager()
-	: m_removeReserves{}
-	, m_reserves{}
+	: m_reserves{}
+	, m_removeReserves{}
 	, m_rigidBodies{}
+	, m_collideManager{}
+	, m_contacts{}
+	, m_contactMap{}
 {
-
 }
 
 PhysicsManager::~PhysicsManager()
@@ -58,10 +58,10 @@ void PhysicsManager::Update(float elapsedTime)
 	// --- Õ“Ë”»’è --- //
 
 	// ‹óŠÔ•ªŠ„‚ÌXV
-	CollideManager::Instance().MoveAllColliderOnTree();
+	m_collideManager.MoveAllColliderOnTree();
 
 	// ”»’è
-	CollideManager::Instance().CheckHitAll(m_contacts);
+	m_collideManager.CheckHitAll(m_contacts);
 
 	// ˆÊ’u•â³
 	HittedCorrection();

@@ -23,9 +23,6 @@
 
 // その他マネージャー
 #include "CameraManager.h"
-#include "Renderer/RendererComponentManager.h"
-
-#include "GameLib/MyRenderer.h"
 
 #include "GameLib/Resources/ResourceManager.h"
 
@@ -56,12 +53,6 @@ void ObjectManager::Update(float elapsedTime)
 	// 予約されているオブジェクトを追加
 	AddReservedObject();
 
-	// リジッドボディの更新
-	PhysicsManager::Instance().Update(elapsedTime);
-
-	// 2Dリジッドボディの更新
-	PhysicsManager2D::Instance().Update(elapsedTime);
-
 	// 全オブジェクトの更新関数呼び出し
 	for (auto& object : m_objects)
 	{
@@ -72,21 +63,6 @@ void ObjectManager::Update(float elapsedTime)
 		object->Update(elapsedTime);
 	}
 
-	// カメラの更新
-	CameraManager::Instance().Update();
-
-	// 衝突判定後の値の更新
-	for (auto& object : m_objects)
-	{
-		object->GetComponent<Transform>()->ReflectCache();	// Transform
-	}
-
-	// 衝突後関数の呼び出し
-	CollideEventSystem::Instance().CallCollideFunctions(PhysicsManager::Instance().GetHitList());
-
-	// 描画管理クラスの更新
-	RendererComponentManager::Instance().Update();
-
 	// 死亡オブジェクトの削除
 	RemoveDeadObject();
 }
@@ -96,13 +72,6 @@ void ObjectManager::Update(float elapsedTime)
 /// </summary>
 void ObjectManager::Render(Renderer& renderer)
 {
-	// メインカメラの行列を適用
-	renderer.SetView(CameraManager::Instance().GetView());
-	renderer.SetProjection(CameraManager::Instance().GetProj());
-
-	// 描画管理クラスの描画処理
-	RendererComponentManager::Instance().DrawAll(renderer);
-
 	// 全オブジェクトの描画
 	for (auto& object : m_objects)
 	{
@@ -112,8 +81,6 @@ void ObjectManager::Render(Renderer& renderer)
 		// 派生クラスの描画処理
 		object->Render();
 	}
-
-//	renderer.Draw().Model(ResourceManager::Instance().GetModel("Animal"), world);
 }
 
 /// <summary>
@@ -123,6 +90,15 @@ void ObjectManager::Finalize()
 {
 	AllDestroy();
 	RemoveDeadObject();
+}
+
+void ObjectManager::AllReflectCache()
+{
+	// 衝突判定後の値の更新
+	for (auto& object : m_objects)
+	{
+		object->GetComponent<Transform>()->ReflectCache();	// Transform
+	}
 }
 
 void ObjectManager::AllDestroy()
@@ -167,18 +143,6 @@ void ObjectManager::RemoveDeadObject()
 
 			// 終了関数の呼び出し
 			obj->Finalize();
-
-			// コライダーをマネージャーから削除
-			std::vector<BaseCollider*> cols;
-			obj->GetComponents<BaseCollider>(cols);
-			for (auto& col : cols) CollideManager::Instance().RemoveCollide(col);
-
-			// リジッドボディをマネージャーから削除
-			if (auto rb = obj->GetComponent<RigidBody>())
-				PhysicsManager::Instance().RemoveRigidBody(rb);
-
-			if (auto rb2d = obj->GetComponent<RigidBody2D>())
-				PhysicsManager2D::Instance().RemoveRigidBody(rb2d);
 
 			// リストから削除
 			m_objects.erase(m_objects.begin() + i);

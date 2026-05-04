@@ -23,6 +23,9 @@ PhysicsManager2D::PhysicsManager2D()
 	: m_removeReserves{}
 	, m_reserves{}
 	, m_rigidBodies{}
+	, m_collideManager{}
+	, m_contacts{}
+	, m_contactMap{}
 {
 
 }
@@ -59,10 +62,10 @@ void PhysicsManager2D::Update(float elapsedTime)
 	// --- Õ“Ë”»’è --- //
 
 	// ‹óŠÔ•ªŠ„‚ÌXV
-	CollideManager2D::Instance().MoveAllColliderOnTree();
+	m_collideManager.MoveAllColliderOnTree();
 
 	// ”»’è
-	CollideManager2D::Instance().CheckHitAll(m_contacts);
+	m_collideManager.CheckHitAll(m_contacts);
 
 	// ˆÊ’u•â³
 	HittedCorrection();

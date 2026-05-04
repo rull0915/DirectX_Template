@@ -1,7 +1,5 @@
 #include "CubeObject.h"
 
-#include "GameLib/MyRenderer.h"
-
 CubeObject::CubeObject()
 {
 }
@@ -26,11 +24,6 @@ void CubeObject::Update(float elapsedTime)
 
 void CubeObject::Render()
 {
-	MyRenderer::SetWorld(GetComponent<Transform>()->GetWorldMatrix());
-
-//	MyRenderer::Draw3DBox({ -0.5, -0.5, -0.5 }, { 0.5, 0.5, 0.5 }, 0xFF0000, !KeyInput::GetKey(DirectX::Keyboard::Keys::F1));
-
-	MyRenderer::SetWorld(DirectX::SimpleMath::Matrix::Identity);
 }
 
 void CubeObject::Finalize()

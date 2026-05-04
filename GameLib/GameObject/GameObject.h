@@ -25,6 +25,8 @@
 // 前方宣言
 //====================================================//
 
+class Scene;
+
 //====================================================//
 // クラス宣言
 //====================================================//
@@ -43,13 +45,15 @@ private:
     std::unique_ptr<Transform> m_pTransform;
 
     // リジッドボディ
+    std::unique_ptr<IRigidBody> m_pReserveRigidBody;
     std::unique_ptr<IRigidBody> m_pRigidBody;
 
     // その他コンポーネント
+    std::vector<std::unique_ptr<BaseComponent>> m_pReserves;
     std::vector<std::unique_ptr<BaseComponent>> m_pComponents;
 
-    // デバッグ描画色
-    int m_debugColor;
+    // 自身を持つシーンのポインタ
+    Scene* m_pScene;
 
     // アクティブフラグ　
     bool m_isActive;
@@ -69,10 +73,7 @@ public:
     // 各仮想関数
     virtual void Initialize() {};
 
-    virtual void Update(float elapsedTime) 
-    {
-        elapsedTime;
-    };
+    virtual void Update(float elapsedTime) {};
 
     virtual void Render() {};
 
@@ -97,6 +98,8 @@ public:
     //-----------------------------------------------------
     void SetActive(bool value) { m_isActive = value; }
 
+    void SetScene(Scene* scene) { m_pScene = scene; }
+
     void Destroy() { m_isDead = true; }
 
 private:
@@ -106,16 +109,17 @@ private:
     // 衝突関連
 public:
 
-    void BaseOnCollision2D(BaseCollider2D* other);
-    void BaseOnTrigger2D(BaseCollider2D* other);
-
     // 衝突時に呼び出される関数
+
+    // 3D
     virtual void OnCollisionEnter(BaseCollider* other) {};
     virtual void OnCollisionStay(BaseCollider* other) {};
     virtual void OnCollisionExit(BaseCollider* other) {};
     virtual void OnTriggerEnter(BaseCollider* other) {};
     virtual void OnTriggerStay(BaseCollider* other) {};
     virtual void OnTriggerExit(BaseCollider* other) {};
+
+    // 2D
     virtual void OnCollision2D(BaseCollider2D* other) {};
     virtual void OnTrigger2D(BaseCollider2D* other) {};
 
@@ -124,7 +128,6 @@ public:
     template<typename T, typename... Args>
     T* AddComponent(Args&&... args);
 
-public:
     // コンポーネントを1つ取得する関数
     template<typename T>
     T* GetComponent();
@@ -135,6 +138,16 @@ public:
 
     template<typename T>
     void GetComponents(std::vector<T*>& array);
+
+    // コンポーネントを全て削除する関数
+    void RemoveComponents();
+
+    // ----- 内部実装 ------- //
+private:
+    void RegisterComponentToScene(BaseComponent* component);
+
+    // 予約済みのコンポーネントを登録する関数
+    void RegisterComponents();
 };
 
 /// <summary>
@@ -146,19 +159,21 @@ public:
 template<typename T, typename... Args>
 T* GameObject::AddComponent(Args&&... args)
 {
-    if constexpr (T::TYPE_ID == MAIN_TRANSFORM) return;
+    T* add = nullptr;
+
+    if constexpr (T::TYPE_ID == MAIN_TRANSFORM) return nullptr;
 
     else if constexpr (T::TYPE_ID == MAIN_RIGIDBODY || T::TYPE_ID == MAIN_RIGIDBODY_2D)
     {
         if (!m_pRigidBody)
         {
             if(T::TYPE_ID == MAIN_RIGIDBODY)
-                m_pRigidBody = std::make_unique<RigidBody>(this, std::forward<Args>(args)...);
+                m_pReserveRigidBody = std::make_unique<RigidBody>(this, std::forward<Args>(args)...);
             else 
-                m_pRigidBody = std::make_unique<RigidBody2D>(this, std::forward<Args>(args)...);
+                m_pReserveRigidBody = std::make_unique<RigidBody2D>(this, std::forward<Args>(args)...);
         }
 
-        return static_cast<T*>(m_pRigidBody.get());
+        add = static_cast<T*>(m_pReserveRigidBody.get());
     }
     else
     {
@@ -167,10 +182,13 @@ T* GameObject::AddComponent(Args&&... args)
         T* ptr = comp.get();
 
         // 配列に追加
-        m_pComponents.push_back(std::move(comp));
+        m_pReserves.push_back(std::move(comp));
 
-        return ptr;
+        add = ptr;
     }
+
+    // 追加したコンポーネントを返す
+    return add;
 }
 
 /// <summary>
@@ -184,15 +202,29 @@ inline T* GameObject::GetComponent()
     // 基底クラスを分岐
     if (T::TYPE_ID == MAIN_BASE) return nullptr;
 
-    // 1. TransformやRigidBodyなどは専用ポインタから即リターン
+    // TransformやRigidBodyなどは専用ポインタから即リターン
     if constexpr (T::TYPE_ID == MAIN_TRANSFORM) return m_pTransform.get();
-    if constexpr (T::TYPE_ID == MAIN_RIGIDBODY || T::TYPE_ID == MAIN_RIGIDBODY_2D) 
+    if constexpr (T::TYPE_ID == MAIN_RIGIDBODY || T::TYPE_ID == MAIN_RIGIDBODY_2D)
+    {
         return static_cast<T*>(m_pRigidBody.get());
+
+        // 予約済みをチェック
+        return static_cast<T*>(m_pReserveRigidBody.get());
+    }
 
     constexpr uint16_t mask = T::IS_MAIN ? 0xFF00 : 0xFFFF;
 
-    // 2. それ以外は ID 比較でループ
+    // それ以外は ID 比較でループ
     for (auto& comp : m_pComponents) 
+    {
+        // コンポーネントが持つ生のIDを、同じマスクで切り落として比較する
+        if ((comp->GetID() & mask) == (T::TYPE_ID & mask))
+        {
+            return static_cast<T*>(comp.get());
+        }
+    }
+    // 予約リストをチェック
+    for (auto& comp : m_pReserves)
     {
         // コンポーネントが持つ生のIDを、同じマスクで切り落として比較する
         if ((comp->GetID() & mask) == (T::TYPE_ID & mask))
@@ -214,27 +246,7 @@ inline std::vector<T*> GameObject::GetComponents()
 {
     std::vector<T*> list;
 
-    // 基底クラスを分岐
-    if (T::TYPE_ID == MAIN_BASE) return list;
-
-    // 1. TransformやRigidBodyなどは専用ポインタから即追加
-    if constexpr (T::TYPE_ID == MAIN_TRANSFORM) list.push_back(m_pTransform.get());
-    else if constexpr (T::TYPE_ID == MAIN_RIGIDBODY) list.push_back(m_pRigidBody.get());
-
-    else
-    {
-        constexpr uint16_t mask = T::IS_MAIN ? 0xFF00 : 0xFFFF;
-
-        // 2. それ以外は ID 比較でループ
-        for (auto& comp : m_pComponents)
-        {
-            // コンポーネントが持つ生のIDを、同じマスクで切り落として比較する
-            if ((comp->GetID() & mask) == (T::TYPE_ID & mask))
-            {
-                list.push_back(static_cast<T*>(comp.get()));
-            }
-        }
-    }
+    GetComponents(list);
 
     return list;
 }
@@ -250,7 +262,11 @@ inline void GameObject::GetComponents(std::vector<T*>& array)
 
     // 1. TransformやRigidBodyなどは専用ポインタから即追加
     if constexpr (T::TYPE_ID == MAIN_TRANSFORM) array.push_back(m_pTransform.get());
-    else if constexpr (T::TYPE_ID == MAIN_RIGIDBODY) array.push_back(m_pRigidBody.get());
+    else if constexpr (T::TYPE_ID == MAIN_RIGIDBODY)
+    {
+        if (m_pRigidBody) array.push_back(m_pRigidBody.get());
+        if (m_pReserveRigidBody) array.push_back(m_pReserveRigidBody.get());
+    }
 
     else
     {
@@ -263,6 +279,15 @@ inline void GameObject::GetComponents(std::vector<T*>& array)
             if ((comp->GetID() & mask) == (T::TYPE_ID & mask))
             {
                 array.push_back(static_cast<T*>(comp.get()));
+            }
+        }
+        // 予約リストをチェック
+        for (auto& reservedComp : m_pReserves)
+        {
+            // コンポーネントが持つ生のIDを、同じマスクで切り落として比較する
+            if ((reservedComp->GetID() & mask) == (T::TYPE_ID & mask))
+            {
+                array.push_back(static_cast<T*>(reservedComp.get()));
             }
         }
     }

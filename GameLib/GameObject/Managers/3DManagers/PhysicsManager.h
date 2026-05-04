@@ -7,6 +7,8 @@
 //
 // 更新履歴 :
 // 2026/04/08 新規作成
+// 2026/04/22 衝突管理クラスを呼び出すように。
+// 2026/05/04 シングルトンから通常のクラスへ変更
 //====================================================//
 
 #pragma once
@@ -15,6 +17,8 @@
 // インクルードファイル
 //====================================================//
 #include "GameLib/GameObject/Components/RigidBody/3D/RigidBody.h"
+
+#include "Collider/CollideManager.h"
 
 #include "../HitContact.h"
 
@@ -52,6 +56,9 @@ private:
     // 登録されているRigidBody
     std::vector<RigidBody*> m_rigidBodies;
 
+    // 衝突管理クラス
+    CollideManager m_collideManager;
+
     // 衝突情報
     std::vector<HitContact> m_contacts;
     std::unordered_map<ObjectPair, HitContact, ObjectPairHash> m_contactMap;
@@ -59,19 +66,12 @@ private:
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-private:
-    PhysicsManager();
 public:
+    PhysicsManager();
     ~PhysicsManager();
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-public:
-    static PhysicsManager& Instance()
-    {
-        static PhysicsManager instance;
-        return instance;
-    }
 
     // 更新処理
     void Update(float elapsedTime);
@@ -84,6 +84,8 @@ public:
     // ゲッター
     //-----------------------------------------------------
     std::unordered_map<ObjectPair, HitContact, ObjectPairHash>& GetHitList() { return m_contactMap; }
+
+    CollideManager& GetCollideManager() { return m_collideManager; }
 
     //-----------------------------------------------------
     // セッター

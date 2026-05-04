@@ -11,8 +11,6 @@
 //====================================================//
 #include "RayCast.h"
 
-#include "GameLib/MyRenderer.h"
-
 #include "Game/Screen.h"
 #include "GameLib/Input/MouseInput.h"
 

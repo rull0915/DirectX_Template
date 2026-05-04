@@ -69,7 +69,8 @@ public:
 	// •`‰æˆ—
 	void Render(Renderer& renderer);
 
-	void TransitionRender();
+	// ‰æ–Ê‘JˆÚ‚Ì•`‰æ
+	void TransitionRender(Renderer& renderer);
 
 	// ŠJnƒV[ƒ“‚Ìİ’è
 	void SetStartScene(const std::string& startSceneName);

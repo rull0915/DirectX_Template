@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneTransition.h"
+#include "GameLib/Common/Renderer/Renderer.h"
 
 class FadeTransition : public SceneTransition
 {
@@ -13,6 +14,6 @@ public:
 
 	bool Update(float elapsedTime) override;
 
-	void Render() override;
+	void Render(Renderer& renderer) override;
 };
 

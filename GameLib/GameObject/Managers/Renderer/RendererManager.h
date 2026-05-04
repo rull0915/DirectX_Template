@@ -1,5 +1,5 @@
 //====================================================//
-// ファイル名   : RendererComponentManager.h
+// ファイル名   : RendererManager.h
 // 作成者       : Hoshino Ryunosuke
 // 作成日       : 2026/05/03
 //
@@ -24,7 +24,7 @@
 //====================================================//
 // クラス宣言
 //====================================================//
-class RendererComponentManager
+class RendererManager
 {
 private:
 
@@ -49,18 +49,12 @@ public:
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
     //-----------------------------------------------------
-    RendererComponentManager();
-    ~RendererComponentManager();
+    RendererManager();
+    ~RendererManager();
 
     //-----------------------------------------------------
     // 公開関数
     //-----------------------------------------------------
-public:
-    static RendererComponentManager& Instance()
-    {
-        static RendererComponentManager instance;
-        return instance;
-    }
 
     // 更新処理
     void Update();

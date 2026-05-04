@@ -44,8 +44,6 @@ CameraComponent::CameraComponent(GameObject* own, int width, int height, Project
 	UpdateProj();
 
 	UpdateView();
-
-	SetMain();
 }
 
 /// <summary>
@@ -53,12 +51,6 @@ CameraComponent::CameraComponent(GameObject* own, int width, int height, Project
 /// </summary>
 CameraComponent::~CameraComponent()
 {
-}
-
-void CameraComponent::SetMain()
-{
-	// カメラマネージャーに自身を登録
-	CameraManager::Instance().SetMainCamera(this);
 }
 
 /// <summary>

@@ -1,5 +1,5 @@
 //====================================================//
-// ファイル名  : RendererComponentManager.cpp
+// ファイル名  : RendererManager.cpp
 // 作成者      : Hoshino Ryunosuke
 // 作成日       : 2026/05/03
 //
@@ -10,27 +10,27 @@
 // インクルードファイル
 //====================================================//
 #include "pch.h"
-#include "RendererComponentManager.h"
+#include "RendererManager.h"
 
 //====================================================//
 // 関数の実体宣言
 //====================================================//
 
-RendererComponentManager::RendererComponentManager()
+RendererManager::RendererManager()
 	: m_reserves{}
 	, m_removeReserves{}
 	, m_renderers{}
 {
 }
 
-RendererComponentManager::~RendererComponentManager()
+RendererManager::~RendererManager()
 {
 }
 
 /// <summary>
 /// 更新処理
 /// </summary>
-void RendererComponentManager::Update()
+void RendererManager::Update()
 {
 	// 予約されているRendererの追加
 	AddReserved();
@@ -42,7 +42,7 @@ void RendererComponentManager::Update()
 /// <summary>
 /// 全ての描画を行う関数
 /// </summary>
-void RendererComponentManager::DrawAll(Renderer& renderer)
+void RendererManager::DrawAll(Renderer& renderer)
 {
 	// 管理している全てのコンポーネントの描画処理を呼び出す
 	for (auto& component : m_renderers)

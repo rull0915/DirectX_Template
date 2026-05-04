@@ -58,7 +58,7 @@ private:
     // 木構造
     TreeManager2D m_tree;
 
-private:
+public:
 
     //-----------------------------------------------------
     // コンストラクタ / デストラクタ
@@ -77,15 +77,6 @@ private:
         for (auto& col : m_layer) col.resize(100);
     };
     ~CollideManager2D() = default;
-
-public:
-    // シングルトン化
-    static CollideManager2D& Instance()
-    {
-        static CollideManager2D instance;
-
-        return instance;
-    }
 
     // コライダーの追加
     void AddCollide(BaseCollider2D* collide)

@@ -12,10 +12,6 @@
 #include "pch.h"
 #include "BaseCollider2D.h"
 
-#include "GameLib/GameObject/Managers/2DManagers/Collider/CollideManager2D.h"
-
-#include "GameLib/MyRenderer.h"
-
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -27,8 +23,6 @@ BaseCollider2D::BaseCollider2D(GameObject* own, ColliderType2D type, int ID, boo
 	, m_boundingBox{}
 	, m_worldCenterPos{}
 {
-	// 自身をマネージャーに登録
-	CollideManager2D::Instance().AddCollide(this);
 }
 
 void AABB2D::DebugDraw(Renderer& renderer, int color) const

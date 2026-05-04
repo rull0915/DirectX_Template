@@ -1,12 +1,8 @@
 #include "TestScene.h"
 #include "Game.h"
 
-#include "GameLib/GameObject/Managers/ObjectManager.h"
-
 #include "TestObjects/TestSphere.h"
 #include "TestObjects/WallObject.h"
-
-#include "GameLib/GameObject/Managers/3DManagers/Collider/CollideManager.h"
 
 #include "GameLib/Random.h"
 
@@ -32,11 +28,13 @@ TestScene::~TestScene()
 // èâä˙âªä÷êî
 void TestScene::Initialize()
 {
-	m_testCamera = ObjectManager::Instance().Generate<GameObject>();
+	m_testCamera = Generate<GameObject>();
 
 	m_testCamera->GetComponent<Transform>()->SetLocalPosition({ 0, 0, 5 });
 
-	m_testCamera->AddComponent<CameraComponent>(Screen::WIDTH, Screen::HEIGHT)->SetMain();
+	auto camera = m_testCamera->AddComponent<CameraComponent>(Screen::WIDTH, Screen::HEIGHT);
+
+	GetCamera().SetMainCamera(camera);
 
 	int ballCount = 5;
 
@@ -45,7 +43,7 @@ void TestScene::Initialize()
 		SimpleMath::Vector3 pos = { -20, 0, (i - (float)ballCount / 2) * 3 };
 //		SimpleMath::Vector3 pos = { (i - (float)ballCount / 2) * 3, 10, 0 };
 
-		auto cube = ObjectManager::Instance().Generate<BoxTemplate>();
+		auto cube = Generate<BoxTemplate>();
 		cube->SetPosition(pos);
 
 		auto rid = cube->AddComponent<RigidBody>();
@@ -61,14 +59,14 @@ void TestScene::Initialize()
 	auto model = m_cubes[0]->AddComponent<ModelComponent>();
 	model->SetModel("Animal");
 
-	m_floor = (ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -60, -2, -60 }, SimpleMath::Vector3{ 60, -1.5, 60 }));
+	m_floor = (Generate<WallObject>(SimpleMath::Vector3{ -60, -2, -60 }, SimpleMath::Vector3{ 60, -1.5, 60 }));
 	m_floor->GetComponent<Transform>()->SetLocalEulerAngle({ 0, 0, 0 });
-	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 });
-	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{  20, -2, -20 }, SimpleMath::Vector3{  20.5, 20, 20 });
-	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, 20 }, SimpleMath::Vector3{ 20, 20, 20.5 });
-	ObjectManager::Instance().Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20.5 }, SimpleMath::Vector3{ 20, 20, -20 });
+	Generate<WallObject>(SimpleMath::Vector3{ -20.5, -2, -20 }, SimpleMath::Vector3{ -20, 20, 20 });
+	Generate<WallObject>(SimpleMath::Vector3{  20, -2, -20 }, SimpleMath::Vector3{  20.5, 20, 20 });
+	Generate<WallObject>(SimpleMath::Vector3{ -20, -2, 20 }, SimpleMath::Vector3{ 20, 20, 20.5 });
+	Generate<WallObject>(SimpleMath::Vector3{ -20, -2, -20.5 }, SimpleMath::Vector3{ 20, 20, -20 });
 
-	CollideManager::Instance().SetCollideActive(5, 5, false);
+//	CollideManager::Instance().SetCollideActive(5, 5, false);
 }
 
 // çXêVä÷êî 
@@ -102,33 +100,6 @@ void TestScene::Update(float elapsedTime)
 // ï`âÊä÷êî
 void TestScene::Render(Renderer& renderer)
 {
-//	renderer.Draw().Triangle({ 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, 0xFFFFFF);
-//	renderer.Draw().Triangle({ 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, 0xFF0000, false);
-//	renderer.Draw().Rect({ 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, { 1, 0, 0 }, 0xFFFFFF, false);
-
-	// ê›íË
-	int circleNum = 3;
-
-	int divCount = 64;
-
-	float radius = 3.0f;
-
-	// ï`âÊ
-	//float step = PI_F * 2 / circleNum;
-	//for (int i = 0; i < circleNum; i++)
-	//{
-	//	float rad = step * i;
-
-	//	DirectX::SimpleMath::Vector3 normal1(sinf(rad), 0, cosf(rad));
-	//	DirectX::SimpleMath::Vector3 normal2(0, sinf(rad), cosf(rad));
-	//	DirectX::SimpleMath::Vector3 normal3(sinf(rad), cosf(rad), 0);
-
-	//	renderer.Draw().Circle({ 0, 0, 0 }, normal1, radius, divCount, 0xFF0000, false);
-	//	renderer.Draw().Circle({ 0, 0, 0 }, normal2, radius, divCount, 0x00FF00, false);
-	//	renderer.Draw().Circle({ 0, 0, 0 }, normal3, radius, divCount, 0x0000FF, false);
-	//}
-
-	renderer.Draw().Arc({ 0, 0, 0 }, { 1, 1, 0 }, { 0, 1, 0 }, 16, radius, 0xFFFFFF, true);
 }
 
 // èIóπä÷êî

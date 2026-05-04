@@ -9,8 +9,6 @@
 
 #include <memory>
 
-#include "GameLib/MyRenderer.h"
-
 #include "GameLib/Scene/SceneManager.h"
 #include "GameLib/Scene/Scenes.h"
 

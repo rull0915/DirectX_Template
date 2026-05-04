@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Button.h"
 
-#include "GameLib/MyRenderer.h"
-
 #include "GameLib/Input/MouseInput.h"
 
 Button::Button(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 size, int stColor, int hvColor, int prColor)
@@ -112,7 +110,7 @@ void Button::Render() const
 		break;
 	}
 
-	MyRenderer::DrawBox(m_position - m_size / 2, m_position + m_size / 2, color);
+//	MyRenderer::DrawBox(m_position - m_size / 2, m_position + m_size / 2, color);
 }
 
 bool Button::PointOnMe(DirectX::SimpleMath::Vector2 point) const

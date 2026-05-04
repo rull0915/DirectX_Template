@@ -19,7 +19,6 @@
 CameraManager::CameraManager()
 	: m_mainCamera{ nullptr }
 {
-
 }
 
 CameraManager::~CameraManager()

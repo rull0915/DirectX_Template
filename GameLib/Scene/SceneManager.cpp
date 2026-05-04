@@ -51,7 +51,7 @@ void SceneManager::Update(float elapsedTime)
 	case TransCondition::None:
 
 		// シーンの更新
-		if (m_pCurrentScene) m_pCurrentScene->Update(elapsedTime);
+		if (m_pCurrentScene) m_pCurrentScene->BaseUpdate(elapsedTime);
 
 		break;
 	case TransCondition::In:
@@ -86,20 +86,20 @@ void SceneManager::Update(float elapsedTime)
 void SceneManager::Render(Renderer& renderer)
 {
 	// シーンの描画処理
-	if (m_pCurrentScene) m_pCurrentScene->Render(renderer);
+	if (m_pCurrentScene) m_pCurrentScene->BaseRender(renderer);
 }
 
-void SceneManager::TransitionRender()
+void SceneManager::TransitionRender(Renderer& renderer)
 {
 	switch (m_condition)
 	{
 	case TransCondition::None:
 		break;
 	case TransCondition::In:
-		m_inTrans->Render();
+		m_inTrans->Render(renderer);
 		break;
 	case TransCondition::Out:
-		m_outTrans->Render();
+		m_outTrans->Render(renderer);
 		break;
 	default:
 		break;

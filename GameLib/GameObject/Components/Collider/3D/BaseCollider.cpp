@@ -11,11 +11,6 @@
 //====================================================//
 #include "BaseCollider.h"
 
-#include "GameLib/GameObject/Managers/3DManagers/Collider/CollideManager.h"
-
-#include "GameLib/GameObject/GameObject.h"
-#include "GameLib/MyRenderer.h"
-
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -29,8 +24,6 @@ BaseCollider::BaseCollider(GameObject* own, ColliderType type, int ID, bool isMa
 	, m_boundingBox{ {0, 0, 0}, {0, 0, 0} }
 	, m_localCenterPos{ center }
 {
-	// 自身をマネージャーに登録
-	CollideManager::Instance().AddCollide(this);
 }
 
 BaseCollider::~BaseCollider()

@@ -13,8 +13,6 @@
 #include "BaseRenderer.h"
 #include "GameLib/GameObject/GameObject.h"
 
-#include "GameLib/GameObject/Managers/Renderer/RendererComponentManager.h"
-
 //====================================================//
 // 関数の実体宣言
 //====================================================//
@@ -24,6 +22,4 @@ BaseRenderer::BaseRenderer(GameObject* own, int ID, bool isMain)
     : BaseComponent(own, ID, isMain)
     , m_pTransform{ own->GetComponent<Transform>() }
 {
-    // 自分をマネージャーに登録
-    RendererComponentManager::Instance().AddRenderer(this);
 };

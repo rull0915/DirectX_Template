@@ -35,7 +35,6 @@
     <ClInclude Include="GameLib\Common\State\StateMachine.h" />
     <ClInclude Include="GameLib\Common\State\TransitionRule.h" />
     <ClInclude Include="GameLib\ContainerExtensions.h" />
-    <ClInclude Include="GameLib\MyRenderer.h" />
     <ClInclude Include="GameLib\Random.h" />
     <ClInclude Include="GameLib\UI\Button.h" />
     <ClInclude Include="Game\TestScene.h" />
@@ -97,7 +96,8 @@
     <ClInclude Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.h" />
     <ClInclude Include="GameLib\Common\Renderer\EachRenderer\IRenderer.h" />
     <ClInclude Include="GameLib\GameObject\Components\Renderer\Model\ModelComponent.h" />
-    <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.h" />
+    <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererManager.h" />
+    <ClInclude Include="GameLib\GameObject\Settings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -114,7 +114,6 @@
     <ClCompile Include="GameLib\Scene\Transition\FadeTransition.cpp" />
     <ClCompile Include="GameLib\Scene\Transition\SceneTransition.cpp" />
     <ClCompile Include="GameLib\Common\State\TransitionRule.cpp" />
-    <ClCompile Include="GameLib\MyRenderer.cpp" />
     <ClCompile Include="GameLib\Random.cpp" />
     <ClCompile Include="GameLib\UI\Button.cpp" />
     <ClCompile Include="Game\TestScene.cpp" />
@@ -157,7 +156,7 @@
     <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Sprite\SpriteRenderer.cpp" />
     <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Renderer\BaseRenderer.cpp" />
-    <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

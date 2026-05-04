@@ -12,9 +12,6 @@
 #include "pch.h"
 #include "RigidBody.h"
 
-#include "GameLib/GameObject/Managers/3DManagers/PhysicsManager.h"
-#include "GameLib/GameObject/GameObject.h"
-
 using namespace DirectX;
 
 //====================================================//
@@ -27,8 +24,6 @@ RigidBody::RigidBody(GameObject* own)
     , m_acceleration{ 0.0f }
     , m_force{ 0.0f }
 {
-    // マネージャーへ自信を登録
-    PhysicsManager::Instance().AddRigidBody(this);
 }
 
 void RigidBody::Integrate(float elapsedTime)

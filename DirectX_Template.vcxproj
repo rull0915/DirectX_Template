@@ -283,11 +283,15 @@
     <ClInclude Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\CameraManager.h" />
     <ClInclude Include="GameLib\GameObject\Managers\ObjectManager.h" />
-    <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.h">
+    <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererManager.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="GameLib\GameObject\Managers\System\CollideEventSystem.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameLib\GameObject\Settings.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -297,7 +301,6 @@
     </ClInclude>
     <ClInclude Include="GameLib\Input\KeyInput.h" />
     <ClInclude Include="GameLib\Input\MouseInput.h" />
-    <ClInclude Include="GameLib\MyRenderer.h" />
     <ClInclude Include="GameLib\Random.h" />
     <ClInclude Include="GameLib\Resources\ResourceManager.h" />
     <ClInclude Include="GameLib\Scene\Scene.h" />
@@ -364,12 +367,11 @@
     <ClCompile Include="GameLib\GameObject\Managers\3DManagers\PhysicsManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\CameraManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\ObjectManager.cpp" />
-    <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererComponentManager.cpp" />
+    <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererManager.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\System\CollideEventSystem.cpp" />
     <ClCompile Include="GameLib\GameObject\TemplateObjects\BoxTemplate.cpp" />
     <ClCompile Include="GameLib\Input\KeyInput.cpp" />
     <ClCompile Include="GameLib\Input\MouseInput.cpp" />
-    <ClCompile Include="GameLib\MyRenderer.cpp" />
     <ClCompile Include="GameLib\Random.cpp" />
     <ClCompile Include="GameLib\Resources\ResourceManager.cpp" />
     <ClCompile Include="GameLib\Scene\Scene.cpp" />

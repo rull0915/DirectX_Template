@@ -85,8 +85,6 @@ public:
     // ŒöŠJŠÖ”
     //-----------------------------------------------------
 
-    void SetMain();
-
     const DirectX::SimpleMath::Matrix& GetView() { return m_view; }
     const DirectX::SimpleMath::Matrix& GetProj() { return m_proj; }
     const DirectX::SimpleMath::Matrix& GetInverseView() { return m_inverseView; }
