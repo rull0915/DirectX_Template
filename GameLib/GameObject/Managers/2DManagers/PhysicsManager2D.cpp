@@ -46,6 +46,9 @@ void PhysicsManager2D::Update(float elapsedTime)
 	// 重力
 	for (auto* body : m_rigidBodies)
 	{
+		// アクティブチェック
+		if (!body->IsActive()) continue;
+
 		if (body->IsStatic() || !body->IsUseGravity()) continue;
 
 		if(!body->IsSleep()) body->AddForce(m_gravityVec * m_gravityPower, ForceMode::Acceleration, false);
@@ -54,6 +57,9 @@ void PhysicsManager2D::Update(float elapsedTime)
 	// 位置の更新
 	for (auto* body : m_rigidBodies)
 	{
+		// アクティブチェック
+		if (!body->IsActive()) continue;
+
 		if (body->IsStatic()) continue;
 
 		body->Integrate(elapsedTime);

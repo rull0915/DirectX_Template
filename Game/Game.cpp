@@ -59,10 +59,10 @@ void Game::Initialize(HWND window, int width, int height)
     MouseInput::SetMode(DirectX::Mouse::MODE_ABSOLUTE);
 
     // ====== シーンの登録 ====== //
-    m_sceneManager.RegisterScene("Test", std::make_unique<TestScene>(this));
+    m_sceneManager.RegisterScene("GamePlay", std::make_unique<GamePlayScene>(this));
 
     // 開始時のシーンを設定
-    m_sceneManager.SetStartScene("Test");
+    m_sceneManager.SetStartScene("GamePlay");
 
     // ====== リソースの追加 ====== //
 
@@ -71,8 +71,10 @@ void Game::Initialize(HWND window, int width, int height)
     // フォントの追加
 
     // モデルの追加
-    ResourceManager::Instance().AddModel("Animal", L"Resources/Models/Monkey.cmo");
-    
+
+    // テンプレートオブジェクト用モデル
+    ResourceManager::Instance().AddModel("Template_Cube", L"Resources/Template/Template_Cube.cmo");
+
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
     /*

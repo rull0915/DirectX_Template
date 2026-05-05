@@ -90,6 +90,9 @@ public:
     const DirectX::SimpleMath::Matrix& GetInverseView() { return m_inverseView; }
     const DirectX::SimpleMath::Matrix& GetInverseProj() { return m_inverseProj; }
 
+    void SetTargetPoint(DirectX::SimpleMath::Vector3 point) { m_targetPoint = point; }
+    void SetUseTarget(bool flag) { m_useTargetPoint = flag; }
+
     // タイプを変更する関数
     void SetType(ProjectionType type)
     {

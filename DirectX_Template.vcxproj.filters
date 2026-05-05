@@ -37,10 +37,6 @@
     <ClInclude Include="GameLib\ContainerExtensions.h" />
     <ClInclude Include="GameLib\Random.h" />
     <ClInclude Include="GameLib\UI\Button.h" />
-    <ClInclude Include="Game\TestScene.h" />
-    <ClInclude Include="Game\TestObjects\CubeObject.h" />
-    <ClInclude Include="Game\TestObjects\TestSphere.h" />
-    <ClInclude Include="Game\TestObjects\WallObject.h" />
     <ClInclude Include="GameLib\GameMath\Color\ColorLib.h" />
     <ClInclude Include="GameLib\Common\ThreadPool.h" />
     <ClInclude Include="GameLib\GameObject\GameObject.h" />
@@ -98,6 +94,7 @@
     <ClInclude Include="GameLib\GameObject\Components\Renderer\Model\ModelComponent.h" />
     <ClInclude Include="GameLib\GameObject\Managers\Renderer\RendererManager.h" />
     <ClInclude Include="GameLib\GameObject\Settings.h" />
+    <ClInclude Include="Game\GamePlayScene\GamePlayScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -116,10 +113,6 @@
     <ClCompile Include="GameLib\Common\State\TransitionRule.cpp" />
     <ClCompile Include="GameLib\Random.cpp" />
     <ClCompile Include="GameLib\UI\Button.cpp" />
-    <ClCompile Include="Game\TestScene.cpp" />
-    <ClCompile Include="Game\TestObjects\CubeObject.cpp" />
-    <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
-    <ClCompile Include="Game\TestObjects\WallObject.cpp" />
     <ClCompile Include="GameLib\Common\ThreadPool.cpp" />
     <ClCompile Include="GameLib\GameObject\GameObject.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\BaseComponent.cpp" />
@@ -157,6 +150,7 @@
     <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.cpp" />
     <ClCompile Include="GameLib\GameObject\Components\Renderer\BaseRenderer.cpp" />
     <ClCompile Include="GameLib\GameObject\Managers\Renderer\RendererManager.cpp" />
+    <ClCompile Include="Game\GamePlayScene\GamePlayScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -129,6 +129,10 @@ bool CollideManager::CheckHitPair(BaseCollider* colA, BaseCollider* colB, HitCon
 	RigidBody* aRigid = colA->GetOwn()->GetComponent<RigidBody>();
 	RigidBody* bRigid = colB->GetOwn()->GetComponent<RigidBody>();
 
+	// 非アクティブの場合nullとして扱う
+	if (!aRigid->IsActive()) aRigid = nullptr;
+	if (!bRigid->IsActive()) bRigid = nullptr;
+
 	// どちらも物理挙動を持っていなければ判定スキップ
 	if (!aRigid && !bRigid) return false;
 

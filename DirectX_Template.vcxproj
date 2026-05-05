@@ -314,13 +314,10 @@
     <ClInclude Include="GameLib\Common\State\TransitionRule.h" />
     <ClInclude Include="GameLib\UI\Button.h" />
     <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\GamePlayScene\GamePlayScene.h" />
     <ClInclude Include="Game\Screen.h" />
-    <ClInclude Include="Game\TestObjects\CubeObject.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
-    <ClInclude Include="Game\TestScene.h" />
-    <ClInclude Include="Game\TestObjects\TestSphere.h" />
-    <ClInclude Include="Game\TestObjects\WallObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLib\Common\Renderer\EachRenderer\Model\ModelRenderer.cpp">
@@ -381,7 +378,7 @@
     <ClCompile Include="GameLib\Common\State\TransitionRule.cpp" />
     <ClCompile Include="GameLib\UI\Button.cpp" />
     <ClCompile Include="Game\Game.cpp" />
-    <ClCompile Include="Game\TestObjects\CubeObject.cpp" />
+    <ClCompile Include="Game\GamePlayScene\GamePlayScene.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -389,9 +386,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Game\TestScene.cpp" />
-    <ClCompile Include="Game\TestObjects\TestSphere.cpp" />
-    <ClCompile Include="Game\TestObjects\WallObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

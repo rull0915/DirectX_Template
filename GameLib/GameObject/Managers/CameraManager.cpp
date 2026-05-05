@@ -27,6 +27,8 @@ CameraManager::~CameraManager()
 
 void CameraManager::Update()
 {
+
+
 	if(m_mainCamera) m_mainCamera->UpdateView();
 
 	// ƒŒƒC‚ÌXV

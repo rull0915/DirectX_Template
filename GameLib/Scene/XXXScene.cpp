@@ -20,11 +20,6 @@ void XXXScene::Initialize()
 // 更新関数 
 void XXXScene::Update(float elapsedTime)
 {
-	// スペースキーでタイトルへ
-	if (m_pGame->GetKeyTrigger() & PAD_INPUT_10)
-	{
-		ChangeScene("");
-	}
 }
 
 // 描画関数

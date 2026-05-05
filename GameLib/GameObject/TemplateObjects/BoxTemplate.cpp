@@ -26,6 +26,7 @@ BoxTemplate::BoxTemplate()
 	AddComponent<BoxCollider>();
 
 	// todo MeshRenderer‚Ì’Ç‰Á
+	AddComponent<ModelComponent>()->SetModel("Template_Cube");
 }
 
 /// <summary>

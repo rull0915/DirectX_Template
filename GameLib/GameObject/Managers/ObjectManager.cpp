@@ -56,6 +56,9 @@ void ObjectManager::Update(float elapsedTime)
 	// 全オブジェクトのコンポーネントを追加
 	for (auto& object : m_objects)
 	{
+		// アクティブチェック
+		if (!object->IsActive()) continue;
+
 		// 予約されたコンポーネントを追加
 		object->RegisterComponents();
 	}
@@ -63,6 +66,9 @@ void ObjectManager::Update(float elapsedTime)
 	// 全オブジェクトの更新関数呼び出し
 	for (auto& object : m_objects)
 	{
+		// アクティブチェック
+		if (!object->IsActive()) continue;
+
 		// 基底クラスの更新処理
 		object->BaseUpdate(elapsedTime);
 
